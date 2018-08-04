@@ -13,6 +13,20 @@ module.exports = {
     link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
   },
   modules: ["@nuxtjs/axios", "@nuxtjs/proxy"],
+  vender:[
+    'element-ui'
+  ],
+  babel:{
+    "plugins": [["component", [
+      {
+        "libraryName": "element-ui",
+        "styleLibraryName": "theme-default"
+      },
+      'transform-async-to-generator',
+      'transform-runtime'
+    ]]],
+    comments: true
+  },
   /*
   ** Customize the progress bar color
   */
@@ -21,7 +35,7 @@ module.exports = {
   ** Build configuration
   */
   proxy: [["/user", { target: "http://api.wengtianmeng.com" }]],
-  plugins: ["~/plugins/"],
+  plugins: ["~/plugins/",{ src: '~plugins/element-ui', ssr: true }],
   build: {
     vendor: ["axios", "~/plugins/"],
     loaders: [

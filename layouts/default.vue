@@ -49,4 +49,38 @@ html {
   color: #fff;
   background-color: #35495e;
 }
+.unified-bg {
+  width: 100vw;
+  min-width: 1000px;
+  height: 100vh;
+  background: url("/img/login-bg.jpg") no-repeat;
+  background-size: 100vw 100vh;
+  overflow: hidden;
+  font-family: 'SimSun';
+}
+.model-body-txt {
+  color: #777;
+  font-size: 24px;
+  margin: 45px 0;
+  text-align: center;
+}
+.btn-cancel, .btn-confirm {
+  display: block;
+  text-align: center;
+  padding-top: 10px;
+  width: 120px;
+  height: 45px;
+  color: #000;
+  font-size: 24px;
+  background-color: #fff;
+  margin: 0 auto;
+  cursor: pointer;
+  box-shadow: 1px 3px 10px 2px #ddd;
+}
+.btn-confirm {
+  background-color: #ded5a7;
+  color: #fff;
+  box-shadow: 0 0 0 #ddd;
+}
+
 </style>

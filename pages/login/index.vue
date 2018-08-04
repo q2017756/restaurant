@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div class="unified-bg">
     <div class="container">
       <div class="form">
         <h1 class="title">酒店餐厅预订</h1>
@@ -12,14 +12,13 @@
     <AppModel></AppModel>
     <modal :options="modalOptions" v-show="modalOptions.show">
       <div slot="body">
-        <p class="body-txt">用户名或密码错误。</p>
+        <p class="model-body-txt">用户名或密码错误。</p>
       </div>
     </modal>
   </div>
 </template>
 
 <script>
-import AppModel from "~/components/AppModel.vue";
 import modal from "~/components/modal.vue";
 export default {
   data(){
@@ -37,9 +36,8 @@ export default {
       }
     };
   },
-  components: { 
-    AppModel,
-    modal 
+  components: {
+    modal
   },
   computed: {
 
@@ -116,10 +114,5 @@ export default {
     cursor: pointer;
     user-select:none;
   }
-  .body-txt {
-    color: #777;
-    font-size: 24px;
-    margin: 45px 0;
-    text-align: center;
-  }
+
 </style>

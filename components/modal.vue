@@ -15,8 +15,9 @@
           <div class="modal-footer">
             <slot name="footer">
               <slot name="button">
-                <a v-if="modal.showCancelButton" class="button btn-cancel" @click="close()">{{modal.cancelButtonText}}</a>
                 <a v-if="modal.showConfirmButton" class="button btn-confirm" @click="submit">{{modal.confirmButtonText}}</a>
+                <slot name="btn"></slot>
+                <a v-if="modal.showCancelButton" class="button btn-cancel" @click="close()">{{modal.cancelButtonText}}</a>
               </slot>
             </slot>
           </div>
@@ -41,36 +42,36 @@ export default {
       let modal = this.options;
       if (modal) {
         modal = {
-					show: modal.show || false,
-				  title: modal.title || '提示',
+          show: modal.show || false,
+          title: modal.title || '提示',
           showCancelButton: typeof modal.showCancelButton === 'undefined' ? true : modal.showCancelButton,
           cancelButtonText: modal.cancelButtonText ? modal.cancelButtonText : '取消',
-          showConfirmButton: typeof modal.showConfirmButton === 'undefined' ? true : modal.cancelButtonClass,
+          showConfirmButton: typeof modal.showConfirmButton === 'undefined' ? true : modal.showConfirmButton,
           confirmButtonText: modal.confirmButtonText ? modal.confirmButtonText : '确定'
         };
       } else { // 使用时没有传递参数
-          modal = {
-            title: '提示',
-            showCancelButton: true,
-            cancelButtonClass: 'btn-default',
-            cancelButtonText: '取消',
-            showConfirmButton: true,
-            confirmButtonClass: 'btn-active',
-            confirmButtonText: '确定'
-          };
-        }
-        return modal;
+        modal = {
+          title: '提示',
+          showCancelButton: true,
+          cancelButtonClass: 'btn-default',
+          cancelButtonText: '取消',
+          showConfirmButton: true,
+          confirmButtonClass: 'btn-active',
+          confirmButtonText: '确定'
+        };
       }
-    },
-
-    methods: {
-      submit() {
-        
-      },
-      close() {
-        this.options.show = false;
-      }
+      return modal;
     }
+  },
+
+  methods: {
+    submit() {
+
+    },
+    close() {
+      this.options.show = false;
+    }
+  }
 };
 </script>
 
@@ -100,19 +101,12 @@ export default {
 	height: 35px;
 	cursor: pointer;
 }
-
-.btn-cancel {
-	display: block;
-	text-align: center;
-	padding-top: 10px;
-	width: 120px;
-	height: 45px;
-	color: #fff;
-	font-size: 24px;
-	background-color: #ded5a7;
-	margin: 0 auto;
-	cursor: pointer;
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
+
 
 .modal-footer {
 	margin-bottom: 45px;
