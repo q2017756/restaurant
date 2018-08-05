@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-    <h1>This is an about page11222</h1>
+    <h1>This is an about pag222e</h1>
     <schedule-calendar :events="events"
                        :dateItemRender="itemRender"
                        :startWeek="7"
@@ -107,5 +107,6 @@ export default {
 <style scoped lang="scss">
 .about {
   height: 100%;
+  padding: 10%;
 }
 </style>

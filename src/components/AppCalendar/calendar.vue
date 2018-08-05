@@ -1,8 +1,9 @@
 <template>
-    <div class="schedule-calendar">
-        <header-bar :year="year"
+    <div class="schedule-calendar" @wheel="test">
+        <header-bar ref="header" :year="year"
                     :month="month"
                     :day="day"
+                    :currentMonth="currentMonth"
                     @updateValue="updateView"></header-bar>
         <div class="schedule-calendar-body">
             <week :startWeek="startWeek"></week>
@@ -44,7 +45,9 @@ export default {
             year: new Date().getFullYear(),
             month: new Date().getMonth(),
             day: new Date().getDate(),
+            currentMonth: new Date().getMonth(),
             dragItem: null
+//            scroll: ''
         }
     },
     methods: {
@@ -71,8 +74,33 @@ export default {
         dateClick(e, date) {
             console.log('[date-click]:', date)
             this.$emit('date-click', e, date)
+        },
+//        menu() {
+//            this.scroll = document.documentElement.scrollTop || document.body.scrollTop;
+//            console.log(this.scroll)
+//        },
+        test(e) {
+            e = e || window.event;
+            if (e.wheelDelta) {  //判断浏览器IE，谷歌滑轮事件
+                if (e.wheelDelta > 0) { //当滑轮向上滚动时
+                    this.$refs.header.prevMonth();
+                }
+                if (e.wheelDelta < 0) { //当滑轮向下滚动时
+                    this.$refs.header.nextMonth();
+                }
+            } else if (e.detail) {  //Firefox滑轮事件
+                if (e.detail> 0) { //当滑轮向上滚动时
+                    this.$refs.header.prevMonth();
+                }
+                if (e.detail< 0) { //当滑轮向下滚动时
+                    this.$refs.header.nextMonth();
+                }
+            }
         }
     },
+//    mounted() {
+//        window.addEventListener('scroll', this.menu)
+//    },
     created() {
         EventBus.$on('cell-dragenter', this.cellDragenter)
         EventBus.$on('item-dragstart', this.itemDragstart)
@@ -98,7 +126,6 @@ export default {
         min-width: $sc-cell-min-width * 7;
         color: $sc-base-color;
         font-size: $sc-base-font-size;
-        box-shadow: $sc-box-shadow;
 
         *,
         *::before,

@@ -1,27 +1,21 @@
 <template>
-    <header class="schedule-calendar-hd">
-        <button type="button"
-                class="schedule-calendar-arrow double-arrow"
-                @click="prevYear">&lt;&lt;</button>
-        <button type="button"
-                class="schedule-calendar-arrow"
-                @click="prevMonth">&lt;</button>
-        <div class="schedule-calendar-picker"
-             ref="picker">
-            <div role="button"
-                 class="schedule-calendar-display"
-                 @click="pickerVisible = !pickerVisible">{{year}} 年 {{month + 1}} 月 {{day}} 日</div>
-            <picker :visible="pickerVisible"
-                    :year="year"
-                    :month="month"></picker>
+    <div class="header">
+        <div class="header-top">
+            <div class="year-selector">
+                <img src="../../assets/img/arrow-left.png" alt="" @click="prevYear">
+                <p>{{year}} 年</p>
+                <img src="../../assets/img/arrow-right.png" alt="" @click="nextYear">
+            </div>
+            <p>
+                {{year}} 年 {{month + 1}} 月 {{day}} 日
+            </p>
         </div>
-        <button type="button"
-                class="schedule-calendar-arrow"
-                @click="nextMonth">&gt;</button>
-        <button type="button"
-                class="schedule-calendar-arrow double-arrow"
-                @click="nextYear">&gt;&gt;</button>
-    </header>
+        <ul class="month-selector">
+            <li v-for="n in 12"
+                :class="{prev: n < (currentMonth + 1), current: n === currentMonth + 1, active: n === month + 1}"
+                @click="updateValue(year,n - 1)">{{n}}</li>
+        </ul>
+    </div>
 </template>
 <script>
 import { calcPrevMonth, calcNextMonth } from './utils'
@@ -34,11 +28,12 @@ export default {
     props: {
         year: Number,
         month: Number,
+        currentMonth: Number,
         day: Number
     },
     data() {
         return {
-            pickerVisible: false
+            pickerVisible: false,
         }
     },
     computed: {
@@ -68,6 +63,7 @@ export default {
             }
         }
     },
+
     created() {
         document.addEventListener('mouseup', this.clickOutSide)
     },
@@ -76,58 +72,59 @@ export default {
     }
 }
 </script>
-<style lang="scss">
+<style scoped lang="scss">
 @import "variables.scss";
 
-.schedule-calendar- {
-    &hd {
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 24px;
+    .year-selector{
         display: flex;
-        justify-content: center;
-        align-content: center;
+        justify-content: space-between;
         align-items: center;
-        height: $sc-header-height;
-        padding: $sc-header-padding 0;
-        font-size: $sc-header-fs;
-        line-height: $sc-header-height - $sc-header-padding * 2;
-        background: $sc-primary-color;
-        color: $sc-body-color;
-        user-select: none;
-    }
-    &arrow {
-        font-family: consolas;
-        font-size: inherit;
-        font-weight: 400;
-        padding: 0 10px;
-        height: 100%;
-        color: $sc-primary-light-color;
-
-        &:active {
-            background: darken($sc-primary-dark-color, 15%);
+        img {
+            padding: 20px;
+            &:first-child {
+                padding-left: 0;
+            }
         }
-        &.double-arrow {
-            letter-spacing: -3px;
-        }
-    }
-    &picker {
-        position: relative;
-        z-index: 20;
-        padding: 4px 5px;
-        height: 100%;
-    }
-    &arrow,
-    &display {
-        border-radius: 2px;
-        transition: .2s ease-in-out;
-        &:hover {
-            color: #fff;
-            background: $sc-primary-dark-color;
-        }
-    }
-    &display {
-        padding: 0 10px;
-        line-height: 32px;
-        cursor: pointer;
     }
 }
-
+ul, li {
+    list-style: none;
+}
+.month-selector {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0;
+    border: 1px solid #DFD4A7;
+    font-size: 24px;
+    li {
+        flex: 1;
+        height: 70px;
+        background: #DED5A7;
+        border: 1px solid transparent;
+        border-right: 1px solid #fff;
+        text-align: center;
+        line-height: 70px;
+        color: #fff;
+        cursor: pointer;
+        &:last-child {
+            border-right: 0 solid #fff;
+        }
+        &.prev {
+            background: #F1EEDE;
+        }
+        &.current {
+            background: #fff;
+            color: #142343;
+        }
+        &.active, &:hover {
+            background: blue;
+        }
+    }
+}
 </style>

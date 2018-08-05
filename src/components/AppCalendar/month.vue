@@ -76,6 +76,10 @@ export default {
             }
         }
     },
+    mounted() {
+        console.log(this.year, this.month, this.startWeek)
+        console.log(monthlyCalendar(this.year, this.month+1, this.startWeek))
+    }
 }
 </script>
 <style lang="scss">

@@ -30,12 +30,13 @@ export default {
         display: flex;
         height: $sc-week-height;
         line-height: $sc-week-height;
-        background: $sc-primary-color
+        background: #F8F8F8;
     }
     &week-item {
         flex: 1;
         text-align: center;
-        color: $sc-body-color
+        color: #142323;
+        font-size: 20px;
     }
 }
 </style>
