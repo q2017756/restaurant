@@ -62,4 +62,36 @@ html,body {
   color: #fff;
   box-shadow: 0 0 0 #ddd;
 }
+.calendar-text-contianer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 5px 0;
+}
+.calendar-text {
+  display: inline-block;
+  width: 72px;
+  height: 24px;
+  border-radius: 10px;
+  text-align: center;
+  line-height: 24px;
+  color: #142343;
+  border: 1px solid #142343;
+  font-size: 16px;
+}
+.calendar-icon-triangle, .calendar-icon-x, .calendar-icon-circle {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  vertical-align: middle;
+}
+.calendar-icon-triangle {
+  background: url("./assets/img/calendar-triangle.png");
+}
+.calendar-icon-x {
+  background: url("./assets/img/calendar-x.png");
+}
+.calendar-icon-circle {
+  background: url("./assets/img/calendar-circle.png");
+}
 </style>

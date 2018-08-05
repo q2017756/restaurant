@@ -7,10 +7,10 @@
          @click="cellClick">
         <div class="schedule-calendar-date-hd">
             <div class="schedule-calendar-date-label">{{date.getDate()}}</div>
-            <button type="button"
-                    class="schedule-calendar-counter"
-                    v-if="details.length > volume"
-                    @click.stop.prevent="expandAll">共 {{details.length}} 项</button>
+            <!--<button type="button"-->
+                    <!--class="schedule-calendar-counter"-->
+                    <!--v-if="details.length > volume"-->
+                    <!--@click.stop.prevent="expandAll">共 {{details.length}} 项</button>-->
         </div>
         <div class="schedule-calendar-details"
              :class="{ expanded }"
@@ -56,6 +56,9 @@ export default {
     computed: {
         isToday() {
             return isSameDay(new Date(), this.date)
+        },
+        notWorkDay() {
+            return this.data.length ? this.data.filter(item => item.DayoffKben === '0') : []
         },
         details() {
             return this.data.length ? this.data.filter(item => isSameDay(item.date, this.date)) : []
@@ -168,6 +171,7 @@ export default {
             line-height: $sc-data-label-size;
             text-align: center;
             border-radius: 50%;
+            color: #142343;
         }
 
         &.today {

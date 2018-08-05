@@ -42,7 +42,7 @@ export default {
         color: #fff;
         line-height: 2em;
         border-radius: 2px;
-        background: $sc-primary-color;
+        background: #fff;
         cursor: pointer;
         overflow: hidden;
         white-space: nowrap;

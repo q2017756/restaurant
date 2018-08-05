@@ -1,5 +1,5 @@
 <template>
-    <div class="schedule-calendar" @wheel="test">
+    <div class="schedule-calendar" @wheel="scrollToMonth">
         <header-bar ref="header" :year="year"
                     :month="month"
                     :day="day"
@@ -32,7 +32,7 @@ export default {
         startMonth: String,
         startWeek: {
             type: Number,
-            default: 7
+            default: 1
         },
         events: {
             type: Array,
@@ -74,7 +74,7 @@ export default {
             console.log('[date-click]:', date)
             this.$emit('date-click', e, date)
         },
-        test(e) {
+        scrollToMonth(e) {
             e = e || window.event;
             if (e.wheelDelta) {  //判断浏览器IE，谷歌滑轮事件
                 if (e.wheelDelta > 0) { //当滑轮向上滚动时

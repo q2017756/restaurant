@@ -75,10 +75,6 @@ export default {
                 this.animated = true
             }
         }
-    },
-    mounted() {
-        console.log(this.year, this.month, 3)
-        console.log(monthlyCalendar(this.year, this.month, 3))
     }
 }
 </script>
