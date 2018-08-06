@@ -1,6 +1,6 @@
 <template>
     <div class="unified-bg">
-        <app-header></app-header>
+        <app-header :btnShow="false"></app-header>
         <div class="contianer">
             <div class="tab sel-date">
                 <div class="tab-title pull-left mr30">
@@ -114,8 +114,8 @@
                 </div>
             </div>
             <div class="opr-btns pull-right">
-                <el-button class="remarks-btn" type="primary">登録</el-button>
-                <el-button class="remarks-btn" plain>戻る</el-button>
+                <el-button class="remarks-btn" type="primary" @click="setInfo">登録</el-button>
+                <el-button class="remarks-btn" plain  @click="toPre">戻る</el-button>
             </div>
         </div>
     </div>
@@ -150,9 +150,12 @@
         },
         computed: {},
         methods: {
-            login() {
-                console.log('登录')
-            }
+            setInfo() {
+                console.log('保存');
+            },
+            toPre() {
+                this.$router.go(-1);
+            },
         }
     }
 </script>

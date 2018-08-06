@@ -44,7 +44,7 @@
         },
         methods: {
             login() {
-                console.log('登录')
+                this.$router.push('calendar')
             }
         }
     }

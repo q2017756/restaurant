@@ -7,10 +7,10 @@
          @click="cellClick">
         <div class="schedule-calendar-date-hd">
             <div class="schedule-calendar-date-label">{{date.getDate()}}</div>
-            <!--<button type="button"-->
-                    <!--class="schedule-calendar-counter"-->
-                    <!--v-if="details.length > volume"-->
-                    <!--@click.stop.prevent="expandAll">共 {{details.length}} 项</button>-->
+            <button type="button"
+                    class="schedule-calendar-counter"
+                    v-if="details.length > volume"
+                    @click.stop.prevent="expandAll">共 {{details.length}} 项</button>
         </div>
         <div class="schedule-calendar-details"
              :class="{ expanded }"

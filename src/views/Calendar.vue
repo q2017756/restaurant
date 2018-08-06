@@ -5,6 +5,7 @@
             <app-calendar :events="events"
                           :dateItemRender="itemRender"
                           :startWeek="0"
+                          @event-click="test"
                           @event-dragend="changeDate"></app-calendar>
         </div>
     </div>
@@ -72,6 +73,9 @@
 
         },
         methods: {
+            test(e, item) {
+                this.$router.push('schedule');
+            },
             changeDate(e, item, date) {
                 const updateIndex = this.events.findIndex(ele => ele.id === item.id)
                 this.$set(this.events, updateIndex, {
@@ -87,7 +91,7 @@
     .contianer {
         width: 80vw;
         min-width: 1000px;
-        height: 100vh;
-        margin: 60px auto;
+        height: calc(100vh - 30px - 90px);
+        margin: 30px auto 0 auto;
     }
 </style>

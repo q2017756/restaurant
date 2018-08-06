@@ -85,7 +85,7 @@ export default {
         justify-content: space-between;
         align-items: center;
         img {
-            padding: 20px;
+            padding: 10px;
             &:first-child {
                 padding-left: 0;
             }
@@ -104,12 +104,12 @@ ul, li {
     font-size: 24px;
     li {
         flex: 1;
-        height: 70px;
+        height: 50px;
         background: #DED5A7;
         border: 1px solid transparent;
         border-right: 1px solid #fff;
         text-align: center;
-        line-height: 70px;
+        line-height: 50px;
         color: #fff;
         cursor: pointer;
         &:last-child {

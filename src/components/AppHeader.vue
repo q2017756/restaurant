@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <h1>予約システム</h1>
-    <span class="right-btn" @click="doSth">
+    <span class="right-btn" v-show="btnShow" @click="doSth">
       <img class="" src="/img/administ.png" alt="">
       <span>システム管理</span>
     </span>
@@ -24,6 +24,12 @@ export default {
       }
     };
   },
+  props: {
+      btnShow: {
+          type: Boolean,
+          default: true
+      }
+  },
   components: {
       AppModal
   },
@@ -32,7 +38,8 @@ export default {
   },
   methods: {
     doSth() {
-      console.log('管理')
+      console.log('管理');
+      this.$router.push('basicSet');
     }
   }
 }

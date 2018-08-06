@@ -18,7 +18,7 @@
                 </div>
             </div>
             <div class="table-contianer">
-                <div class="add-btn">
+                <div class="add-btn" @click="toNext">
                     <img src="/img/add.png" alt="">
                     <span>新規登録</span>
                 </div>
@@ -112,8 +112,8 @@
         },
         computed: {},
         methods: {
-            login() {
-                console.log('登录')
+            toNext() {
+                this.$router.push('reserveInfo');
             }
         }
     }

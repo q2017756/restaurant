@@ -32,10 +32,10 @@ html,body {
 .unified-bg {
   width: 100vw;
   min-width: 1000px;
-  height: auto;
+  height: 100vh;
   background: url("./assets/img/login-bg.jpg") no-repeat;
   background-size: 100% 100%;
-  overflow: hidden;
+  overflow: scroll;
   font-family: 'SimSun';
 }
 .model-body-txt {

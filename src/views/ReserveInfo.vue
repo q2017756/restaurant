@@ -239,11 +239,11 @@
         padding: 60px 30px 150px 30px;
         overflow: hidden;
         .inner-left {
-            width: 50%;
+            width: 49%;
             border-right: 1px solid #ddd;
         }
         .inner-right {
-            width: 50%;
+            width: 49%;
             height: 1232px;
         }
         .sel-date {
