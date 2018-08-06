@@ -11,7 +11,7 @@
         </div>
         <app-modal :options="modalOptions" v-show="modalOptions.show">
             <div slot="body">
-                <p class="model-body-txt">ユーザー名又はパスワードが違いました。</p>
+                <p class="model-body-txt">{{ modalMsg }}</p>
             </div>
         </app-modal>
     </div>
@@ -25,9 +25,9 @@
             return {
                 username: '',
                 password: '',
-                showModal: false,
+                modalMsg: '',
                 modalOptions: {
-                    show: true,
+                    show: false,
                     title: ' ',
                     showCancelButton: true,
                     cancelButtonText: 'ok',
@@ -44,7 +44,17 @@
         },
         methods: {
             login() {
-                this.$router.push('calendar')
+                if(!this.username || !this.password){
+                    this.modalOptions.show = true;
+                    this.modalMsg = 'ユーザー名又はパスワードが違いました。';
+                }else {
+                    if(this.username !== '1' || this.password !== '1') {
+                        this.modalOptions.show = true;
+                        this.modalMsg = 'asdasd';
+                    }else {
+                        this.$router.push('calendar');
+                    }
+                }
             }
         }
     }

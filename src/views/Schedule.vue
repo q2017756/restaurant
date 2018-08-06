@@ -18,7 +18,7 @@
                 </div>
             </div>
             <div class="table-contianer">
-                <div class="add-btn" @click="toNext">
+                <div class="add-btn" @click="showModal">
                     <img src="/img/add.png" alt="">
                     <span>新規登録</span>
                 </div>
@@ -58,7 +58,7 @@
                         <td><span class="color-btn blue">宴</span></td>
                         <td class="long-td"></td>
                         <td>
-                            <el-button size="mini" plain>修正</el-button>
+                            <el-button size="mini" plain @click="toEdit">修正</el-button>
                         </td>
                     </tr>
                     <tr class="tr-disabled">
@@ -76,12 +76,18 @@
                 </table>
             </div>
         </div>
-        <app-modal :options="modalOptions" v-show="modalOptions.show">
+        <app-modal :options="modalOptions" v-show="modalOptions.show" @submit="toAdd">
             <div slot="body">
-                <p class="model-body-txt">混雑条件以上入っています！。</p>
+                <p class="model-body-txt">{{ modalMsg }}</p>
             </div>
-            <span slot="btn">
-                <a class="btn-cancel">asd</a>
+        </app-modal>
+
+        <app-modal :options="leaveModalOptions" v-show="leaveModalOptions.show" @submit="saveAndLeave">
+            <div slot="body">
+                <p class="model-body-txt">当日備考が修正されました。登録してよろしいでしょうか？</p>
+            </div>
+            <span slot="btn" @click="forceLeave">
+                <a class="btn-cancel">いいえ</a>
             </span>
         </app-modal>
     </div>
@@ -94,15 +100,28 @@
     export default {
         data() {
             return {
+                oldRemarks: '备注1：xxx',
                 remarks: '备注1：xxx',
-                showModal: false,
+                status: 1,
+                modalMsg: '',
+                otherBtnShow: false,
+                canILeave: false,
+                toName: '',
                 modalOptions: {
-                    show: true,
+                    show: false,
                     title: ' ',
                     showCancelButton: true,
-                    cancelButtonText: 'ok',
+                    cancelButtonText: '取消',
                     showConfirmButton: true,
-                    confirmButtonText: 'confirm'
+                    confirmButtonText: '確認'
+                },
+                leaveModalOptions: {
+                    show: false,
+                    title: ' ',
+                    showCancelButton: true,
+                    cancelButtonText: 'キャンセル',
+                    showConfirmButton: true,
+                    confirmButtonText: 'はい'
                 }
             };
         },
@@ -112,8 +131,46 @@
         },
         computed: {},
         methods: {
-            toNext() {
+            showModal() {
+                this.modalOptions.show = true;
+                if(this.status === 1) {
+                    this.modalMsg = '混雑条件以上なっています！';
+                }else if (this.status === 2) {
+                    this.modalMsg = '満席条件以上入っています！';
+                }else if (this.status === 3) {
+                    this.modalMsg = '満席条件以上入っています！';
+                }
+            },
+            toAdd() {
+                if(this.status === 1 || this.status === 2) {
+                    this.$router.push('reserveInfo');
+                }
+            },
+            toEdit() {
                 this.$router.push('reserveInfo');
+            },
+            saveAndLeave() {
+                console.log('保存备注');
+                this.canILeave = true;
+                this.$router.push(this.toName);
+            },
+            forceLeave() {
+                console.log('不保存备注，强制离开');
+                this.canILeave = true;
+                this.$router.push(this.toName);
+            }
+        },
+        beforeRouteLeave (to, from, next) {
+            if(this.remarks === this.oldRemarks) {
+                next();
+            }else {
+                this.leaveModalOptions.show = true;
+                this.toName = to.name;
+                if(this.canILeave) {
+                    next();
+                }else {
+                    next(false);
+                }
             }
         }
     }

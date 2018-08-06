@@ -66,7 +66,7 @@ export default {
 
   methods: {
     submit() {
-
+      this.$emit('submit')
     },
     close() {
       this.options.show = false;

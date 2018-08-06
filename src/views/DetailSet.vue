@@ -118,6 +118,11 @@
                 <el-button class="remarks-btn" plain  @click="toPre">戻る</el-button>
             </div>
         </div>
+        <app-modal :options="modalOptions" v-show="modalOptions.show" @submit="doConfirm">
+            <div slot="body">
+                <p class="model-body-txt">{{ modalMsg }}</p>
+            </div>
+        </app-modal>
     </div>
 </template>
 
@@ -128,19 +133,20 @@
     export default {
         data() {
             return {
-                showModal: false,
                 checkList: [],
                 value: '',
                 options: [],
                 value1: '',
                 input: '',
+                modalStatus: 1,
+                modalMsg: '',
                 modalOptions: {
-                    show: true,
+                    show: false,
                     title: ' ',
                     showCancelButton: true,
-                    cancelButtonText: 'ok',
+                    cancelButtonText: '取消',
                     showConfirmButton: true,
-                    confirmButtonText: 'confirm'
+                    confirmButtonText: '確認'
                 }
             };
         },
@@ -151,11 +157,22 @@
         computed: {},
         methods: {
             setInfo() {
-                console.log('保存');
+                this.modalOptions.show = true;
+                this.modalMsg = '登録してよろしいでしょうか？';
+                this.modalStatus = 1;
             },
             toPre() {
-                this.$router.go(-1);
+                this.modalOptions.show = true;
+                this.modalMsg = '台帳に戻ってよろしいでしょうか？';
+                this.modalStatus = 2;
             },
+            doConfirm() {
+                if(this.modalStatus === 1) {
+                    console.log('接口：保存');
+                }else if(this.modalStatus === 2) {
+                    this.$router.push('calendar');
+                }
+            }
         }
     }
 </script>

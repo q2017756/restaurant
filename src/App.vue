@@ -41,7 +41,7 @@ html,body {
 .model-body-txt {
   color: #777;
   font-size: 24px;
-  margin: 45px 0;
+  margin: 45px;
   text-align: center;
 }
 .btn-cancel, .btn-confirm {

@@ -1,33 +1,24 @@
 <template>
     <div class="unified-bg">
-        <app-header></app-header>
+        <app-header :btnShow="isRoot"></app-header>
         <div class="contianer">
             <app-calendar :events="events"
                           :dateItemRender="itemRender"
                           :startWeek="0"
-                          @event-click="test"
+                          @event-click="toNext"
                           @event-dragend="changeDate"></app-calendar>
         </div>
     </div>
 </template>
 
 <script>
-    import AppModal from "../components/AppModal.vue";
     import AppHeader from "../components/AppHeader.vue";
     import AppCalendar from '../components/AppCalendar';
 
     export default {
         data(){
             return {
-                showModal: false,
-                modalOptions: {
-                    show: true,
-                    title: ' ',
-                    showCancelButton: true,
-                    cancelButtonText: 'ok',
-                    showConfirmButton: true,
-                    confirmButtonText: ' '
-                },
+                isRoot: true,
                 events: [
                     {
                         id: 1,
@@ -43,6 +34,22 @@
                         DailyDate: "2017/12/31",
                         TimeKbn: "2",
                         YoyakuLevel: "1",
+                        DayoffKben: "0"
+                    },
+                    {
+                        id: 3,
+                        date: '2018/08/03',
+                        DailyDate: "2017/12/31",
+                        TimeKbn: "1",
+                        YoyakuLevel: "0",
+                        DayoffKben: "0"
+                    },
+                    {
+                        id: 4,
+                        date: '2018/08/03',
+                        DailyDate: "2017/12/31",
+                        TimeKbn: "2",
+                        YoyakuLevel: "2",
                         DayoffKben: "0"
                     }
                 ],
@@ -65,7 +72,6 @@
             };
         },
         components: {
-            AppModal,
             AppHeader,
             AppCalendar
         },
@@ -73,7 +79,7 @@
 
         },
         methods: {
-            test(e, item) {
+            toNext(e, item) {
                 this.$router.push('schedule');
             },
             changeDate(e, item, date) {

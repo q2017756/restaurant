@@ -10,7 +10,7 @@
                     </div>
                     <div class="pull-left">
                         <el-input v-model="input" class="mr30"></el-input>
-                        <el-button class="remarks-btn" type="primary">予約日変更</el-button>
+                        <el-button class="remarks-btn" type="primary" @click="showCalendar">予約日変更</el-button>
                     </div>
                 </div>
             <div class="tab">
@@ -171,40 +171,118 @@
                 <el-button class="remarks-btn" plain>戻る</el-button>
             </div>
         </div>
+        <div v-if="calendarShow" class="calendar-contianer">
+            <a @click="closeCalendar" class="xd xd-close">close</a>
+            <app-calendar :events="events"
+                          :dateItemRender="itemRender"
+                          :startWeek="0"
+                          @date-click="chooseDate"
+                          @event-click="chooseDate2"
+                          @event-dragend="changeDate"></app-calendar>
+        </div>
     </div>
 </template>
 
 <script>
     import AppModal from "../components/AppModal.vue";
     import AppHeader from "../components/AppHeader.vue";
+    import AppCalendar from '../components/AppCalendar';
 
     export default {
         data() {
             return {
-                showModal: false,
                 checkList: [],
                 value: '',
                 options: [],
                 value1: '',
                 input: '',
+                modalMsg: '111',
                 modalOptions: {
-                    show: true,
+                    show: false,
                     title: ' ',
                     showCancelButton: true,
-                    cancelButtonText: 'ok',
+                    cancelButtonText: '取消',
                     showConfirmButton: true,
-                    confirmButtonText: 'confirm'
-                }
+                    confirmButtonText: '確認'
+                },
+                calendarShow: false,
+                events: [
+                    {
+                        id: 1,
+                        date: '2018/08/02',
+                        DailyDate: "2017/12/31",
+                        TimeKbn: "1",
+                        YoyakuLevel: "2",
+                        DayoffKben: "0"
+                    },
+                    {
+                        id: 2,
+                        date: '2018/08/02',
+                        DailyDate: "2017/12/31",
+                        TimeKbn: "2",
+                        YoyakuLevel: "1",
+                        DayoffKben: "0"
+                    },
+                    {
+                        id: 3,
+                        date: '2018/08/03',
+                        DailyDate: "2017/12/31",
+                        TimeKbn: "1",
+                        YoyakuLevel: "0",
+                        DayoffKben: "0"
+                    },
+                    {
+                        id: 4,
+                        date: '2018/08/03',
+                        DailyDate: "2017/12/31",
+                        TimeKbn: "2",
+                        YoyakuLevel: "2",
+                        DayoffKben: "0"
+                    }
+                ],
+                itemRender(item) {
+                    const h = this.$createElement
+                    return h('div',{
+                            class: 'calendar-text-contianer'
+                        },
+                        [
+                            h('span',{
+                                    class: 'calendar-text'
+                                },item.TimeKbn === "1" ? '午餐' : '晚餐'
+                            ),
+                            h('span',{
+                                class: item.YoyakuLevel === '0' ? 'calendar-icon-circle' : (item.YoyakuLevel === '1' ? 'calendar-icon-triangle' : 'calendar-icon-x')
+                            })
+                        ]
+                    )
+                },
             };
         },
         components: {
             AppModal,
-            AppHeader
+            AppHeader,
+            AppCalendar
         },
         computed: {},
         methods: {
-            login() {
-                console.log('登录')
+            showCalendar() {
+                this.calendarShow = true
+            },
+            closeCalendar() {
+                this.calendarShow = false
+            },
+            changeDate(e, item, date) {
+                const updateIndex = this.events.findIndex(ele => ele.id === item.id)
+                this.$set(this.events, updateIndex, {
+                    ...this.events[updateIndex],
+                    date
+                });
+            },
+            chooseDate(e, date) {
+                console.log(date)
+            },
+            chooseDate2(e, item) {
+                console.log(item.date)
             }
         }
     }
@@ -330,6 +408,30 @@
                 margin-left: 30px;
                 padding: 15px 91px;
             }
+        }
+    }
+    .calendar-contianer {
+        position: absolute;
+        top: 200px;
+        left: 15vw;
+        width: 70vw;
+        min-width: 850px;
+        height: 70vh;
+        background: #fff;
+        padding: 10px 100px 10px 10px;
+        border-radius: 5px;
+        box-shadow: 2px 3px 20px 1px #000;
+        .xd-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: inline-block;
+            padding: 10px;
+            border: 1px solid #000;
+            border-radius: 6px;
+            color: #000;
+            font-size: 18px;
+            cursor: pointer;
         }
     }
 </style>
