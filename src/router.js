@@ -49,7 +49,12 @@ export default new Router({
         name: "detailSet",
         component: () =>
             import("./views/DetailSet.vue")
-    },
+    },{
+        path: "/reserveInfo",
+        name: "reserveInfo",
+        component: () =>
+            import("./views/ReserveInfo.vue")
+    }
 
   ]
 });

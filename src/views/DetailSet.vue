@@ -5,7 +5,7 @@
             <div class="tab sel-date">
                 <div class="tab-title pull-left mr30">
                     <span class="title-line"></span>
-                    <span class="title-txt">予约日</span>
+                    <span class="title-txt">予約日</span>
                 </div>
                 <div class="pull-left">
                     <el-date-picker
@@ -15,7 +15,7 @@
                     </el-date-picker>
                 </div>
             </div>
-            <div class="tab clearfix">
+            <div class="tab">
                 <div class="tab-title">
                     <span class="title-line"></span>
                     <span class="title-txt">营业</span>
