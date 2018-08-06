@@ -16,7 +16,7 @@ html,body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
-  text-align: center;
+  // text-align: center;
   color: #2c3e50;
 }
 #nav {
@@ -32,9 +32,9 @@ html,body {
 .unified-bg {
   width: 100vw;
   min-width: 1000px;
-  height: 100vh;
+  height: auto;
   background: url("./assets/img/login-bg.jpg") no-repeat;
-  background-size: 100vw 100vh;
+  background-size: 100% 100%;
   overflow: hidden;
   font-family: 'SimSun';
 }

@@ -11,7 +11,7 @@
         </div>
         <app-modal :options="modalOptions" v-show="modalOptions.show">
             <div slot="body">
-                <p class="model-body-txt">用户名或密码错误111。</p>
+                <p class="model-body-txt">ユーザー名又はパスワードが違いました。</p>
             </div>
         </app-modal>
     </div>

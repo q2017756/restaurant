@@ -30,6 +30,16 @@ export default new Router({
         name: "schedule",
         component: () =>
             import("./views/Schedule.vue")
+    },{
+        path: "/basicSet",
+        name: "basicSet",
+        component: () =>
+            import("./views/BasicSet.vue")
+    },{
+        path: "/detailSet",
+        name: "detailSet",
+        component: () =>
+            import("./views/DetailSet.vue")
     },
 
   ]
