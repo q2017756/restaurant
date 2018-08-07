@@ -118,135 +118,135 @@
 </template>
 
 <script>
-    import AppModal from "../components/AppModal.vue";
-    import AppHeader from "../components/AppHeader.vue";
+import AppModal from "../components/AppModal.vue";
+import AppHeader from "../components/AppHeader.vue";
 
-    export default {
-        data() {
-            return {
-                checkList: [],
-                value: '',
-                options: [],
-                input: '',
-                modalStatus: 1,
-                modalMsg: '',
-                modalOptions: {
-                    show: false,
-                    title: ' ',
-                    showCancelButton: true,
-                    cancelButtonText: '取消',
-                    showConfirmButton: true,
-                    confirmButtonText: '確認'
-                }
-            };
-        },
-        components: {
-            AppModal,
-            AppHeader
-        },
-        computed: {},
-        methods: {
-            toDetail() {
-                this.$router.push('detailSet');
-            },
-            setInfo() {
-                this.modalOptions.show = true;
-                this.modalMsg = '登録してよろしいでしょうか？';
-                this.modalStatus = 1;
-            },
-            toPre() {
-                this.modalOptions.show = true;
-                this.modalMsg = '台帳に戻ってよろしいでしょうか？';
-                this.modalStatus = 2;
-            },
-            doConfirm() {
-                if(this.modalStatus === 1) {
-                    console.log('接口：保存');
-                }else if(this.modalStatus === 2) {
-                    this.$router.push('calendar');
-                }
-            }
-        }
+export default {
+  data() {
+    return {
+      checkList: [],
+      value: "",
+      options: [],
+      input: "",
+      modalStatus: 1,
+      modalMsg: "",
+      modalOptions: {
+        show: false,
+        title: " ",
+        showCancelButton: true,
+        cancelButtonText: "取消",
+        showConfirmButton: true,
+        confirmButtonText: "確認"
+      }
+    };
+  },
+  components: {
+    AppModal,
+    AppHeader
+  },
+  computed: {},
+  methods: {
+    toDetail() {
+      this.$router.push("detailSet");
+    },
+    setInfo() {
+      this.modalOptions.show = true;
+      this.modalMsg = "登録してよろしいでしょうか？";
+      this.modalStatus = 1;
+    },
+    toPre() {
+      this.modalOptions.show = true;
+      this.modalMsg = "台帳に戻ってよろしいでしょうか？";
+      this.modalStatus = 2;
+    },
+    doConfirm() {
+      if (this.modalStatus === 1) {
+        console.log("接口：保存");
+      } else if (this.modalStatus === 2) {
+        this.$router.push("calendar");
+      }
     }
+  }
+};
 </script>
 
 <style scoped lang="scss">
-    .pull-left {
-        float: left;
-    }
-    .pull-right {
-        float: right;
-    }
-    .ml12 {
-        margin-left: 12px;
-    }
-    .mr24 {
+.pull-left {
+  float: left;
+}
+.pull-right {
+  float: right;
+}
+.ml12 {
+  margin-left: 12px;
+}
+.mr24 {
+  margin-right: 24px;
+}
+.contianer {
+  width: 980px;
+  margin: 60px auto;
+  background-color: #fff;
+  padding: 60px 30px 150px 30px;
+  .tab {
+    margin-bottom: 30px;
+    .tab-title {
+      margin-bottom: 30px;
+      font-size: 30px;
+      color: #142343;
+      .title-line {
+        display: inline-block;
+        width: 6px;
+        height: 36px;
         margin-right: 24px;
+        background-color: #ded5a7;
+      }
+      .title-txt {
+        display: inline-block;
+        vertical-align: top;
+      }
     }
-    .contianer {
-        width: 980px;
-        margin: 60px auto;
-        background-color: #fff;
-        padding: 60px 30px 150px 30px;
-        .tab {
-            margin-bottom: 30px;
-            .tab-title {
-                margin-bottom: 30px;
-                font-size: 30px;
-                color: #142343;
-                .title-line {
-                    display: inline-block;
-                    width: 6px;
-                    height: 36px;
-                    margin-right: 24px;
-                    background-color: #ded5a7;
-                }
-                .title-txt {
-                    display: inline-block;
-                    vertical-align: top;
-                }
-            }
-            .group-input .el-input {
-                width: 240px;
-            }
-            .tab-inner {
-                .sel-week .el-checkbox {
-                    border: 1px solid #ddd;
-                    box-shadow: 1px 1px 1px #ddd;
-                    padding: 15px 20px;
-                    span.el-checkbox__label {
-                        font-size: 24px;
-                    }
-                }
-                .time-line {
-                    width: 1px;
-                    height: 100%;
-                    background-color: #ddd;
-                    margin: 0 30px;
-                }
-                .time-wrap {
-                    height: 85px;
-                }
-                .inner-txt {
-                    font-size: 24px;
-                    margin-bottom: 18px;
-                    color: #142343;
-                }
-                .group1 {
-                    margin-bottom: 30px;
-                }
-                .email-input {
-                    width: 590px;
-                }
-            }
-        }
-        .opr-btns {
-            height: 46px;
-            margin-top: 30px;
-            button {
-                margin-left: 30px;
-                padding: 15px 91px;
-            }
-        }
+    .group-input .el-input {
+      width: 240px;
     }
+    .tab-inner {
+      .sel-week .el-checkbox {
+        border: 1px solid #ddd;
+        box-shadow: 1px 1px 1px #ddd;
+        padding: 15px 20px;
+        span.el-checkbox__label {
+          font-size: 24px;
+        }
+      }
+      .time-line {
+        width: 1px;
+        height: 100%;
+        background-color: #ddd;
+        margin: 0 30px;
+      }
+      .time-wrap {
+        height: 85px;
+      }
+      .inner-txt {
+        font-size: 24px;
+        margin-bottom: 18px;
+        color: #142343;
+      }
+      .group1 {
+        margin-bottom: 30px;
+      }
+      .email-input {
+        width: 590px;
+      }
+    }
+  }
+  .opr-btns {
+    height: 46px;
+    margin-top: 30px;
+    button {
+      margin-left: 30px;
+      padding: 15px 91px;
+    }
+  }
+}
 </style>

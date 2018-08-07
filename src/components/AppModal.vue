@@ -30,34 +30,43 @@
 
 <script>
 export default {
-  props: ['options'],
-  data () {
-    return {
-
-    };
+  props: ["options"],
+  data() {
+    return {};
   },
 
   computed: {
-    modal () {
+    modal() {
       let modal = this.options;
       if (modal) {
         modal = {
           show: modal.show || false,
-          title: modal.title || '提示',
-          showCancelButton: typeof modal.showCancelButton === 'undefined' ? true : modal.showCancelButton,
-          cancelButtonText: modal.cancelButtonText ? modal.cancelButtonText : '取消',
-          showConfirmButton: typeof modal.showConfirmButton === 'undefined' ? true : modal.showConfirmButton,
-          confirmButtonText: modal.confirmButtonText ? modal.confirmButtonText : '确定'
+          title: modal.title || "提示",
+          showCancelButton:
+            typeof modal.showCancelButton === "undefined"
+              ? true
+              : modal.showCancelButton,
+          cancelButtonText: modal.cancelButtonText
+            ? modal.cancelButtonText
+            : "取消",
+          showConfirmButton:
+            typeof modal.showConfirmButton === "undefined"
+              ? true
+              : modal.showConfirmButton,
+          confirmButtonText: modal.confirmButtonText
+            ? modal.confirmButtonText
+            : "确定"
         };
-      } else { // 使用时没有传递参数
+      } else {
+        // 使用时没有传递参数
         modal = {
-          title: '提示',
+          title: "提示",
           showCancelButton: true,
-          cancelButtonClass: 'btn-default',
-          cancelButtonText: '取消',
+          cancelButtonClass: "btn-default",
+          cancelButtonText: "取消",
           showConfirmButton: true,
-          confirmButtonClass: 'btn-active',
-          confirmButtonText: '确定'
+          confirmButtonClass: "btn-active",
+          confirmButtonText: "确定"
         };
       }
       return modal;
@@ -66,7 +75,7 @@ export default {
 
   methods: {
     submit() {
-      this.$emit('submit')
+      this.$emit("submit");
     },
     close() {
       this.options.show = false;
@@ -79,27 +88,27 @@ export default {
 .modal-dialog {
   position: absolute;
   left: 50%;
-	top: 50%;
+  top: 50%;
   transform: translate(-50%, -50%);
   width: 600px;
   background: #fff;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   z-index: 1002;
 }
 
 .modal-header {
-	height: 36px;
-	background-color: #ded5a7;
+  height: 36px;
+  background-color: #ded5a7;
 }
 
 .xd-close {
-	float: right;
-	margin-top: 5px;
-	display: inline-block;
-	background: url("../assets/img/btn-close.png") no-repeat;
-	width: 35px;
-	height: 35px;
-	cursor: pointer;
+  float: right;
+  margin-top: 5px;
+  display: inline-block;
+  background: url("../assets/img/btn-close.png") no-repeat;
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
 }
 .modal-footer {
   display: flex;
@@ -107,9 +116,8 @@ export default {
   align-items: center;
 }
 
-
 .modal-footer {
-	margin-bottom: 45px;
+  margin-bottom: 45px;
 }
 
 .modal-backup {
@@ -121,6 +129,6 @@ export default {
   bottom: 0;
   left: 0;
   z-index: 1000;
-  background: rgba(0, 0, 0, .2);
+  background: rgba(0, 0, 0, 0.2);
 }
 </style>

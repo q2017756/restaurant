@@ -8,7 +8,8 @@
 * {
   margin: 0;
 }
-html,body {
+html,
+body {
   height: 100%;
 }
 #app {
@@ -36,7 +37,7 @@ html,body {
   background: url("./assets/img/login-bg.jpg") no-repeat;
   background-size: 100% 100%;
   overflow: scroll;
-  font-family: 'SimSun';
+  font-family: "SimSun";
 }
 .model-body-txt {
   color: #777;
@@ -44,7 +45,8 @@ html,body {
   margin: 45px;
   text-align: center;
 }
-.btn-cancel, .btn-confirm {
+.btn-cancel,
+.btn-confirm {
   display: block;
   text-align: center;
   padding-top: 10px;
@@ -79,7 +81,9 @@ html,body {
   border: 1px solid #142343;
   font-size: 16px;
 }
-.calendar-icon-triangle, .calendar-icon-x, .calendar-icon-circle {
+.calendar-icon-triangle,
+.calendar-icon-x,
+.calendar-icon-circle {
   display: inline-block;
   width: 30px;
   height: 30px;

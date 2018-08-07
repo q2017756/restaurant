@@ -13,118 +13,119 @@
         <ul class="month-selector">
             <li v-for="n in 12"
                 :class="{prev: n < (currentMonth + 1), current: n === currentMonth + 1, active: n === month + 1}"
+                :key="n"
                 @click="updateValue(year,n - 1)">{{n}}</li>
         </ul>
     </div>
 </template>
 <script>
-import { calcPrevMonth, calcNextMonth } from './utils'
-import picker from './picker'
+import { calcPrevMonth, calcNextMonth } from "./utils";
+import picker from "./picker";
 
 export default {
-    components: {
-        picker
+  components: {
+    picker
+  },
+  props: {
+    year: Number,
+    month: Number,
+    currentMonth: Number,
+    day: Number
+  },
+  data() {
+    return {
+      pickerVisible: false
+    };
+  },
+  computed: {},
+  methods: {
+    updateValue(year, month = this.month) {
+      this.$emit("updateValue", year, month);
     },
-    props: {
-        year: Number,
-        month: Number,
-        currentMonth: Number,
-        day: Number
+    prevYear() {
+      this.updateValue(this.year - 1);
     },
-    data() {
-        return {
-            pickerVisible: false,
-        }
+    nextYear() {
+      this.updateValue(this.year + 1);
     },
-    computed: {
-
+    prevMonth() {
+      const { year, month } = calcPrevMonth(this.year, this.month);
+      this.updateValue(year, month);
     },
-    methods: {
-        updateValue(year, month = this.month) {
-            this.$emit('updateValue', year, month)
-        },
-        prevYear() {
-            this.updateValue(this.year - 1)
-        },
-        nextYear() {
-            this.updateValue(this.year + 1)
-        },
-        prevMonth() {
-            const { year, month } = calcPrevMonth(this.year, this.month)
-            this.updateValue(year, month)
-        },
-        nextMonth() {
-            const { year, month } = calcNextMonth(this.year, this.month)
-            this.updateValue(year, month)
-        },
-        clickOutSide(e) {
-            if (this.pickerVisible && !this.$refs.picker.contains(e.target)) {
-                this.pickerVisible = false
-            }
-        }
+    nextMonth() {
+      const { year, month } = calcNextMonth(this.year, this.month);
+      this.updateValue(year, month);
     },
-
-    created() {
-        document.addEventListener('mouseup', this.clickOutSide)
-    },
-    destoryed() {
-        document.removeEventListener('mouseup', this.clickOutSide)
+    clickOutSide(e) {
+      if (this.pickerVisible && !this.$refs.picker.contains(e.target)) {
+        this.pickerVisible = false;
+      }
     }
-}
+  },
+
+  created() {
+    document.addEventListener("mouseup", this.clickOutSide);
+  },
+  destoryed() {
+    document.removeEventListener("mouseup", this.clickOutSide);
+  }
+};
 </script>
 <style scoped lang="scss">
 @import "variables.scss";
 
 .header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 24px;
+  .year-selector {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 24px;
-    .year-selector{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        img {
-            padding: 10px;
-            &:first-child {
-                padding-left: 0;
-            }
-        }
+    img {
+      padding: 10px;
+      &:first-child {
+        padding-left: 0;
+      }
     }
+  }
 }
-ul, li {
-    list-style: none;
+ul,
+li {
+  list-style: none;
 }
 .month-selector {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 0;
-    border: 1px solid #DFD4A7;
-    font-size: 24px;
-    li {
-        flex: 1;
-        height: 50px;
-        background: #DED5A7;
-        border: 1px solid transparent;
-        border-right: 1px solid #fff;
-        text-align: center;
-        line-height: 50px;
-        color: #fff;
-        cursor: pointer;
-        &:last-child {
-            border-right: 0 solid #fff;
-        }
-        &.prev {
-            background: #F1EEDE;
-        }
-        &.current {
-            background: #fff;
-            color: #142343;
-        }
-        &.active, &:hover {
-            background: #2196f3;
-        }
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0;
+  border: 1px solid #dfd4a7;
+  font-size: 24px;
+  li {
+    flex: 1;
+    height: 50px;
+    background: #ded5a7;
+    border: 1px solid transparent;
+    border-right: 1px solid #fff;
+    text-align: center;
+    line-height: 50px;
+    color: #fff;
+    cursor: pointer;
+    &:last-child {
+      border-right: 0 solid #fff;
     }
+    &.prev {
+      background: #f1eede;
+    }
+    &.current {
+      background: #fff;
+      color: #142343;
+    }
+    &.active,
+    &:hover {
+      background: #2196f3;
+    }
+  }
 }
 </style>

@@ -175,7 +175,7 @@
         </div>
         <div v-if="calendarShow" class="calendar-contianer">
             <a @click="closeCalendar" class="xd xd-close">close</a>
-            <app-calendar :events="events"
+            <app-calendar :events="data"
                           :dateItemRender="itemRender"
                           :startWeek="0"
                           @date-click="chooseDate"
@@ -191,270 +191,280 @@
 </template>
 
 <script>
-    import AppModal from "../components/AppModal.vue";
-    import AppHeader from "../components/AppHeader.vue";
-    import AppCalendar from '../components/AppCalendar';
+import AppModal from "../components/AppModal.vue";
+import AppHeader from "../components/AppHeader.vue";
+import AppCalendar from "../components/AppCalendar";
 
-    export default {
-        data() {
-            return {
-                checkList: [],
-                value: '',
-                options: [],
-                value1: '',
-                input: '',
-                modalMsg: '111',
-                modalOptions: {
-                    show: false,
-                    title: ' ',
-                    showCancelButton: true,
-                    cancelButtonText: '取消',
-                    showConfirmButton: true,
-                    confirmButtonText: '確認'
-                },
-                calendarShow: false,
-                events: [
-                    {
-                        id: 1,
-                        date: '2018/08/02',
-                        DailyDate: "2017/12/31",
-                        TimeKbn: "1",
-                        YoyakuLevel: "2",
-                        DayoffKben: "0"
-                    },
-                    {
-                        id: 2,
-                        date: '2018/08/02',
-                        DailyDate: "2017/12/31",
-                        TimeKbn: "2",
-                        YoyakuLevel: "1",
-                        DayoffKben: "0"
-                    },
-                    {
-                        id: 3,
-                        date: '2018/08/03',
-                        DailyDate: "2017/12/31",
-                        TimeKbn: "1",
-                        YoyakuLevel: "0",
-                        DayoffKben: "0"
-                    },
-                    {
-                        id: 4,
-                        date: '2018/08/03',
-                        DailyDate: "2017/12/31",
-                        TimeKbn: "2",
-                        YoyakuLevel: "2",
-                        DayoffKben: "0"
-                    }
-                ],
-                itemRender(item) {
-                    const h = this.$createElement
-                    return h('div',{
-                            class: 'calendar-text-contianer'
-                        },
-                        [
-                            h('span',{
-                                    class: 'calendar-text'
-                                },item.TimeKbn === "1" ? '午餐' : '晚餐'
-                            ),
-                            h('span',{
-                                class: item.YoyakuLevel === '0' ? 'calendar-icon-circle' : (item.YoyakuLevel === '1' ? 'calendar-icon-triangle' : 'calendar-icon-x')
-                            })
-                        ]
-                    )
-                },
-            };
+export default {
+  data() {
+    return {
+      checkList: [],
+      value: "",
+      options: [],
+      value1: "",
+      input: "",
+      modalMsg: "111",
+      modalOptions: {
+        show: false,
+        title: " ",
+        showCancelButton: true,
+        cancelButtonText: "取消",
+        showConfirmButton: true,
+        confirmButtonText: "確認"
+      },
+      calendarShow: false,
+      data: [
+        {
+          id: 1,
+          date: "2018/08/02",
+          DailyDate: "2017/12/31",
+          TimeKbn: "1",
+          YoyakuLevel: "2",
+          DayoffKben: "0"
         },
-        components: {
-            AppModal,
-            AppHeader,
-            AppCalendar
+        {
+          id: 2,
+          date: "2018/08/02",
+          DailyDate: "2017/12/31",
+          TimeKbn: "2",
+          YoyakuLevel: "1",
+          DayoffKben: "0"
         },
-        computed: {},
-        methods: {
-            login() {
-                this.modalOptions.show = true
-                this.modalMsg = '登録してよろしいでしょうか？'
-            },
-            sign() {
-                this.modalOptions.show = true
-                this.modalMsg = '台帳に戻ってよろしいでしょうか？'
-            },
-            cancel() {
-                this.modalOptions.show = true
-                this.modalMsg = '予約をキャンセルしてよろしいでしょうか？'
-            },
-            delReserve() {
-                this.modalOptions.show = true
-                this.modalMsg = '予約データを削除してよろしいでしょうか？'
-            },
-            showCalendar() {
-                this.calendarShow = true
-            },
-            closeCalendar() {
-                this.calendarShow = false
-            },
-            changeDate(e, item, date) {
-                const updateIndex = this.events.findIndex(ele => ele.id === item.id)
-                this.$set(this.events, updateIndex, {
-                    ...this.events[updateIndex],
-                    date
-                });
-            },
-            chooseDate(e, date) {
-                console.log(date)
-            },
-            chooseDate2(e, item) {
-                console.log(item.date)
-            }
+        {
+          id: 3,
+          date: "2018/08/03",
+          DailyDate: "2017/12/31",
+          TimeKbn: "1",
+          YoyakuLevel: "0",
+          DayoffKben: "0"
+        },
+        {
+          id: 4,
+          date: "2018/08/03",
+          DailyDate: "2017/12/31",
+          TimeKbn: "2",
+          YoyakuLevel: "2",
+          DayoffKben: "0"
         }
+      ],
+      itemRender(item) {
+        const h = this.$createElement;
+        return h(
+          "div",
+          {
+            class: "calendar-text-contianer"
+          },
+          [
+            h(
+              "span",
+              {
+                class: "calendar-text"
+              },
+              item.TimeKbn === "1" ? "午餐" : "晚餐"
+            ),
+            h("span", {
+              class:
+                item.YoyakuLevel === "0"
+                  ? "calendar-icon-circle"
+                  : item.YoyakuLevel === "1"
+                    ? "calendar-icon-triangle"
+                    : "calendar-icon-x"
+            })
+          ]
+        );
+      }
+    };
+  },
+  components: {
+    AppModal,
+    AppHeader,
+    AppCalendar
+  },
+  computed: {},
+  methods: {
+    login() {
+      this.modalOptions.show = true;
+      this.modalMsg = "登録してよろしいでしょうか？";
+    },
+    sign() {
+      this.modalOptions.show = true;
+      this.modalMsg = "台帳に戻ってよろしいでしょうか？";
+    },
+    cancel() {
+      this.modalOptions.show = true;
+      this.modalMsg = "予約をキャンセルしてよろしいでしょうか？";
+    },
+    delReserve() {
+      this.modalOptions.show = true;
+      this.modalMsg = "予約データを削除してよろしいでしょうか？";
+    },
+    showCalendar() {
+      this.calendarShow = true;
+    },
+    closeCalendar() {
+      this.calendarShow = false;
+    },
+    changeDate(e, item, date) {
+      const updateIndex = this.events.findIndex(ele => ele.id === item.id);
+      this.$set(this.events, updateIndex, {
+        ...this.events[updateIndex],
+        date
+      });
+    },
+    chooseDate(e, date) {
+      console.log(date);
+    },
+    chooseDate2(e, item) {
+      console.log(item.date);
     }
+  }
+};
 </script>
 
 <style scoped lang="scss">
-    .pull-left {
-        float: left;
+.pull-left {
+  float: left;
+}
+.pull-right {
+  float: right;
+}
+.ml12 {
+  margin-left: 12px;
+}
+.mr24 {
+  margin-right: 24px;
+}
+.mr30 {
+  margin-right: 30px;
+}
+.mb20 {
+  margin-bottom: 20px;
+}
+.mb30 {
+  margin-bottom: 30px;
+}
+.contianer {
+  width: 1100px;
+  margin: 60px auto;
+  background-color: #fff;
+  padding: 60px 30px 150px 30px;
+  overflow: hidden;
+  .inner-left {
+    width: 49%;
+    border-right: 1px solid #ddd;
+  }
+  .inner-right {
+    width: 49%;
+    height: 1232px;
+  }
+  .sel-date {
+    height: 42px;
+    .el-input {
+      width: 240px;
     }
-    .pull-right {
-        float: right;
+  }
+  .tab {
+    margin-bottom: 30px;
+    .group-input .el-input {
+      width: 240px;
     }
-    .ml12 {
-        margin-left: 12px;
-    }
-    .mr24 {
+    .tab-title {
+      margin-bottom: 30px;
+      font-size: 30px;
+      color: #142343;
+      .title-line {
+        display: inline-block;
+        width: 6px;
+        height: 36px;
         margin-right: 24px;
+        background-color: #ded5a7;
+      }
+      .title-txt {
+        display: inline-block;
+        vertical-align: top;
+      }
     }
-    .mr30 {
-        margin-right: 30px;
-    }
-    .mb20 {
-        margin-bottom: 20px;
-    }
-    .mb30 {
+    .tab-inner {
+      .sel-week .el-checkbox {
+        border: 1px solid #ddd;
+        box-shadow: 1px 1px 1px #ddd;
+        padding: 15px 20px;
+        span.el-checkbox__label {
+          font-size: 24px;
+        }
+      }
+      .time-line {
+        width: 1px;
+        height: 100%;
+        background-color: #ddd;
+        margin: 0 30px;
+      }
+      .time-wrap {
+        height: auto;
+      }
+      .tel-input {
+        width: 510px;
+      }
+      .group-input .el-input {
+        width: 240px;
+      }
+      .inner-txt {
+        font-size: 24px;
+        margin-bottom: 18px;
+        color: #142343;
+      }
+      .group1 {
         margin-bottom: 30px;
+      }
     }
-    .contianer {
-        width: 1100px;
-        margin: 60px auto;
-        background-color: #fff;
-        padding: 60px 30px 150px 30px;
-        overflow: hidden;
-        .inner-left {
-            width: 49%;
-            border-right: 1px solid #ddd;
-        }
-        .inner-right {
-            width: 49%;
-            height: 1232px;
-        }
-        .sel-date {
-            height: 42px;
-            .el-input {
-                width: 240px;
-            }
-        }
-        .tab {
-            margin-bottom: 30px;
-            .group-input .el-input {
-                width: 240px;
-            }
-            .tab-title {
-                margin-bottom: 30px;
-                font-size: 30px;
-                color: #142343;
-                .title-line {
-                    display: inline-block;
-                    width: 6px;
-                    height: 36px;
-                    margin-right: 24px;
-                    background-color: #ded5a7;
-                }
-                .title-txt {
-                    display: inline-block;
-                    vertical-align: top;
-                }
-            }
-            .tab-inner {
-                .sel-week .el-checkbox {
-                    border: 1px solid #ddd;
-                    box-shadow: 1px 1px 1px #ddd;
-                    padding: 15px 20px;
-                    span.el-checkbox__label {
-                        font-size: 24px;
-                    }
-                }
-                .time-line {
-                    width: 1px;
-                    height: 100%;
-                    background-color: #ddd;
-                    margin: 0 30px;
-                }
-                .time-wrap {
-                    height: auto;
-                }
-                .tel-input {
-                    width: 510px;
-                }
-                .group-input .el-input {
-                    width: 240px;
-                }
-                .inner-txt {
-                    font-size: 24px;
-                    margin-bottom: 18px;
-                    color: #142343;
-                }
-                .group1 {
-                    margin-bottom: 30px;
-                }
-            }
-            .info {
-                height: 110px;
-                .el-input {
-                    width: 240px;
-                }
-            }
-            .name-wrap {
-                margin-top: 4px;
-            }
-            .remark {
-                .el-checkbox {
-                    .el-checkbox__label {
-                        font-size: 24px;
-                    }
-                }
-            }
-        }
-        .opr-btns {
-            height: 46px;
-            margin-top: 30px;
-            button {
-                margin-left: 30px;
-                padding: 15px 91px;
-            }
-        }
+    .info {
+      height: 110px;
+      .el-input {
+        width: 240px;
+      }
     }
-    .calendar-contianer {
-        position: absolute;
-        top: 200px;
-        left: 15vw;
-        width: 70vw;
-        min-width: 850px;
-        height: 70vh;
-        background: #fff;
-        padding: 10px 100px 10px 10px;
-        border-radius: 5px;
-        box-shadow: 2px 3px 20px 1px #000;
-        .xd-close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            display: inline-block;
-            padding: 10px;
-            border: 1px solid #000;
-            border-radius: 6px;
-            color: #000;
-            font-size: 18px;
-            cursor: pointer;
-        }
+    .name-wrap {
+      margin-top: 4px;
     }
+    .remark {
+      .el-checkbox {
+        .el-checkbox__label {
+          font-size: 24px;
+        }
+      }
+    }
+  }
+  .opr-btns {
+    height: 46px;
+    margin-top: 30px;
+    button {
+      margin-left: 30px;
+      padding: 15px 91px;
+    }
+  }
+}
+.calendar-contianer {
+  position: absolute;
+  top: 200px;
+  left: 15vw;
+  width: 70vw;
+  min-width: 850px;
+  height: 70vh;
+  background: #fff;
+  padding: 10px 100px 10px 10px;
+  border-radius: 5px;
+  box-shadow: 2px 3px 20px 1px #000;
+  .xd-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: inline-block;
+    padding: 10px;
+    border: 1px solid #000;
+    border-radius: 6px;
+    color: #000;
+    font-size: 18px;
+    cursor: pointer;
+  }
+}
 </style>

@@ -1,7 +1,7 @@
-import calendar from './calendar'
+import calendar from "./calendar";
 
-export default calendar
+export default calendar;
 
 if (window.Vue) {
-    Vue.component(calendar.name, calendar)
+  Vue.component(calendar.name, calendar);
 }
