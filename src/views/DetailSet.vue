@@ -222,13 +222,17 @@ export default {
         vertical-align: top;
       }
     }
-    .tab-inner {
-      .sel-week .el-checkbox {
-        border: 1px solid #ddd;
-        box-shadow: 1px 1px 1px #ddd;
-        padding: 15px 20px;
-        span.el-checkbox__label {
-          font-size: 24px;
+    .mr30 {
+        margin-right: 30px;
+    }
+    .contianer {
+        background: url('../assets/img/set-bg.png') no-repeat;
+        width: 980px;
+        margin: 60px auto;
+        background-color: #fff;
+        padding: 60px 30px 150px 30px;
+        .sel-date {
+            height: 42px;
         }
       }
       .time-line {

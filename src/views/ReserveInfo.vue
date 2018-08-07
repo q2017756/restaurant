@@ -426,12 +426,106 @@ export default {
     .name-wrap {
       margin-top: 4px;
     }
-    .remark {
-      .el-checkbox {
-        .el-checkbox__label {
-          font-size: 24px;
+    .contianer {
+        width: 1100px;
+        background: url('../assets/img/info-bg.png') no-repeat;
+        margin: 60px auto;
+        background-color: #fff;
+        padding: 60px 30px 150px 30px;
+        overflow: hidden;
+        .inner-left {
+            width: 49%;
+            border-right: 1px solid #ddd;
         }
-      }
+        .inner-right {
+            width: 49%;
+            margin-top: 391px;
+        }
+        .sel-date {
+            height: 42px;
+            .el-input {
+                width: 240px;
+            }
+        }
+        .tab {
+            margin-bottom: 30px;
+            .group-input .el-input {
+                width: 240px;
+            }
+            .tab-title {
+                margin-bottom: 30px;
+                font-size: 30px;
+                color: #142343;
+                .title-line {
+                    display: inline-block;
+                    width: 6px;
+                    height: 36px;
+                    margin-right: 24px;
+                    background-color: #ded5a7;
+                }
+                .title-txt {
+                    display: inline-block;
+                    vertical-align: top;
+                }
+            }
+            .tab-inner {
+                .sel-week .el-checkbox {
+                    border: 1px solid #ddd;
+                    box-shadow: 1px 1px 1px #ddd;
+                    padding: 15px 20px;
+                    span.el-checkbox__label {
+                        font-size: 24px;
+                    }
+                }
+                .time-line {
+                    width: 1px;
+                    height: 100%;
+                    background-color: #ddd;
+                    margin: 0 30px;
+                }
+                .time-wrap {
+                    height: auto;
+                }
+                .tel-input {
+                    width: 510px;
+                }
+                .group-input .el-input {
+                    width: 240px;
+                }
+                .inner-txt {
+                    font-size: 24px;
+                    margin-bottom: 18px;
+                    color: #142343;
+                }
+                .group1 {
+                    margin-bottom: 30px;
+                }
+            }
+            .info {
+                height: 110px;
+                .el-input {
+                    width: 240px;
+                }
+            }
+            .name-wrap {
+                margin-top: 4px;
+            }
+            .remark {
+                .el-checkbox {
+                    .el-checkbox__label {
+                        font-size: 24px;
+                    }
+                }
+            }
+        }
+        .opr-btns {
+            height: 46px;
+            margin-top: 30px;
+            button {
+                margin-left: 30px;
+                padding: 15px 91px;
+            }
+        }
     }
   }
   .opr-btns {

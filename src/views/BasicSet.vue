@@ -206,16 +206,63 @@ export default {
         vertical-align: top;
       }
     }
-    .group-input .el-input {
-      width: 240px;
-    }
-    .tab-inner {
-      .sel-week .el-checkbox {
-        border: 1px solid #ddd;
-        box-shadow: 1px 1px 1px #ddd;
-        padding: 15px 20px;
-        span.el-checkbox__label {
-          font-size: 24px;
+    .contianer {
+        background: url('../assets/img/set-bg.png') no-repeat;
+        width: 980px;
+        margin: 60px auto;
+        background-color: #fff;
+        padding: 60px 30px 150px 30px;
+        .tab {
+            margin-bottom: 30px;
+            .tab-title {
+                margin-bottom: 30px;
+                font-size: 30px;
+                color: #142343;
+                .title-line {
+                    display: inline-block;
+                    width: 6px;
+                    height: 36px;
+                    margin-right: 24px;
+                    background-color: #ded5a7;
+                }
+                .title-txt {
+                    display: inline-block;
+                    vertical-align: top;
+                }
+            }
+            .group-input .el-input {
+                width: 240px;
+            }
+            .tab-inner {
+                .sel-week .el-checkbox {
+                    border: 1px solid #ddd;
+                    box-shadow: 1px 1px 1px #ddd;
+                    padding: 15px 20px;
+                    span.el-checkbox__label {
+                        font-size: 24px;
+                    }
+                }
+                .time-line {
+                    width: 1px;
+                    height: 100%;
+                    background-color: #ddd;
+                    margin: 0 30px;
+                }
+                .time-wrap {
+                    height: 85px;
+                }
+                .inner-txt {
+                    font-size: 24px;
+                    margin-bottom: 18px;
+                    color: #142343;
+                }
+                .group1 {
+                    margin-bottom: 30px;
+                }
+                .email-input {
+                    width: 590px;
+                }
+            }
         }
       }
       .time-line {
