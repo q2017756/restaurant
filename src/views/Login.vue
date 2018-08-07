@@ -46,11 +46,11 @@
             login() {
                 if(!this.username || !this.password){
                     this.modalOptions.show = true;
-                    this.modalMsg = 'ユーザー名又はパスワードが違いました。';
+                    this.modalMsg = '账号密码不能为空';
                 }else {
                     if(this.username !== '1' || this.password !== '1') {
                         this.modalOptions.show = true;
-                        this.modalMsg = 'asdasd';
+                        this.modalMsg = 'ユーザー名又はパスワードが違いました。';
                     }else {
                         this.$router.push('calendar');
                     }
