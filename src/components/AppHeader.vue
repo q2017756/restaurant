@@ -48,10 +48,11 @@ export default {
 <style scoped lang="scss">
   .header {
     position: relative;
-    height: 90px;
+    height: 50px;
+    padding-left: 60px;
     background: url("../assets/img/header-bg.png");
-    text-align: center;
-    line-height: 90px;
+    text-align: left;
+    line-height: 50px;
     color: #dbbe77;
   }
   .right-btn {
@@ -63,8 +64,9 @@ export default {
     align-items: center;
     box-sizing: border-box;
     padding: 10px;
-    line-height: 60px;
+    line-height: 30px;
     font-size: 24px;
+    cursor: pointer;
     img {
       margin-right: 10px;
     }

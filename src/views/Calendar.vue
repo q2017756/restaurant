@@ -80,6 +80,11 @@
         },
         methods: {
             toNext(e, item) {
+                if(item.TimeKbn === "1") {
+                    localStorage.mealsType = '1';
+                } else {
+                    localStorage.mealsType = '2';
+                }
                 this.$router.push('schedule');
             },
             changeDate(e, item, date) {

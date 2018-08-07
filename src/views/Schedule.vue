@@ -143,10 +143,12 @@
             },
             toAdd() {
                 if(this.status === 1 || this.status === 2) {
+                    localStorage.setInfoType = 1;
                     this.$router.push('reserveInfo');
                 }
             },
             toEdit() {
+                localStorage.setInfoType = 2;
                 this.$router.push('reserveInfo');
             },
             saveAndLeave() {

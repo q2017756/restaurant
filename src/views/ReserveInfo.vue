@@ -3,7 +3,7 @@
         <app-header></app-header>
         <div class="contianer">
             <div class="inner-left pull-left">
-                <div class="tab sel-date">
+                <div v-show="setInfoType === '1' ? false : true" class="tab sel-date">
                     <div class="tab-title pull-left mr30">
                         <span class="title-line"></span>
                         <span class="title-txt">予約日</span>
@@ -175,7 +175,7 @@
         </div>
         <div v-if="calendarShow" class="calendar-contianer">
             <a @click="closeCalendar" class="xd xd-close">close</a>
-            <app-calendar :events="events"
+            <app-calendar :events="eventsData"
                           :dateItemRender="itemRender"
                           :startWeek="0"
                           @date-click="chooseDate"
@@ -198,6 +198,7 @@
     export default {
         data() {
             return {
+                setInfoType: localStorage.setInfoType,
                 checkList: [],
                 value: '',
                 options: [],
@@ -270,7 +271,12 @@
             AppHeader,
             AppCalendar
         },
-        computed: {},
+        computed: {
+            eventsData() {
+                let arr = this.events.filter(item=>item.TimeKbn === localStorage.mealsType);
+                return arr;
+            }
+        },
         methods: {
             login() {
                 this.modalOptions.show = true
@@ -360,7 +366,7 @@
                 width: 240px;
             }
             .tab-title {
-                margin-bottom: 30px;
+                margin-bottom: 25px;
                 font-size: 30px;
                 color: #142343;
                 .title-line {
