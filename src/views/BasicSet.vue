@@ -295,5 +295,4 @@ export default {
       padding: 15px 91px;
     }
   }
-}
 </style>
