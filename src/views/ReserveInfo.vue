@@ -335,6 +335,7 @@
     }
     .contianer {
         width: 1100px;
+        background: url('../assets/img/info-bg.png') no-repeat;
         margin: 60px auto;
         background-color: #fff;
         padding: 60px 30px 150px 30px;
@@ -345,7 +346,7 @@
         }
         .inner-right {
             width: 49%;
-            height: 1232px;
+            margin-top: 391px;
         }
         .sel-date {
             height: 42px;

@@ -184,6 +184,7 @@
         margin-right: 24px;
     }
     .contianer {
+        background: url('../assets/img/set-bg.png') no-repeat;
         width: 980px;
         margin: 60px auto;
         background-color: #fff;
