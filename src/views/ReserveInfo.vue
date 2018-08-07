@@ -167,8 +167,10 @@
                 </div>
             </div>
             <div class="opr-btns pull-right">
-                <el-button class="remarks-btn" type="primary">登録</el-button>
-                <el-button class="remarks-btn" plain>戻る</el-button>
+                <el-button class="remarks-btn" type="primary" @click="login()">登録</el-button>
+                <el-button class="remarks-btn" plain @click="sign()">戻る</el-button>
+                <el-button class="remarks-btn" plain @click="cancel()">予約ＣＸＬ</el-button>
+                <el-button class="remarks-btn" plain @click="delReserve()">データ削除</el-button>
             </div>
         </div>
         <div v-if="calendarShow" class="calendar-contianer">
@@ -180,6 +182,11 @@
                           @event-click="chooseDate2"
                           @event-dragend="changeDate"></app-calendar>
         </div>
+        <app-modal :options="modalOptions" v-show="modalOptions.show">
+            <div slot="body">
+                <p class="model-body-txt">{{ modalMsg }}</p>
+            </div>
+        </app-modal>
     </div>
 </template>
 
@@ -265,6 +272,22 @@
         },
         computed: {},
         methods: {
+            login() {
+                this.modalOptions.show = true
+                this.modalMsg = '登録してよろしいでしょうか？'
+            },
+            sign() {
+                this.modalOptions.show = true
+                this.modalMsg = '台帳に戻ってよろしいでしょうか？'
+            },
+            cancel() {
+                this.modalOptions.show = true
+                this.modalMsg = '予約をキャンセルしてよろしいでしょうか？'
+            },
+            delReserve() {
+                this.modalOptions.show = true
+                this.modalMsg = '予約データを削除してよろしいでしょうか？'
+            },
             showCalendar() {
                 this.calendarShow = true
             },
