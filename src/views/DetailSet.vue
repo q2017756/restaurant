@@ -195,10 +195,10 @@
     }
     .contianer {
         background: url('../assets/img/set-bg.png') no-repeat;
-        width: 980px;
+        width: 1080px;
         margin: 60px auto;
         background-color: #fff;
-        padding: 60px 30px 150px 30px;
+        padding: 60px 30px 135px 30px;
         .sel-date {
             height: 42px;
         }
@@ -240,6 +240,9 @@
                 }
                 .time-wrap {
                     height: 85px;
+                    .el-select {
+                        width: 240px;
+                    }
                 }
                 .group-input .el-input {
                     width: 240px;
