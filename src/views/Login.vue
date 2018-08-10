@@ -2,11 +2,11 @@
     <div class="unified-bg">
         <div class="container">
             <div class="form">
-                <h1 class="title">酒店餐厅预订</h1>
-                <p class="sub-title">管理平台</p>
+                <h1 class="title">レストラン予約</h1>
+                <p class="sub-title">システム</p>
                 <input class="username" type="text" v-model="username">
                 <input class="pwd" type="password" v-model="password">
-                <div class="login-btn" @click="login">登录</div>
+                <div class="login-btn" @click="login">登録</div>
             </div>
         </div>
         <app-modal :options="modalOptions" v-show="modalOptions.show">
@@ -46,7 +46,7 @@
             login() {
                 if(!this.username || !this.password){
                     this.modalOptions.show = true;
-                    this.modalMsg = '账号密码不能为空';
+                    this.modalMsg = 'アカウントとパスワードは空けてはいけません';
                 }else {
                     if(this.username !== '1' || this.password !== '1') {
                         this.modalOptions.show = true;
@@ -90,6 +90,7 @@
     }
     .title {
         letter-spacing: 3px;
+        white-space: nowrap;
     }
     .sub-title {
         margin: 9px 0 15px;

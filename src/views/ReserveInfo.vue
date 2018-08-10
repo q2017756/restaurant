@@ -141,7 +141,7 @@
                     </div>
                     <div class="info">
                         <div class="pull-left">
-                            <div class="inner-txt">婚礼</div>
+                            <div class="inner-txt">結婚式</div>
                             <el-input v-model="input" class="mr30"></el-input>
                         </div>
                         <div class="pull-left">
@@ -154,7 +154,7 @@
                 <div class="tab">
                 <div class="tab-title">
                     <span class="title-line"></span>
-                    <span class="title-txt">备注</span>
+                    <span class="title-txt">備考</span>
                 </div>
                 <div class="tab-inner remark">
                     <div class="inner-txt mb20">料理詳細<el-checkbox class="pull-right" label="強調" name="type"></el-checkbox></div>

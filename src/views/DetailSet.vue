@@ -11,7 +11,7 @@
                     <el-date-picker
                         v-model="value1"
                         type="date"
-                        placeholder="选择日期">
+                        placeholder="日付選択">
                     </el-date-picker>
                 </div>
             </div>
@@ -86,16 +86,16 @@
                 <div class="tab-inner">
                     <div class="inner-txt">△</div>
                     <div class="group-input group1">
-                        <el-input v-model="input" placeholder="请输入内容"></el-input>
+                        <el-input v-model="input" placeholder="内容を入力してください"></el-input>
                         <span class="ml12 mr24">組以上</span>
-                        <el-input v-model="input" placeholder="请输入内容"></el-input>
+                        <el-input v-model="input" placeholder="内容を入力してください"></el-input>
                         <span class="ml12">人以上</span>
                     </div>
                     <div class="inner-txt">x</div>
                     <div class="group-input">
-                        <el-input v-model="input" placeholder="请输入内容"></el-input>
+                        <el-input v-model="input" placeholder="内容を入力してください"></el-input>
                         <span class="ml12 mr24">組以上</span>
-                        <el-input v-model="input" placeholder="请输入内容"></el-input>
+                        <el-input v-model="input" placeholder="内容を入力してください"></el-input>
                         <span class="ml12">人以上</span>
                     </div>
                 </div>
