@@ -12,12 +12,13 @@ export default {
     data() {
         return {
             cn: ['日', '一', '二', '三', '四', '五', '六'],
+            japanese: ['日','月', '火', '水', '木', '金', '土'],
             en: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
         }
     },
     computed: {
         weeks() {
-            return this.startWeek === 0 ? this.cn : this.cn.concat(this.cn.splice(0, this.startWeek))
+            return this.startWeek === 0 ? this.cn : this.japanese.concat(this.japanese.splice(0, this.startWeek))
         }
     }
 }

@@ -256,7 +256,7 @@
                         [
                             h('span',{
                                     class: 'calendar-text'
-                                },item.TimeKbn === "1" ? '午餐' : '晚餐'
+                                },item.TimeKbn === "1" ? 'ランチ' : 'ディナー'
                             ),
                             h('span',{
                                 class: item.YoyakuLevel === '0' ? 'calendar-icon-circle' : (item.YoyakuLevel === '1' ? 'calendar-icon-triangle' : 'calendar-icon-x')

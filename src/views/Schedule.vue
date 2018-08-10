@@ -41,7 +41,7 @@
                         <th>人数（子供）</th>
                         <th>TEL</th>
                         <th colspan="2">その他備考</th>
-                        <th></th>
+                        <th>受者</th>
                         <th colspan="2">婚礼・個人履歴</th>
                         <th></th>
                     </tr>

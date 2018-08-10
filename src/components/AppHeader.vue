@@ -1,6 +1,6 @@
 <template>
   <div class="header">
-    <h1>予約システム</h1>
+    <h1>レストラン予約システム</h1>
     <span class="right-btn" v-show="btnShow" @click="doSth">
       <img class="" src="/img/administ.png" alt="">
       <span>システム管理</span>

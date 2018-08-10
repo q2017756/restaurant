@@ -23,7 +23,7 @@
             <div class="tab">
                 <div class="tab-title">
                     <span class="title-line"></span>
-                    <span class="title-txt">起止时间</span>
+                    <span class="title-txt">営業日</span>
                 </div>
                 <div class="tab-inner">
                     <div class="time-wrap">
@@ -49,7 +49,7 @@
                     </div>
                     <div class="time-line pull-left"></div>
                     <div class="pull-left">
-                        <div class="inner-txt">ランチ</div>
+                        <div class="inner-txt">ディナー</div>
                         <el-select v-model="value" placeholder="OPEN">
                             <el-option
                                 v-for="item in options"
@@ -74,20 +74,20 @@
             <div class="tab">
                 <div class="tab-title">
                     <span class="title-line"></span>
-                    <span class="title-txt">预定标准</span>
+                    <span class="title-txt">混雑基準</span>
                 </div>
                 <div class="tab-inner">
-                    <div class="inner-txt">混雑基準</div>
+                    <div class="inner-txt">△</div>
                     <div class="group-input group1">
                         <el-input v-model="input" placeholder="请输入内容"></el-input>
-                        <span class="ml12 mr24">组以上</span>
+                        <span class="ml12 mr24">組以上</span>
                         <el-input v-model="input" placeholder="请输入内容"></el-input>
                         <span class="ml12">人以上</span>
                     </div>
-                    <div class="inner-txt">混雑基準</div>
+                    <div class="inner-txt">x</div>
                     <div class="group-input">
                         <el-input v-model="input" placeholder="请输入内容"></el-input>
-                        <span class="ml12 mr24">组以上</span>
+                        <span class="ml12 mr24">組以上</span>
                         <el-input v-model="input" placeholder="请输入内容"></el-input>
                         <span class="ml12">人以上</span>
                     </div>
@@ -96,10 +96,10 @@
             <div class="tab">
                 <div class="tab-title">
                     <span class="title-line"></span>
-                    <span class="title-txt">通知邮箱</span>
+                    <span class="title-txt">通知メール</span>
                 </div>
                 <div class="tab-inner">
-                    <div class="inner-txt">通知メール宛先</div>
+                    <div class="inner-txt">メールアドレス</div>
                     <el-input class="email-input" v-model="input" placeholder="请输入内容"></el-input>
                 </div>
             </div>
@@ -134,9 +134,9 @@
                     show: false,
                     title: ' ',
                     showCancelButton: true,
-                    cancelButtonText: '取消',
+                    cancelButtonText: 'キャンセル',
                     showConfirmButton: true,
-                    confirmButtonText: '確認'
+                    confirmButtonText: 'OK'
                 }
             };
         },
@@ -151,7 +151,7 @@
             },
             setInfo() {
                 this.modalOptions.show = true;
-                this.modalMsg = '登録してよろしいでしょうか？';
+                this.modalMsg = '登録します。よろしいですか？';
                 this.modalStatus = 1;
             },
             toPre() {
