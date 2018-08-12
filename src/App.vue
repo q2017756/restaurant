@@ -86,12 +86,12 @@ html,body {
   vertical-align: middle;
 }
 .calendar-icon-triangle {
-  background: url("./assets/img/calendar-triangle.png");
+  background-image: url("./assets/img/calendar-triangle.png");
 }
 .calendar-icon-x {
-  background: url("./assets/img/calendar-x.png");
+  background-image: url("./assets/img/calendar-x.png");
 }
 .calendar-icon-circle {
-  background: url("./assets/img/calendar-circle.png");
+  background-image: url("./assets/img/calendar-circle.png");
 }
 </style>

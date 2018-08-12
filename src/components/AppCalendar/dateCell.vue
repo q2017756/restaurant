@@ -4,13 +4,14 @@
          @dragover.prevent=""
          @dragenter.prevent="dragenter"
          @drop="onDrop"
-         @click="cellClick">
+         @click="cellClick"
+         ref="b">
         <div class="schedule-calendar-date-hd">
             <div class="schedule-calendar-date-label">{{date.getDate()}}</div>
-            <button type="button"
-                    class="schedule-calendar-counter"
-                    v-if="details.length > volume"
-                    @click.stop.prevent="expandAll">共 {{details.length}} 项</button>
+            <!--<button type="button"-->
+                    <!--class="schedule-calendar-counter"-->
+                    <!--v-if="details.length > volume"-->
+                    <!--@click.stop.prevent="expandAll">共 {{details.length}} 项</button>-->
         </div>
         <div class="schedule-calendar-details"
              :class="{ expanded }"
@@ -18,7 +19,7 @@
              ref="details">
             <div v-show="expanded"
                  class="schedule-calendar-details-hd">{{ dateString }}</div>
-            <div class="schedule-calendar-details-bd">
+            <div class="schedule-calendar-details-bd" :class="{ scale: scale1 }">
                 <event-item v-if="details.length"
                             v-for="item in displayDetails"
                             :item="item"
@@ -50,7 +51,9 @@ export default {
     data() {
         return {
             volume: 0,
-            expanded: false
+            expanded: false,
+            scale: false,
+            num: 0
         }
     },
     computed: {
@@ -64,7 +67,11 @@ export default {
             return this.data.length ? this.data.filter(item => isSameDay(item.date, this.date)) : []
         },
         displayDetails() {
-            return this.expanded ? this.details : this.details.slice(0, this.volume)
+//            return this.expanded ? this.details : this.details.slice(0, this.volume)
+            return this.expanded ? this.details : this.details
+        },
+        scale1() {
+            return this.num > 90 ? false : true;
         },
         dateString() {
             return format(this.date)
@@ -130,6 +137,7 @@ export default {
         }
     },
     mounted() {
+        this.num = this.$refs.b.getBoundingClientRect().height;
         this.calcVolume()
         window.addEventListener('resize', this.calcVolume)
     },
@@ -192,6 +200,9 @@ export default {
         display: flex;
         justify-content: space-between;
         align-content: center;
+        .schedule-calendar-date-label {
+            z-index: 99;
+        }
     }
     &details {
         flex: 1;
@@ -225,5 +236,10 @@ export default {
         color: $sc-primary-color;
     }
 }
-
+.schedule-calendar-details-bd.scale {
+    position: absolute;
+    transform: scale(0.8);
+    bottom: 0;
+    right: 0;
+}
 </style>

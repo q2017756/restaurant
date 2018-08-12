@@ -22,7 +22,7 @@ export default {
         return h('div', {
             class: ['schedule-calendar-detail-item', `schedule-calendar-status_${this.item.status}`],
             attrs: {
-                draggable: true
+                draggable: false
             },
             on: {
                 dragstart: this.onDrag,

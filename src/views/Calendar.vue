@@ -1,7 +1,7 @@
 <template>
     <div class="unified-bg">
         <app-header :btnShow="isRoot"></app-header>
-        <div class="contianer">
+        <div class="contianer" >
             <app-calendar :events="events"
                           :dateItemRender="itemRender"
                           :startWeek="0"
@@ -38,7 +38,7 @@
                     },
                     {
                         id: 3,
-                        date: '2018/08/03',
+                        date: '2018/08/09',
                         DailyDate: "2017/12/31",
                         TimeKbn: "1",
                         YoyakuLevel: "0",
@@ -46,7 +46,7 @@
                     },
                     {
                         id: 4,
-                        date: '2018/08/03',
+                        date: '2018/08/09',
                         DailyDate: "2017/12/31",
                         TimeKbn: "2",
                         YoyakuLevel: "2",
