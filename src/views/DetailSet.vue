@@ -84,14 +84,18 @@
                     <span class="title-txt">混雑基準</span>
                 </div>
                 <div class="tab-inner">
-                    <div class="inner-txt">△</div>
+                    <div class="inner-txt">
+                        <img src="../assets/img/calendar-triangle.png" alt="">
+                    </div>
                     <div class="group-input group1">
                         <el-input v-model="input" placeholder="内容を入力してください"></el-input>
                         <span class="ml12 mr24">組以上</span>
                         <el-input v-model="input" placeholder="内容を入力してください"></el-input>
                         <span class="ml12">人以上</span>
                     </div>
-                    <div class="inner-txt">x</div>
+                    <div class="inner-txt">
+                        <img src="../assets/img/calendar-x.png" alt="">
+                    </div>
                     <div class="group-input">
                         <el-input v-model="input" placeholder="内容を入力してください"></el-input>
                         <span class="ml12 mr24">組以上</span>
@@ -107,9 +111,15 @@
                 </div>
                 <div class="tab-inner">
                     <el-checkbox-group v-model="checkList">
-                        <el-checkbox label="空席有"></el-checkbox>
-                        <el-checkbox label="混雑"></el-checkbox>
-                        <el-checkbox label="満席"></el-checkbox>
+                        <el-checkbox label="空席有">
+                            <img class="middle-img" src="../assets/img/calendar-circle.png" alt="">
+                        </el-checkbox>
+                        <el-checkbox label="混雑">
+                            <img class="middle-img" src="../assets/img/calendar-triangle.png" alt="">
+                        </el-checkbox>
+                        <el-checkbox label="満席">
+                            <img class="middle-img" src="../assets/img/calendar-x.png" alt="">
+                        </el-checkbox>
                     </el-checkbox-group>
                 </div>
             </div>
@@ -203,7 +213,7 @@
             height: 42px;
         }
         .tab {
-            margin-bottom: 29px;
+            margin-bottom: 34px;
             .group-input .el-input {
                 width: 240px;
             }
@@ -264,6 +274,10 @@
                 margin-left: 30px;
                 padding: 15px 91px;
             }
+        }
+
+        .middle-img {
+            vertical-align: middle;
         }
     }
 </style>

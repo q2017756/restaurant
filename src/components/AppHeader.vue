@@ -1,76 +1,79 @@
 <template>
-  <div class="header">
-    <h1>レストラン予約システム</h1>
-    <span class="right-btn" v-show="btnShow" @click="doSth">
-      <img class="" src="/img/administ.png" alt="">
-      <span>システム管理</span>
-    </span>
-  </div>
+    <div class="header">
+        <h1>レストラン予約システム</h1>
+        <div class="right-btns" v-show="btnShow">
+            <span class="btn" @click="toBasic">システム管理</span>
+            <span class="btn" @click="toDetail">詳細設定</span>
+        </div>
+    </div>
 </template>
 
 <script>
-import AppModal from "./AppModal.vue";
-export default {
-  data(){
-    return {
-      showModal: false,
-      modalOptions: {
-        show: true,
-        title: ' ',
-        showCancelButton: true,
-        cancelButtonText: 'ok',
-        showConfirmButton: true,
-        confirmButtonText: ' '
-      }
-    };
-  },
-  props: {
-      btnShow: {
-          type: Boolean,
-          default: true
-      }
-  },
-  components: {
-      AppModal
-  },
-  computed: {
+    import AppModal from "./AppModal.vue";
 
-  },
-  methods: {
-    doSth() {
-      console.log('管理');
-      this.$router.push('basicSet');
+    export default {
+        data() {
+            return {
+                showModal: false,
+                modalOptions: {
+                    show: true,
+                    title: ' ',
+                    showCancelButton: true,
+                    cancelButtonText: 'ok',
+                    showConfirmButton: true,
+                    confirmButtonText: ' '
+                }
+            };
+        },
+        props: {
+            btnShow: {
+                type: Boolean,
+                default: true
+            }
+        },
+        components: {
+            AppModal
+        },
+        computed: {},
+        methods: {
+            toBasic() {
+                console.log('管理');
+                this.$router.push('basicSet');
+            },
+            toDetail() {
+                console.log('管理');
+                this.$router.push('detailSet');
+            }
+        }
     }
-  }
-}
 </script>
 
 <style scoped lang="scss">
-  .header {
-    position: relative;
-    height: 50px;
-    padding-left: 60px;
-    background: url("../assets/img/header-bg.png");
-    text-align: left;
-    line-height: 50px;
-    color: #dbbe77;
-  }
-  .right-btn {
-    position: absolute;
-    right: 60px;
-    top: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box;
-    padding: 10px;
-    line-height: 30px;
-    font-size: 24px;
-    cursor: pointer;
-    img {
-      margin-right: 10px;
+    .header {
+        position: relative;
+        height: 50px;
+        padding-left: 60px;
+        background: url("../assets/img/header-bg.png");
+        text-align: left;
+        line-height: 50px;
+        color: #dbbe77;
     }
-  }
+
+    .right-btns {
+        position: absolute;
+        right: 60px;
+        top: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
+        line-height: 30px;
+        font-size: 24px;
+        cursor: pointer;
+        .btn {
+            padding: 10px 15px;
+        }
+    }
 
 
 </style>
