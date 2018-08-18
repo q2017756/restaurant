@@ -88,19 +88,27 @@
                         <img src="../assets/img/calendar-triangle.png" alt="">
                     </div>
                     <div class="group-input group1">
-                        <el-input v-model="input" placeholder="内容を入力してください"></el-input>
-                        <span class="ml12 mr24">組以上</span>
-                        <el-input v-model="input" placeholder="内容を入力してください"></el-input>
-                        <span class="ml12">人以上</span>
+                        <div>
+                            <el-input v-model="input" placeholder="内容を入力してください"></el-input>
+                            <span class="ml12 mr24">組以上</span>
+                        </div>
+                        <div>
+                            <el-input v-model="input" placeholder="内容を入力してください"></el-input>
+                            <span class="ml12">人以上</span>
+                        </div>
                     </div>
                     <div class="inner-txt">
                         <img src="../assets/img/calendar-x.png" alt="">
                     </div>
                     <div class="group-input">
-                        <el-input v-model="input" placeholder="内容を入力してください"></el-input>
-                        <span class="ml12 mr24">組以上</span>
-                        <el-input v-model="input" placeholder="内容を入力してください"></el-input>
-                        <span class="ml12">人以上</span>
+                        <div>
+                            <el-input v-model="input" placeholder="内容を入力してください"></el-input>
+                            <span class="ml12 mr24">組以上</span>
+                        </div>
+                        <div>
+                            <el-input v-model="input" placeholder="内容を入力してください"></el-input>
+                            <span class="ml12">人以上</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -123,7 +131,7 @@
                     </el-checkbox-group>
                 </div>
             </div>
-            <div class="opr-btns pull-right">
+            <div class="opr-btns">
                 <el-button class="remarks-btn" type="primary" @click="setInfo">登録</el-button>
                 <el-button class="remarks-btn" plain  @click="toPre">戻る</el-button>
             </div>
@@ -204,11 +212,14 @@
         margin-right: 30px;
     }
     .contianer {
+        display: flex;
+        flex-direction: column;
         background: url('../assets/img/set-bg.png') no-repeat;
-        width: 1080px;
+        width: 90vw;
+        max-width: 1200px;
         margin: 60px auto;
         background-color: #fff;
-        padding: 60px 30px 135px 30px;
+        padding: 30px;
         .sel-date {
             height: 42px;
         }
@@ -231,9 +242,14 @@
                 .title-txt {
                     display: inline-block;
                     vertical-align: top;
+                    font-size: 24px;
                 }
             }
             .tab-inner {
+                .sel-week {
+                    display: flex;
+                    flex-wrap: wrap;
+                }
                 .sel-week .el-checkbox {
                     border: 1px solid #ddd;
                     box-shadow: 1px 1px 1px #ddd;
@@ -242,6 +258,9 @@
                         font-size: 24px;
                     }
                 }
+                .el-checkbox {
+                    margin: 0 20px 20px 0;
+                }
                 .time-line {
                     width: 1px;
                     height: 100%;
@@ -249,7 +268,11 @@
                     margin: 0 30px;
                 }
                 .time-wrap {
-                    height: 85px;
+                    display: flex;
+                    flex-wrap: wrap;
+                    >div {
+                        margin-bottom: 20px;
+                    }
                     .el-select {
                         width: 240px;
                     }
@@ -259,7 +282,7 @@
                 }
                 .inner-txt {
                     font-size: 24px;
-                    margin-bottom: 18px;
+                    margin-bottom: 10px;
                     color: #142343;
                 }
                 .group1 {
@@ -267,17 +290,44 @@
                 }
             }
         }
+        .group-input {
+            display: flex;
+            flex-wrap: wrap;
+            >div {
+                margin: 0 30px 10px 0;
+                display: flex;
+                align-items: center;
+                >span {
+                    flex: 0 0 20%;
+                }
+            }
+        }
         .opr-btns {
-            height: 46px;
-            margin-top: 30px;
+            align-self: flex-end;
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
             button {
-                margin-left: 30px;
-                padding: 15px 91px;
+                margin: 0 30px 10px 0;
+                padding: 15px 5vw;
             }
         }
 
         .middle-img {
             vertical-align: middle;
+        }
+    }
+    @media screen and(max-width: 750px){
+        .container {
+            padding: 15px;
+        }
+        .opr-btns {
+            align-self: center;
+            button {
+                width: 100%;
+            }
         }
     }
 </style>

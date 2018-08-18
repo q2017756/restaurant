@@ -75,13 +75,13 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .modal-dialog {
   position: absolute;
   left: 50%;
 	top: 50%;
   transform: translate(-50%, -50%);
-  width: 600px;
+  width: 50vw;
   background: #fff;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   z-index: 1002;
@@ -122,5 +122,10 @@ export default {
   left: 0;
   z-index: 1000;
   background: rgba(0, 0, 0, .2);
+}
+@media screen and(max-width: 750px) {
+  .modal-dialog {
+    width: 90vw;
+  }
 }
 </style>

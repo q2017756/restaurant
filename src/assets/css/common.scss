@@ -1,0 +1,60 @@
+@import "./mixin.scss";
+
+.font-small {
+  font-size: $size_small + px;
+}
+.font_middle {
+  font-size: $size_middle + px;
+}
+.font-default {
+  font-size: $size_default + px;
+}
+.font-big {
+  font-size: $size_big;
+}
+.font-smaller {
+  font-size: $size_small + px;
+  transform: scale(.8);
+}
+.font-smaller-b {
+  font-size: $size_small + px;
+  transform: scale(.8);
+  padding: px2rem(2) px2rem(8);
+  background: #eee;
+  border-radius: 5px;
+  color: #000;
+}
+.text-center {
+  text-align: center;
+}
+
+// 两边带线的title ——xxx——
+.title-line {
+  position: relative;
+  display: inline-block;
+  margin: px2rem(18) auto px2rem(8) auto;
+  font-size: px2rem($size_default);
+  color: #666;
+  &:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -50%;
+    display: block;
+    width: 8vw;
+    height: 1px;
+    border-bottom: 1px solid $text_color;
+  }
+  &:before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -50%;
+    display: block;
+    width: 8vw;
+    height: 1px;
+    border-bottom: 1px solid $text_color;
+  }
+}
+
+

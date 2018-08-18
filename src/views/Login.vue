@@ -18,6 +18,7 @@
 </template>
 
 <script>
+  import { mapActions } from 'vuex'
   import AppModal from "../components/AppModal.vue"
 
   export default {
@@ -42,64 +43,67 @@
     },
     computed: {},
     methods: {
+      ...mapActions([
+        'login'
+      ]),
       login() {
         if (!this.username || !this.password) {
           this.modalOptions.show = true
           this.modalMsg = 'アカウントとパスワードは空けてはいけません'
         } else {
-          this.axios.post('user/userauth', {
-            UserId: Number(this.username),
-            Password: Number(this.password)
-          })
-              .then(res => {
-                console.log(res)
-              })
-          // if(this.username !== '1' || this.password !== '1') {
-          //     this.modalOptions.show = true;
-          //     this.modalMsg = 'ユーザー名又はパスワードが違いました。';
-          // }else {
-          //     this.$router.push('calendar');
-          // }
+//          this.axios.post('user/userauth', {
+//          this.axios.post('setting/updatedailymessage', {
+//              DailyDate: '2018/08/17',
+//              DailyMessage: 'test'
+//          })
+//              .then(res => {
+//                console.log(res)
+//              })
+          if (this.username !== '1' || this.password !== '1') {
+            this.modalOptions.show = true;
+            this.modalMsg = 'ユーザー名又はパスワードが違いました。';
+          } else {
+            this.$store.dispatch('login',1);
+            this.$router.push('calendar');
+          }
         }
       }
     }
   }
 </script>
 
-<style scoped>
-  .login {
-    width: 100vw;
-    height: 100vh;
-    background: url("../assets/img/login-bg.jpg") no-repeat;
-    background-size: 100vw 100vh;
-    overflow: hidden;
-    font-family: 'SimSun';
-  }
+<style lang="scss" scoped>
+  @import "../assets/css/common.scss";
 
   .container {
     position: relative;
+    width: 8rem;
+    height: 50vh;
+    max-width: 100vw;
     margin: 25vh auto;
     background: url("../assets/img/login-form-bg.jpg") no-repeat;
-    width: 1000px;
-    height: 460px;
+    background-size: 100% 100%;
   }
 
   .form {
     box-sizing: border-box;
     position: absolute;
-    right: 50px;
-    top: 50px;
+    right: .5rem;
+    top: .5rem;
     width: 324px;
     height: 360px;
     background: #fff;
     border-radius: 5px;
     text-align: center;
-    padding: 45px;
+    padding: .4rem;
   }
+
+
 
   .title {
     letter-spacing: 3px;
     white-space: nowrap;
+    font-size: 26px;
   }
 
   .sub-title {
@@ -109,6 +113,8 @@
   }
 
   .username, .pwd {
+    box-sizing: border-box;
+    width: 90%;
     margin-bottom: 15px;
     padding: 10px 40px;
     background-repeat: no-repeat;
@@ -139,5 +145,19 @@
     cursor: pointer;
     user-select: none;
   }
-
+  @media screen and(max-width: 750px){
+    .container {
+      width: 100vw;
+      height: 60vh;
+    }
+    .form {
+      right: 10%;
+      top: 10%;
+      width: 8rem;
+      width: 8rem;
+      height: 50vh;
+      max-width: 100vw;
+      padding: .8rem .4rem;
+    }
+  }
 </style>

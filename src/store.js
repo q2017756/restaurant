@@ -9,7 +9,7 @@ const state = {
 
 // actions
 const actions = {
-  login: ({ commit }) => commit('login'),
+  login: ({ commit },data) => commit('login',data),
   logout: ({ commit }) => commit('logout'),
 }
 
@@ -19,7 +19,7 @@ const mutations = {
     localStorage.token = data;
     state.token = data;
   },
-  logout (state, data) {
+  logout (state) {
     localStorage.removeItem('token');
     state.token = null
   }

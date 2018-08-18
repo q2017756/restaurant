@@ -64,7 +64,7 @@ export default {
             return this.data.length ? this.data.filter(item => item.DayoffKben === '0') : []
         },
         details() {
-            return this.data.length ? this.data.filter(item => isSameDay(item.date, this.date)) : []
+            return this.data.length ? this.data.filter(item => isSameDay(item.DailyDate, this.date)) : []
         },
         displayDetails() {
 //            return this.expanded ? this.details : this.details.slice(0, this.volume)
