@@ -95,7 +95,7 @@
     background: #fff;
     border-radius: 5px;
     text-align: center;
-    padding: .4rem;
+    padding: 40px;
   }
 
 
