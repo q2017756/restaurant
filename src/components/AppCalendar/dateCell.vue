@@ -1,6 +1,6 @@
 <template>
     <div class="schedule-calendar-date"
-         :class="[type, { today: isToday, dragged: draggedIndex === index }]"
+         :class="[type, { today: isToday, dragged: draggedIndex === index ,off: notWorkDay}]"
          @dragover.prevent=""
          @dragenter.prevent="dragenter"
          @drop="onDrop"
@@ -61,7 +61,8 @@ export default {
             return isSameDay(new Date(), this.date)
         },
         notWorkDay() {
-            return this.data.length ? this.data.filter(item => item.DayoffKben === '0') : []
+            let details = this.data.length ? this.data.filter(item => isSameDay(item.DailyDate, this.date)) : []
+            return (details[0] ? (details[0].DayoffKbn == "1" ? true : false) : false)
         },
         details() {
             return this.data.length ? this.data.filter(item => isSameDay(item.DailyDate, this.date)) : []
@@ -194,6 +195,9 @@ export default {
             .schedule-calendar-details {
                 background: $sc-primary-light-color;
             }
+        }
+        &.off {
+            background: #FEF5F3;
         }
     }
     &date-hd {

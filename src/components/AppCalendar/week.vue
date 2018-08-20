@@ -18,7 +18,7 @@ export default {
     },
     computed: {
         weeks() {
-            return this.startWeek === 0 ? this.cn : this.japanese.concat(this.japanese.splice(0, this.startWeek))
+            return this.startWeek === 0 ? this.japanese : this.japanese.concat(this.japanese.splice(0, this.startWeek))
         }
     }
 }

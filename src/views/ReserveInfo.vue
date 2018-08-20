@@ -9,7 +9,7 @@
             <span class="title-txt">予約日</span>
           </div>
           <div class="pull-left">
-            <el-input v-model="input" class="mr30"></el-input>
+            <el-input v-model="clickDate" class="mr30"></el-input>
             <el-button class="remarks-btn" type="primary" @click="showCalendar">予約日変更</el-button>
           </div>
         </div>
@@ -22,26 +22,26 @@
             <div class="time-wrap">
               <div class="mb20">
                 <div class="inner-txt">テーブル</div>
-                <el-select v-model="value" placeholder="">
+                <el-select v-model="fieldData" placeholder="">
                   <el-option
-                          v-for="item in options"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
+                          v-for="item in fieldOptions"
+                          :key="item.KaijoId"
+                          :label="item.KaijoName"
+                          :value="item.KaijoId">
                   </el-option>
                 </el-select>
                 -
-                <el-select v-model="value" placeholder="">
+                <el-select v-model="tableData" placeholder="">
                   <el-option
-                          v-for="item in options"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
+                          v-for="item in tableOptions"
+                          :key="item.TableId"
+                          :label="item.TableName"
+                          :value="item.TableId">
                   </el-option>
                 </el-select>
               </div>
               <div class="inner-txt">時間</div>
-              <el-select class="mb20" v-model="value" placeholder="">
+              <el-select class="mb20" v-model="timeInfo" placeholder="">
                 <el-option
                         v-for="item in options"
                         :key="item.value"
@@ -72,12 +72,12 @@
                 </div>
               </div>
               <div class="inner-txt">区分</div>
-              <el-select class="mb20" v-model="value" placeholder="">
+              <el-select class="mb20" v-model="typeData" placeholder="">
                 <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
+                        v-for="item in typeOptions"
+                        :key="item.KbnId"
+                        :label="item.KbnName"
+                        :value="item.KbnId">
                 </el-option>
               </el-select>
             </div>
@@ -92,21 +92,21 @@
               </div>
             </div>
             <div class="inner-txt">料理</div>
-            <el-select class="mb20" v-model="value" placeholder="">
+            <el-select class="mb20" v-model="foodData" placeholder="">
               <el-option
-                      v-for="item in options"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
+                      v-for="item in foodOptions"
+                      :key="item.MenuId"
+                      :label="item.MenuName"
+                      :value="item.MenuId">
               </el-option>
             </el-select>
             <div class="inner-txt">受者</div>
-            <el-select class="mb20" v-model="value" placeholder="">
+            <el-select class="mb20" v-model="ownerData" placeholder="">
               <el-option
-                      v-for="item in options"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
+                      v-for="item in ownerOptions"
+                      :key="item.OwnerCode"
+                      :label="item.OwnerName"
+                      :value="item.OwnerCode">
               </el-option>
             </el-select>
             <div class="inner-txt">受日</div>
@@ -197,15 +197,28 @@
 </template>
 
 <script>
-  import AppModal from "../components/AppModal.vue";
-  import AppHeader from "../components/AppHeader.vue";
-  import AppCalendar from '../components/AppCalendar';
+  import AppModal from "../components/AppModal.vue"
+  import AppHeader from "../components/AppHeader.vue"
+  import AppCalendar from '../components/AppCalendar'
 
   export default {
     data() {
       return {
+        allData: {},
+        clickDate: localStorage.clickDate,
         setInfoType: localStorage.setInfoType,
-        checkList: [],
+        fieldData: '',
+        tableData: '',
+        timeInfo: '',
+        typeData: '',
+        foodData: '',
+        ownerData: '',
+        fieldOptions: [],
+        tableOptions: [],
+        typeOptions: [],
+        foodOptions: [],
+        ownerOptions: [],
+
         value: '',
         options: [],
         value1: '',
@@ -224,7 +237,7 @@
           {
             id: 1,
             date: '2018/08/02',
-            DailyDate: "2017/12/31",
+            DailyDate: "2018/08/20",
             TimeKbn: "1",
             YoyakuLevel: "2",
             DayoffKben: "0"
@@ -232,23 +245,23 @@
           {
             id: 2,
             date: '2018/08/02',
-            DailyDate: "2017/12/31",
+            DailyDate: "2018/08/20",
             TimeKbn: "2",
             YoyakuLevel: "1",
             DayoffKben: "0"
           },
           {
             id: 3,
-            date: '2018/08/03',
-            DailyDate: "2017/12/31",
+            date: '2018/08/09',
+            DailyDate: "2018/08/21",
             TimeKbn: "1",
             YoyakuLevel: "0",
             DayoffKben: "0"
           },
           {
             id: 4,
-            date: '2018/08/03',
-            DailyDate: "2017/12/31",
+            date: '2018/08/09',
+            DailyDate: "2018/08/21",
             TimeKbn: "2",
             YoyakuLevel: "2",
             DayoffKben: "0"
@@ -257,20 +270,20 @@
         itemRender(item) {
           const h = this.$createElement
           return h('div', {
-              class: 'calendar-text-contianer'
-            },
-            [
-              h('span', {
-                  class: 'calendar-text'
-                }, item.TimeKbn === "1" ? 'ランチ' : 'ディナー'
-              ),
-              h('span', {
-                class: item.YoyakuLevel === '0' ? 'calendar-icon-circle' : (item.YoyakuLevel === '1' ? 'calendar-icon-triangle' : 'calendar-icon-x')
-              })
-            ]
+                class: 'calendar-text-contianer'
+              },
+              [
+                h('span', {
+                      class: 'calendar-text'
+                    }, item.TimeKbn === "1" ? 'ランチ' : 'ディナー'
+                ),
+                h('span', {
+                  class: item.YoyakuLevel === '0' ? 'calendar-icon-circle' : (item.YoyakuLevel === '1' ? 'calendar-icon-triangle' : 'calendar-icon-x')
+                })
+              ]
           )
         },
-      };
+      }
     },
     components: {
       AppModal,
@@ -279,11 +292,156 @@
     },
     computed: {
       eventsData() {
-        let arr = this.events.filter(item => item.TimeKbn === localStorage.mealsType);
-        return arr;
+        let arr = this.events.filter(item => item.TimeKbn === localStorage.mealsType)
+        return arr
       }
     },
     methods: {
+      getData() {
+        // 会场
+        this.fieldOptions = [
+          {
+            "KaijoId": "001",
+            "KaijoName": "１Fレストラン",
+          },
+          {
+            "KaijoId": "002",
+            "KaijoName": "2Fダイニング",
+          }
+        ]
+        // 桌号
+        this.tableOptions = [
+          {
+            "TableId": "010",
+            "KaijoId": "001",
+            "TableName": "T-1",
+          },
+          {
+            "TableId": "020",
+            "KaijoId": "001",
+            "TableName": "T-1-bis",
+          }
+        ]
+        // 时间
+        this.timeData = {
+          "StartTime": "13：00",
+          "EndTime": "15：00"
+        }
+        this.timeInfo = this.timeData.StartTime
+        // 区分
+        this.typeOptions = [
+          {
+            "KbnId": "010",
+            "KbnName": "Ticket",
+          },
+          {
+            "KbnId": "020",
+            "KbnName": "Soigner",
+          }
+        ]
+        // 料理
+        this.foodOptions = [
+          {
+            "MenuId": "010",
+            "MenuName": "当日",
+          },
+          {
+            "MenuId": "020",
+            "MenuName": "2800",
+          }
+        ]
+        // 所有者信息
+        this.ownerOptions = [
+          {
+            "OwnerCode": "A0001",
+            "OwnerName": "社長",
+          },
+          {
+            "OwnerCode": "N0001",
+            "OwnerName": "常務",
+          }
+        ]
+        // 模糊查询
+        this.filterOptions = [
+          {
+            "ReservationDate": "2017/02/17",
+            "KbnName": "結婚記念日",
+            "CustName": "謝",
+            "CustNameKana": "シャ",
+            "CusrCompanyName": "（DATAMAX）",
+            "CusrBusyoName": "（DATAMAX 本部）",
+            "CustTel": "080-XXXX-XXXX",
+            "ReservationNum": "20",
+            "EnkaiSyusaiName": "小贵子",
+            "EnkaiSyusaiNameKana": "シヨウキコ",
+            "EnkaiSyusaiTel": "080-0000-0000",
+            "EnkaiName": "小贵子的欢迎宴会",
+            "EnkaiDate": "2016/10/17",
+            "EnkaiNum": "5",
+            "JissiDate": "2016/8/9",
+            "HiroenEnkaijo": "宴会场",
+            "Name": "小鬼",
+            "NameKana": "コアニ",
+            "Tel": "080-XXXX-XXXX",
+            "Kankei": "新郎",
+          },
+          {
+            "ReservationDate": "2017/02/14",
+            "KbnName": "結婚記念日",
+            "CustName": "黎汉",
+            "CustNameKana": "レイハン",
+            "CusrCompanyName": "（DATAMAX）",
+            "CusrBusyoName": "（DATAMAX 本部）",
+            "CustTel": "080-XXXX-XXXX",
+            "ReservationNum": "20",
+            "EnkaiSyusaiName": "小贵子",
+            "EnkaiSyusaiNameKana": "シヨウキコ",
+            "EnkaiSyusaiTel": "080-0000-0000",
+            "EnkaiName": "小谢的欢迎宴会",
+            "EnkaiDate": "2016/10/17",
+            "EnkaiNum": "5",
+            "JissiDate": "2016/8/8",
+            "HiroenEnkaijo": "宴会场",
+            "Name": "小鬼",
+            "NameKana": "コアニ",
+            "Tel": "080-XXXX-XXXX",
+            "Kankei": "新郎",
+          }
+        ]
+        // 全部信息
+        this.allData = {
+          "ReservationCode": "20170214001",
+          "ReservationDate": "2017/02/14",
+          "TimeKbn": "1",
+          "KbnName": "結婚記念日",
+          "StartTime": "12：00",
+          "EndTime": "14：00",
+          "CustName": "黎汉",
+          "CustNameKana": "レイハン",
+          "CustCompanyName": "（DATAMAX）",
+          "CustBusyoName": "（DATAMAX 本部）",
+          "CustTel": "080-XXXX-XXXX",
+          "AdultNum": "10",
+          "ChildNum": "1",
+          "OwnerName": "西村",
+          "UkerukeDate": "2017/02/10",
+          "VisitingPlace": "レストラン",
+          "MenuName": "当日",
+          "KaijoName": "１Fレストラン",
+          "TableNo": "T-1-bis",
+          "RyouriRemark ": "不能吃香菜",
+          "SituationRemark ": "不要放香菜，小孩不能喝酒",
+          "OthersRemark": "没了",
+          "RyouriRemarke ": "0",
+          "SituationRemarke ": "0",
+          "OthersRemarke": "0",
+          "EnkaiNum": "6",
+          "KonReiJissiDate": "2016/11/08",
+          "ReservationNum": "10",
+          "CompanyReservationNum": "10",
+          "ActiveFlg": "0"
+        }
+      },
       login() {
         this.modalOptions.show = true
         this.modalMsg = '登録してよろしいでしょうか？'
@@ -311,7 +469,7 @@
         this.$set(this.events, updateIndex, {
           ...this.events[updateIndex],
           date
-        });
+        })
       },
       chooseDate(e, date) {
         console.log(date)
@@ -319,6 +477,9 @@
       chooseDate2(e, item) {
         console.log(item.date)
       }
+    },
+    mounted() {
+      this.getData()
     }
   }
 </script>
@@ -495,6 +656,12 @@
     }
   }
 
+  @media screen and(max-width: 1250px) {
+    .contianer .tab .info {
+      height: 215px;
+    }
+  }
+
   @media screen and(max-width: 750px) {
     .contianer {
       flex-direction: column;
@@ -521,9 +688,6 @@
     .contianer .sel-date {
       margin-bottom: 131px;
     }
-    /*.contianer .tab {*/
-      /*margin-bottom: 131px;*/
-    /*}*/
     .contianer .tab .info {
       height: 215px;
     }

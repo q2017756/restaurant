@@ -1,6 +1,6 @@
 <template>
   <div class="unified-bg">
-    <app-header :btnShow="isRoot"></app-header>
+    <app-header :btnShow="$store.isRoot"></app-header>
     <div class="contianer">
       <app-calendar :events="events"
                     :dateItemRender="itemRender"
@@ -91,26 +91,20 @@
           {
             "DailyDate": "2018/08/05",
             "TimeKbn": "2",
-            "YoyakuLevel": "0",
+            "YoyakuLevel": "1",
             "DayoffKbn": "1"
           },
           {
             "DailyDate": "2018/08/06",
             "TimeKbn": "1",
-            "YoyakuLevel": "0",
-            "DayoffKbn": "0"
+            "YoyakuLevel": "2",
+            "DayoffKbn": "1"
           },
           {
             "DailyDate": "2018/08/06",
             "TimeKbn": "2",
-            "YoyakuLevel": "0",
-            "DayoffKbn": "0"
-          },
-          {
-            "DailyDate": "2018/08/09",
-            "TimeKbn": "1",
-            "YoyakuLevel": "0",
-            "DayoffKbn": "0"
+            "YoyakuLevel": "1",
+            "DayoffKbn": "1"
           },
           {
             "DailyDate": "2018/08/09",
@@ -121,13 +115,19 @@
           {
             "DailyDate": "2018/08/09",
             "TimeKbn": "2",
-            "YoyakuLevel": "0",
+            "YoyakuLevel": "2",
             "DayoffKbn": "0"
           },
           {
-            "DailyDate": "2018/08/09",
+            "DailyDate": "2018/08/19",
+            "TimeKbn": "1",
+            "YoyakuLevel": "1",
+            "DayoffKbn": "0"
+          },
+          {
+            "DailyDate": "2018/08/19",
             "TimeKbn": "2",
-            "YoyakuLevel": "0",
+            "YoyakuLevel": "2",
             "DayoffKbn": "0"
           }
         ]
@@ -138,7 +138,9 @@
         } else {
           localStorage.mealsType = '2';
         }
+        localStorage.clickDate = item.DailyDate
         this.$router.push('schedule');
+
       },
       changeDate(e, item, date) {
         const updateIndex = this.events.findIndex(ele => ele.id === item.id)

@@ -4,7 +4,8 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 const state = {
-  token: null
+  token: null,
+  isRoot: true
 }
 
 // actions

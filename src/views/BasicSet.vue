@@ -9,14 +9,14 @@
         </div>
         <div class="tab-inner">
           <el-checkbox-group v-model="checkList" class="sel-week">
-            <el-checkbox label="月"></el-checkbox>
-            <el-checkbox label="火"></el-checkbox>
-            <el-checkbox label="水"></el-checkbox>
-            <el-checkbox label="木"></el-checkbox>
-            <el-checkbox label="金"></el-checkbox>
-            <el-checkbox label="土"></el-checkbox>
-            <el-checkbox label="日"></el-checkbox>
-            <el-checkbox label="祝日"></el-checkbox>
+            <el-checkbox label="01">月</el-checkbox>
+            <el-checkbox label="02">火</el-checkbox>
+            <el-checkbox label="03">水</el-checkbox>
+            <el-checkbox label="04">木</el-checkbox>
+            <el-checkbox label="05">金</el-checkbox>
+            <el-checkbox label="06">土</el-checkbox>
+            <el-checkbox label="07">日</el-checkbox>
+            <el-checkbox label="08">祝日</el-checkbox>
           </el-checkbox-group>
         </div>
       </div>
@@ -29,7 +29,7 @@
           <div class="time-wrap">
             <div class="pull-left">
               <div class="inner-txt">ランチ</div>
-              <el-select v-model="value" placeholder="OPEN">
+              <el-select v-model="timeValue.lunchStart" placeholder="OPEN">
                 <el-option
                         v-for="item in options"
                         :key="item.value"
@@ -38,7 +38,7 @@
                 </el-option>
               </el-select>
               -
-              <el-select v-model="value" placeholder="L.O">
+              <el-select v-model="timeValue.lunchEnd" placeholder="L.O">
                 <el-option
                         v-for="item in options"
                         :key="item.value"
@@ -50,7 +50,7 @@
             <div class="time-line pull-left"></div>
             <div class="pull-left">
               <div class="inner-txt">ディナー</div>
-              <el-select v-model="value" placeholder="OPEN">
+              <el-select v-model="timeValue.dinnerStart" placeholder="OPEN">
                 <el-option
                         v-for="item in options"
                         :key="item.value"
@@ -59,7 +59,7 @@
                 </el-option>
               </el-select>
               -
-              <el-select v-model="value" placeholder="L.O">
+              <el-select v-model="timeValue.dinnerEnd" placeholder="L.O">
                 <el-option
                         v-for="item in options"
                         :key="item.value"
@@ -82,11 +82,11 @@
           </div>
           <div class="group-input group1">
             <div>
-              <el-input v-model="input" placeholder="内容を入力してください"></el-input>
+              <el-input v-model="inputValue.group1" placeholder="内容を入力してください"></el-input>
               <span class="ml12 mr24">組以上</span>
             </div>
             <div>
-              <el-input v-model="input" placeholder="内容を入力してください"></el-input>
+              <el-input v-model="inputValue.people1" placeholder="内容を入力してください"></el-input>
               <span class="ml12">人以上</span>
             </div>
           </div>
@@ -95,11 +95,11 @@
           </div>
           <div class="group-input">
             <div>
-              <el-input v-model="input" placeholder="内容を入力してください"></el-input>
+              <el-input v-model="inputValue.group2" placeholder="内容を入力してください"></el-input>
               <span class="ml12 mr24">組以上</span>
             </div>
             <div>
-              <el-input v-model="input" placeholder="内容を入力してください"></el-input>
+              <el-input v-model="inputValue.people2" placeholder="内容を入力してください"></el-input>
               <span class="ml12">人以上</span>
             </div>
           </div>
@@ -112,7 +112,14 @@
         </div>
         <div class="tab-inner">
           <div class="inner-txt">メールアドレス</div>
-          <el-input class="email-input" v-model="input" placeholder="内容を入力してください"></el-input>
+          <el-select class="email-input"
+                  v-model="email"
+                  multiple
+                  filterable
+                  allow-create
+                  default-first-option
+                  placeholder="内容を入力してください">
+          </el-select>
         </div>
       </div>
       <div class="opr-btns">
@@ -130,16 +137,30 @@
 </template>
 
 <script>
-  import AppModal from "../components/AppModal.vue";
-  import AppHeader from "../components/AppHeader.vue";
+  import AppModal from "../components/AppModal.vue"
+  import AppHeader from "../components/AppHeader.vue"
 
   export default {
     data() {
       return {
         checkList: [],
-        value: '',
+
+        timeValue: {
+          lunchStart: '',
+          lunchEnd: '',
+          dinnerStart: '',
+          dinnerEnd: '',
+        },
+        inputValue: {
+          group1: '',
+          people1: '',
+          group2: '',
+          people2: '',
+        },
         options: [],
-        input: '',
+        email: '',
+
+
         modalStatus: 1,
         modalMsg: '',
         modalOptions: {
@@ -150,7 +171,7 @@
           showConfirmButton: true,
           confirmButtonText: 'OK'
         }
-      };
+      }
     },
     components: {
       AppModal,
@@ -158,26 +179,58 @@
     },
     computed: {},
     methods: {
+      getData() {
+        this.data = {
+          "WeeklyWorkdayId": "01,02,03,04",
+          "LunchStartTime": "12：00",
+          "LunchEndTime": "15：00",
+          "DinnerStartTime": "17：00",
+          "DinnerEndTime": "21:00",
+          "YoyakuAvalibleNum": "10",
+          "YoyakuUnavalibleNum": "20",
+          "YoyakuSyaAvalibleNum": "50",
+          "YoyakuSyaUnavalibleNum": "100",
+          "TantoMail": "rei@datamax.co.jp",
+        }
+        this.checkList = this.data.WeeklyWorkdayId.split(',')
+        this.timeValue = {
+          lunchStart: this.data.LunchStartTime,
+          lunchEnd: this.data.LunchEndTime,
+          dinnerStart: this.data.DinnerStartTime,
+          dinnerEnd: this.data.DinnerEndTime,
+        }
+        this.inputValue = {
+          group1: this.data.YoyakuAvalibleNum,
+          people1: this.data.YoyakuSyaAvalibleNum,
+          group2: this.data.YoyakuUnavalibleNum,
+          people2: this.data.YoyakuSyaUnavalibleNum,
+        }
+        this.email = this.data.TantoMail.split()
+
+      },
       toDetail() {
-        this.$router.push('detailSet');
+        this.$router.push('detailSet')
       },
       setInfo() {
-        this.modalOptions.show = true;
-        this.modalMsg = '登録します。よろしいですか？';
-        this.modalStatus = 1;
+        this.modalOptions.show = true
+        this.modalMsg = '登録します。よろしいですか？'
+        this.modalStatus = 1
       },
       toPre() {
-        this.modalOptions.show = true;
-        this.modalMsg = '台帳に戻ってよろしいでしょうか？';
-        this.modalStatus = 2;
+        this.modalOptions.show = true
+        this.modalMsg = '台帳に戻ってよろしいでしょうか？'
+        this.modalStatus = 2
       },
       doConfirm() {
         if (this.modalStatus === 1) {
-          console.log('接口：保存');
+          console.log('接口：保存')
         } else if (this.modalStatus === 2) {
-          this.$router.push('calendar');
+          this.$router.push('calendar')
         }
       }
+    },
+    mounted() {
+      this.getData()
     }
   }
 </script>
@@ -255,7 +308,7 @@
         .time-wrap {
           display: flex;
           flex-wrap: wrap;
-          >div {
+          > div {
             margin-bottom: 20px;
           }
           .el-select {
@@ -279,11 +332,11 @@
     .group-input {
       display: flex;
       flex-wrap: wrap;
-      >div {
+      > div {
         margin: 0 30px 10px 0;
         display: flex;
         align-items: center;
-        >span {
+        > span {
           flex: 0 0 20%;
         }
       }
@@ -301,7 +354,8 @@
       }
     }
   }
-  @media screen and(max-width: 750px){
+
+  @media screen and(max-width: 750px) {
     .container {
       padding: 15px;
     }
