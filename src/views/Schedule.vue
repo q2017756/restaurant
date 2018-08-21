@@ -50,12 +50,12 @@
           <tr>
             <!--{{ item. }}-->
             <td>{{ item.KaijoName }}</td>
-            <td></td>
+            <td>{{ item.CustCompanyName }}</td>
             <td>{{ item.KbnName }}</td>
             <td>{{ item.MenuName }}</td>
             <td>{{ item.RyouriRemark }}</td>
             <td>{{ item.SituationRemark }}</td>
-            <td>{{ item.ReservationDate }}</td>
+            <td>{{ item.UkerukeDate }}</td>
             <td><span class="color-btn blue">宴</span></td>
             <td class="long-td">{{ item.EnkaiNum }}</td>
             <td>
@@ -65,7 +65,7 @@
           <!--<tr class="tr-disabled">-->
           <tr>
             <td>{{ item.StartTime }}</td>
-            <td>{{ item.CustName }}</td>
+            <td>{{ item.CustName }}({{ item.CustNameKana}})</td>
             <td>{{ item.AdultNum }}({{ item.ChildNum }})</td>
             <td>{{ item.CustTel }}</td>
             <td colspan="2">{{ item.OthersRemark }}</td>
@@ -145,7 +145,7 @@
         this.oldRemarks = remarkInfo.DailyMessage
         this.remarks = remarkInfo.DailyMessage
         //  调用获取表格信息接口
-        const tableInfo = [
+        this.tableInfo = [
           {
             "ReservationCode": "20170214001",
             "ReservationDate": "2017/02/14",
@@ -166,11 +166,11 @@
             "MenuName": "当日",
             "KaijoName": "１Fレストラン",
             "TableNo": "T-1-bis",
-            "RyouriRemark ": "不能吃香菜",
-            "SituationRemark ": "不要放香菜，小孩不能喝酒",
+            "RyouriRemark": "不能吃香菜",
+            "SituationRemark": "不要放香菜，小孩不能喝酒",
             "OthersRemark": "没了",
-            "RyouriRemarke ": "0",
-            "SituationRemarke ": "0",
+            "RyouriRemarke": "0",
+            "SituationRemarke": "0",
             "OthersRemarke": "0",
             "KonReiNum": "1",
             "EnkaiNum": "6",
@@ -199,11 +199,11 @@
             "MenuName": "結納メニュー",
             "KaijoName": "１Fレストラン",
             "TableNo": "T-1-bis",
-            "RyouriRemark ": "不能吃肉",
-            "SituationRemark ": "不要放肉，小孩不能喝酒",
+            "RyouriRemark": "不能吃肉",
+            "SituationRemark": "不要放肉，小孩不能喝酒",
             "OthersRemark": "没了",
-            "RyouriRemarke ": "1",
-            "SituationRemarke ": "1",
+            "RyouriRemarke": "1",
+            "SituationRemarke": "1",
             "OthersRemarke": "0",
             "KonReiNum": "1",
             "EnkaiNum": "10",
@@ -213,7 +213,6 @@
             "ActiveFlg": "0"
           }
         ]
-        this.tableInfo = tableInfo
       },
       showModal() {
         this.modalOptions.show = true
@@ -229,11 +228,13 @@
         if (this.modalStatus === 1 || this.modalStatus === 2) {
           localStorage.setInfoType = 1
           this.$router.push('reserveInfo')
+          localStorage.setItem('scheduleInfo','')
         }
       },
       toEdit() {
         localStorage.setInfoType = 2
         this.$router.push('reserveInfo')
+        localStorage.setItem('scheduleInfo',JSON.stringify(this.tableInfo[0]))
       },
       saveAndLeave() {
         console.log('保存备注')

@@ -32,18 +32,18 @@
               <el-select v-model="timeValue.lunchStart" placeholder="OPEN">
                 <el-option
                         v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
+                        :key="item"
+                        :label="item"
+                        :value="item">
                 </el-option>
               </el-select>
               -
               <el-select v-model="timeValue.lunchEnd" placeholder="L.O">
                 <el-option
                         v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
+                        :key="item"
+                        :label="item"
+                        :value="item">
                 </el-option>
               </el-select>
             </div>
@@ -53,18 +53,18 @@
               <el-select v-model="timeValue.dinnerStart" placeholder="OPEN">
                 <el-option
                         v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
+                        :key="item"
+                        :label="item"
+                        :value="item">
                 </el-option>
               </el-select>
               -
               <el-select v-model="timeValue.dinnerEnd" placeholder="L.O">
                 <el-option
                         v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
+                        :key="item"
+                        :label="item"
+                        :value="item">
                 </el-option>
               </el-select>
             </div>
@@ -139,6 +139,7 @@
 <script>
   import AppModal from "../components/AppModal.vue"
   import AppHeader from "../components/AppHeader.vue"
+  import {getTimeList} from '../utils/func'
 
   export default {
     data() {
@@ -206,7 +207,7 @@
           people2: this.data.YoyakuSyaUnavalibleNum,
         }
         this.email = this.data.TantoMail.split()
-
+        this.options = getTimeList()
       },
       toDetail() {
         this.$router.push('detailSet')

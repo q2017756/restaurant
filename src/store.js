@@ -5,13 +5,17 @@ Vue.use(Vuex);
 
 const state = {
   token: null,
-  isRoot: true
+  isRoot: true,
+  scheduleInfo: {
+
+  }
 }
 
 // actions
 const actions = {
   login: ({ commit },data) => commit('login',data),
   logout: ({ commit }) => commit('logout'),
+  setScheduleInfo: ({ commit },data) => commit('setScheduleInfo',data),
 }
 
 // mutations
@@ -23,6 +27,10 @@ const mutations = {
   logout (state) {
     localStorage.removeItem('token');
     state.token = null
+  },
+  setScheduleInfo (state, data) {
+    localStorage.scheduleInfo = data;
+    state.scheduleInfo = JSON.parse(data);
   }
 }
 

@@ -22,7 +22,7 @@
             <div class="time-wrap">
               <div class="mb20">
                 <div class="inner-txt">テーブル</div>
-                <el-select v-model="fieldData" placeholder="">
+                <el-select v-model="inputInfo.KaijoName" placeholder="">
                   <el-option
                           v-for="item in fieldOptions"
                           :key="item.KaijoId"
@@ -31,7 +31,7 @@
                   </el-option>
                 </el-select>
                 -
-                <el-select v-model="tableData" placeholder="">
+                <el-select v-model="inputInfo.TableNo" placeholder="">
                   <el-option
                           v-for="item in tableOptions"
                           :key="item.TableId"
@@ -41,7 +41,7 @@
                 </el-select>
               </div>
               <div class="inner-txt">時間</div>
-              <el-select class="mb20" v-model="timeInfo" placeholder="">
+              <el-select class="mb20" v-model="inputInfo.StartTime" placeholder="">
                 <el-option
                         v-for="item in options"
                         :key="item.value"
@@ -50,29 +50,29 @@
                 </el-option>
               </el-select>
               <div class="inner-txt">TEL</div>
-              <el-input class="mb20 tel-input" v-model="input"></el-input>
+              <el-input class="mb20 tel-input" v-model="inputInfo.CustTel"></el-input>
               <div class="info">
                 <div class="pull-left">
                   <div class="inner-txt">法人・団体名</div>
-                  <el-input v-model="input" class="mr30"></el-input>
+                  <el-input v-model="inputInfo.CustCompanyName" class="mr30"></el-input>
                 </div>
                 <div class="pull-left name-wrap">
                   <div class="inner-txt">部署名</div>
-                  <el-input v-model="input"></el-input>
+                  <el-input v-model="inputInfo.CustBusyoName"></el-input>
                 </div>
               </div>
               <div class="info">
                 <div class="pull-left">
                   <div class="inner-txt">预约人名称</div>
-                  <el-input v-model="input" class="mr30"></el-input>
+                  <el-input v-model="inputInfo.CustName" class="mr30"></el-input>
                 </div>
                 <div class="pull-left">
                   <div class="inner-txt">ふりが</div>
-                  <el-input v-model="input"></el-input>
+                  <el-input v-model="inputInfo.CustNameKana"></el-input>
                 </div>
               </div>
               <div class="inner-txt">区分</div>
-              <el-select class="mb20" v-model="typeData" placeholder="">
+              <el-select class="mb20" v-model="inputInfo.KbnName" placeholder="">
                 <el-option
                         v-for="item in typeOptions"
                         :key="item.KbnId"
@@ -84,15 +84,15 @@
             <div class="info">
               <div class="pull-left">
                 <div class="inner-txt">大人人数</div>
-                <el-input v-model="input" class="mr30"></el-input>
+                <el-input v-model="inputInfo.AdultNum" class="mr30"></el-input>
               </div>
               <div class="pull-left">
                 <div class="inner-txt">子供人数</div>
-                <el-input v-model="input"></el-input>
+                <el-input v-model="inputInfo.ChildNum"></el-input>
               </div>
             </div>
             <div class="inner-txt">料理</div>
-            <el-select class="mb20" v-model="foodData" placeholder="">
+            <el-select class="mb20" v-model="inputInfo.MenuName" placeholder="">
               <el-option
                       v-for="item in foodOptions"
                       :key="item.MenuId"
@@ -101,7 +101,7 @@
               </el-option>
             </el-select>
             <div class="inner-txt">受者</div>
-            <el-select class="mb20" v-model="ownerData" placeholder="">
+            <el-select class="mb20" v-model="inputInfo.OwnerName" placeholder="">
               <el-option
                       v-for="item in ownerOptions"
                       :key="item.OwnerCode"
@@ -110,7 +110,7 @@
               </el-option>
             </el-select>
             <div class="inner-txt">受日</div>
-            <el-select class="mb20" v-model="value" placeholder="">
+            <el-select class="mb20" v-model="inputInfo.UkerukeDate" placeholder="">
               <el-option
                       v-for="item in options"
                       :key="item.value"
@@ -132,21 +132,21 @@
             <div class="info">
               <div class="pull-left">
                 <div class="inner-txt">宴会履歴</div>
-                <el-input v-model="input" class="mr30"></el-input>
+                <el-input v-model="inputInfo.EnkaiNum" class="mr30"></el-input>
               </div>
               <div class="pull-left">
                 <div class="inner-txt">法人レストラン履</div>
-                <el-input v-model="input"></el-input>
+                <el-input v-model="inputInfo.CompanyReservationNum"></el-input>
               </div>
             </div>
             <div class="info">
               <div class="pull-left">
                 <div class="inner-txt">結婚式</div>
-                <el-input v-model="input" class="mr30"></el-input>
+                <el-input v-model="inputInfo.KonReiJissiDate" class="mr30"></el-input>
               </div>
               <div class="pull-left">
                 <div class="inner-txt">个人レストラン履</div>
-                <el-input v-model="input"></el-input>
+                <el-input v-model="inputInfo.ReservationNum"></el-input>
               </div>
             </div>
           </div>
@@ -160,15 +160,15 @@
             <div class="inner-txt mb20">料理詳細
               <el-checkbox class="pull-right" label="強調" name="type"></el-checkbox>
             </div>
-            <el-input class="mb30" type="textarea" v-model="value"></el-input>
+            <el-input class="mb30" type="textarea" v-model="inputInfo.RyouriRemark"></el-input>
             <div class="inner-txt mb20">シチュエーション
               <el-checkbox class="pull-right" label="強調" name="type"></el-checkbox>
             </div>
-            <el-input type="textarea" class="mb30" v-model="value"></el-input>
+            <el-input type="textarea" class="mb30" v-model="inputInfo.SituationRemark"></el-input>
             <div class="inner-txt mb20">その他備考
               <el-checkbox class="pull-right" label="強調" name="type"></el-checkbox>
             </div>
-            <el-input type="textarea" class="mb30" v-model="value"></el-input>
+            <el-input type="textarea" class="mb30" v-model="inputInfo.OthersRemarke"></el-input>
           </div>
         </div>
       </div>
@@ -207,18 +207,38 @@
         allData: {},
         clickDate: localStorage.clickDate,
         setInfoType: localStorage.setInfoType,
-        fieldData: '',
-        tableData: '',
-        timeInfo: '',
-        typeData: '',
-        foodData: '',
-        ownerData: '',
+
         fieldOptions: [],
         tableOptions: [],
         typeOptions: [],
         foodOptions: [],
         ownerOptions: [],
-
+        inputInfo: {
+          KaijoName: '', // 会场
+          TableNo: '', // 桌号
+          StartTime: '', // 时间
+          CustTel: '', // 电话
+          CustCompanyName: '', // 法人团体名
+          CustBusyoName: '', // 部署名
+          CustName: '', // 预约人姓名
+          CustNameKana: '', // 预约人日文发音
+          KbnName: '', // 区分
+          AdultNum: '', // 大人数
+          ChildNum: '', // 小孩数
+          MenuName: '', // 料理
+          OwnerName: '', // 担当人信息
+          UkerukeDate: '', // 预订提交日期
+          EnkaiNum: '', // 宴会次数
+          CompanyReservationNum: '', // 法人餐厅预约次数
+          KonReiJissiDate: '', // 婚礼日期
+          ReservationNum: '', // 个人餐厅预约次数
+          RyouriRemark: '', // 料理备注
+          RyouriRemarke: '', // 料理备注勾选 1选中
+          SituationRemark: '', // 情况备注
+          SituationRemarke: '', // 情况备注勾选 1选中
+          OthersRemark: '', // 其他备注
+          OthersRemarke: '', // 其他备注勾选 1选中
+        },
         value: '',
         options: [],
         value1: '',
@@ -327,7 +347,6 @@
           "StartTime": "13：00",
           "EndTime": "15：00"
         }
-        this.timeInfo = this.timeData.StartTime
         // 区分
         this.typeOptions = [
           {
@@ -364,83 +383,242 @@
         // 模糊查询
         this.filterOptions = [
           {
-            "ReservationDate": "2017/02/17",
-            "KbnName": "結婚記念日",
-            "CustName": "謝",
-            "CustNameKana": "シャ",
-            "CusrCompanyName": "（DATAMAX）",
-            "CusrBusyoName": "（DATAMAX 本部）",
-            "CustTel": "080-XXXX-XXXX",
-            "ReservationNum": "20",
-            "EnkaiSyusaiName": "小贵子",
-            "EnkaiSyusaiNameKana": "シヨウキコ",
-            "EnkaiSyusaiTel": "080-0000-0000",
-            "EnkaiName": "小贵子的欢迎宴会",
-            "EnkaiDate": "2016/10/17",
-            "EnkaiNum": "5",
-            "JissiDate": "2016/8/9",
-            "HiroenEnkaijo": "宴会场",
-            "Name": "小鬼",
-            "NameKana": "コアニ",
-            "Tel": "080-XXXX-XXXX",
-            "Kankei": "新郎",
+            "PrimaryId": null,
+            "ReservationDate": "2018/08/20",
+            "KbnName": "LLLLLLLLLDDDD",
+            "CustName": "黎漢",
+            "CustNameKana": "レイハン",
+            "CustCompanyName": "DATAMAX",
+            "CustBusyoName": "開発部",
+            "CustTel": "080XXXXXXXX",
+            "ReservationNum": "2",
+            "EnkaiSyusaiName": null,
+            "EnkaiSyusaiNameKana": null,
+            "EnkaiSyusaiTel": null,
+            "EnkaiName": null,
+            "EnkaiDate": null,
+            "EnkaiNum": "",
+            "JissiDate": null,
+            "HiroenEnkaijo": null,
+            "Name": null,
+            "NameKana": null,
+            "Tel": null,
+            "Kankei": null
           },
           {
-            "ReservationDate": "2017/02/14",
-            "KbnName": "結婚記念日",
-            "CustName": "黎汉",
-            "CustNameKana": "レイハン",
-            "CusrCompanyName": "（DATAMAX）",
-            "CusrBusyoName": "（DATAMAX 本部）",
-            "CustTel": "080-XXXX-XXXX",
-            "ReservationNum": "20",
-            "EnkaiSyusaiName": "小贵子",
-            "EnkaiSyusaiNameKana": "シヨウキコ",
-            "EnkaiSyusaiTel": "080-0000-0000",
-            "EnkaiName": "小谢的欢迎宴会",
-            "EnkaiDate": "2016/10/17",
-            "EnkaiNum": "5",
-            "JissiDate": "2016/8/8",
-            "HiroenEnkaijo": "宴会场",
-            "Name": "小鬼",
-            "NameKana": "コアニ",
-            "Tel": "080-XXXX-XXXX",
-            "Kankei": "新郎",
-          }
+            "PrimaryId": null,
+            "ReservationDate": null,
+            "KbnName": null,
+            "CustName": null,
+            "CustNameKana": null,
+            "CustCompanyName": null,
+            "CustBusyoName": null,
+            "CustTel": null,
+            "ReservationNum": "",
+            "EnkaiSyusaiName": "前橋龍様・金沢直美様ｱﾌﾀｰﾊﾟｰﾃｨｰ",
+            "EnkaiSyusaiNameKana": null,
+            "EnkaiSyusaiTel": "090-2933-9985",
+            "EnkaiName": "前橋龍様・金沢直美様ｱﾌﾀｰﾊﾟｰﾃｨｰ",
+            "EnkaiDate": "2003/01/11",
+            "EnkaiNum": "1",
+            "JissiDate": null,
+            "HiroenEnkaijo": null,
+            "Name": null,
+            "NameKana": null,
+            "Tel": null,
+            "Kankei": null
+          },
+          {
+            "PrimaryId": null,
+            "ReservationDate": null,
+            "KbnName": null,
+            "CustName": null,
+            "CustNameKana": null,
+            "CustCompanyName": null,
+            "CustBusyoName": null,
+            "CustTel": null,
+            "ReservationNum": "",
+            "EnkaiSyusaiName": "風間・風間様　披露パーティー",
+            "EnkaiSyusaiNameKana": null,
+            "EnkaiSyusaiTel": "090-4527-3100",
+            "EnkaiName": "風間・風間様　披露パーティー",
+            "EnkaiDate": "2003/01/12",
+            "EnkaiNum": "1",
+            "JissiDate": null,
+            "HiroenEnkaijo": null,
+            "Name": null,
+            "NameKana": null,
+            "Tel": null,
+            "Kankei": null
+          },
+          {
+            "PrimaryId": null,
+            "ReservationDate": null,
+            "KbnName": null,
+            "CustName": null,
+            "CustNameKana": null,
+            "CustCompanyName": null,
+            "CustBusyoName": null,
+            "CustTel": null,
+            "ReservationNum": "",
+            "EnkaiSyusaiName": "土屋賢太郎様・鈴木紗保美様ｱﾌﾀｰﾊﾟｰﾃｨｰ",
+            "EnkaiSyusaiNameKana": null,
+            "EnkaiSyusaiTel": "046-234-0261",
+            "EnkaiName": "土屋賢太郎様・鈴木紗保美様ｱﾌﾀｰﾊﾟｰﾃｨｰ",
+            "EnkaiDate": "2003/01/25",
+            "EnkaiNum": "1",
+            "JissiDate": null,
+            "HiroenEnkaijo": null,
+            "Name": null,
+            "NameKana": null,
+            "Tel": null,
+            "Kankei": null
+          },
+          {
+            "PrimaryId": null,
+            "ReservationDate": null,
+            "KbnName": null,
+            "CustName": null,
+            "CustNameKana": null,
+            "CustCompanyName": null,
+            "CustBusyoName": null,
+            "CustTel": null,
+            "ReservationNum": "",
+            "EnkaiSyusaiName": "石井家・長尾家ｱﾌﾀｰﾊﾟｰﾃｨ",
+            "EnkaiSyusaiNameKana": null,
+            "EnkaiSyusaiTel": "03-5483-7187",
+            "EnkaiName": "石井家・長尾家ｱﾌﾀｰﾊﾟｰﾃｨ",
+            "EnkaiDate": "2003/02/01",
+            "EnkaiNum": "1",
+            "JissiDate": null,
+            "HiroenEnkaijo": null,
+            "Name": null,
+            "NameKana": null,
+            "Tel": null,
+            "Kankei": null
+          },
+          {
+            "PrimaryId": null,
+            "ReservationDate": null,
+            "KbnName": null,
+            "CustName": null,
+            "CustNameKana": null,
+            "CustCompanyName": null,
+            "CustBusyoName": null,
+            "CustTel": null,
+            "ReservationNum": "",
+            "EnkaiSyusaiName": "新倉家・服部家ｱﾌﾀｰﾊﾟｰﾃｨｰ",
+            "EnkaiSyusaiNameKana": null,
+            "EnkaiSyusaiTel": "070-6655-9268",
+            "EnkaiName": "新倉家・服部家ｱﾌﾀｰﾊﾟｰﾃｨｰ",
+            "EnkaiDate": "2003/02/02",
+            "EnkaiNum": "1",
+            "JissiDate": null,
+            "HiroenEnkaijo": null,
+            "Name": null,
+            "NameKana": null,
+            "Tel": null,
+            "Kankei": null
+          },
+          {
+            "PrimaryId": null,
+            "ReservationDate": null,
+            "KbnName": null,
+            "CustName": null,
+            "CustNameKana": null,
+            "CustCompanyName": null,
+            "CustBusyoName": null,
+            "CustTel": null,
+            "ReservationNum": "",
+            "EnkaiSyusaiName": "遠藤様・榊原様二次会ﾊﾟｰﾃｨｰ",
+            "EnkaiSyusaiNameKana": null,
+            "EnkaiSyusaiTel": "0466-29-3103",
+            "EnkaiName": "遠藤様・榊原様二次会ﾊﾟｰﾃｨｰ",
+            "EnkaiDate": "2003/02/08",
+            "EnkaiNum": "1",
+            "JissiDate": null,
+            "HiroenEnkaijo": null,
+            "Name": null,
+            "NameKana": null,
+            "Tel": null,
+            "Kankei": null
+          },
+          {
+            "PrimaryId": null,
+            "ReservationDate": null,
+            "KbnName": null,
+            "CustName": null,
+            "CustNameKana": null,
+            "CustCompanyName": null,
+            "CustBusyoName": null,
+            "CustTel": null,
+            "ReservationNum": "",
+            "EnkaiSyusaiName": "青木雄一様・佐藤倫子様二次会パーティー",
+            "EnkaiSyusaiNameKana": null,
+            "EnkaiSyusaiTel": "042-770-5319",
+            "EnkaiName": "青木雄一様・佐藤倫子様二次会パーティー",
+            "EnkaiDate": "2003/02/11",
+            "EnkaiNum": "1",
+            "JissiDate": null,
+            "HiroenEnkaijo": null,
+            "Name": null,
+            "NameKana": null,
+            "Tel": null,
+            "Kankei": null
+          },
+          {
+            "PrimaryId": null,
+            "ReservationDate": null,
+            "KbnName": null,
+            "CustName": null,
+            "CustNameKana": null,
+            "CustCompanyName": null,
+            "CustBusyoName": null,
+            "CustTel": null,
+            "ReservationNum": "",
+            "EnkaiSyusaiName": "宇野家・丹家ｱﾌﾀｰﾊﾟｰﾃｨｰ",
+            "EnkaiSyusaiNameKana": null,
+            "EnkaiSyusaiTel": "090-9137-0707",
+            "EnkaiName": "宇野家・丹家ｱﾌﾀｰﾊﾟｰﾃｨｰ",
+            "EnkaiDate": "2003/02/15",
+            "EnkaiNum": "1",
+            "JissiDate": null,
+            "HiroenEnkaijo": null,
+            "Name": null,
+            "NameKana": null,
+            "Tel": null,
+            "Kankei": null
+          },
+          {
+            "PrimaryId": null,
+            "ReservationDate": null,
+            "KbnName": null,
+            "CustName": null,
+            "CustNameKana": null,
+            "CustCompanyName": null,
+            "CustBusyoName": null,
+            "CustTel": null,
+            "ReservationNum": "",
+            "EnkaiSyusaiName": "柏田家・江口家ｱﾌﾀｰﾊﾟｰﾃｨ",
+            "EnkaiSyusaiNameKana": null,
+            "EnkaiSyusaiTel": "0466-44-2709",
+            "EnkaiName": "柏田家・江口家ｱﾌﾀｰﾊﾟｰﾃｨ",
+            "EnkaiDate": "2003/02/22",
+            "EnkaiNum": "1",
+            "JissiDate": null,
+            "HiroenEnkaijo": null,
+            "Name": null,
+            "NameKana": null,
+            "Tel": null,
+            "Kankei": null
+          },
         ]
-        // 全部信息
-        this.allData = {
-          "ReservationCode": "20170214001",
-          "ReservationDate": "2017/02/14",
-          "TimeKbn": "1",
-          "KbnName": "結婚記念日",
-          "StartTime": "12：00",
-          "EndTime": "14：00",
-          "CustName": "黎汉",
-          "CustNameKana": "レイハン",
-          "CustCompanyName": "（DATAMAX）",
-          "CustBusyoName": "（DATAMAX 本部）",
-          "CustTel": "080-XXXX-XXXX",
-          "AdultNum": "10",
-          "ChildNum": "1",
-          "OwnerName": "西村",
-          "UkerukeDate": "2017/02/10",
-          "VisitingPlace": "レストラン",
-          "MenuName": "当日",
-          "KaijoName": "１Fレストラン",
-          "TableNo": "T-1-bis",
-          "RyouriRemark ": "不能吃香菜",
-          "SituationRemark ": "不要放香菜，小孩不能喝酒",
-          "OthersRemark": "没了",
-          "RyouriRemarke ": "0",
-          "SituationRemarke ": "0",
-          "OthersRemarke": "0",
-          "EnkaiNum": "6",
-          "KonReiJissiDate": "2016/11/08",
-          "ReservationNum": "10",
-          "CompanyReservationNum": "10",
-          "ActiveFlg": "0"
+        // 修改时从前页传过来的全部信息
+        console.log(this.allData)
+        if (localStorage.setInfoType === '2') {
+          this.inputInfo = JSON.parse(localStorage.getItem('scheduleInfo'))
         }
+
       },
       login() {
         this.modalOptions.show = true
