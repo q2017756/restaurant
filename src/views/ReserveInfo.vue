@@ -3,6 +3,15 @@
     <app-header></app-header>
     <div class="contianer">
       <div class="inner-left">
+        <div>123{{filterOptions}}</div>
+        <el-select v-model="value8" filterable placeholder="请选择">
+          <el-option
+                  v-for="(item,index) in filterOptions"
+                  :key="index"
+
+                  :value="index">{{item}}
+          </el-option>
+        </el-select>
         <div v-show="setInfoType === '1' ? false : true" class="tab sel-date">
           <div class="tab-title pull-left mr30">
             <span class="title-line"></span>
@@ -204,6 +213,26 @@
   export default {
     data() {
       return {
+        options1: [{
+          value: '选项1',
+          label: '黄金糕'
+        }, {
+          value: '选项2',
+          label: '双皮奶'
+        }, {
+          value: '选项3',
+          label: '蚵仔煎'
+        }, {
+          value: '选项4',
+          label: '龙须面'
+        }, {
+          value: '选项5',
+          label: '北京烤鸭'
+        }],
+        value8: '',
+        filterOptionsData: [],
+
+
         allData: {},
         clickDate: localStorage.clickDate,
         setInfoType: localStorage.setInfoType,
@@ -314,6 +343,10 @@
       eventsData() {
         let arr = this.events.filter(item => item.TimeKbn === localStorage.mealsType)
         return arr
+      },
+      filterOptions() {
+//        return this.filterOptionsData.filter(item => item.CustTel === val || item.CustName === val || item.CustCompanyName === val)
+          return this.filterOptionsData.filter(item => item.CustTel === this.inputInfo.CustTel)
       }
     },
     methods: {
@@ -381,7 +414,7 @@
           }
         ]
         // 模糊查询
-        this.filterOptions = [
+        this.filterOptionsData = [
           {
             "PrimaryId": null,
             "ReservationDate": "2018/08/20",
