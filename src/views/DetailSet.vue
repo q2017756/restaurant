@@ -1,7 +1,7 @@
 <template>
   <div class="unified-bg">
     <app-header :btnShow="false"></app-header>
-    <div class="contianer">
+    <div class="container">
       <div class="tab sel-date">
         <div class="tab-title pull-left mr30">
           <span class="title-line"></span>
@@ -115,7 +115,7 @@
           <span class="title-line"></span>
           <span class="title-txt">予约可否</span>
         </div>
-        <div class="tab-inner">
+        <div class="tab-inner small">
           <el-checkbox-group v-model="checkList">
             <el-checkbox label="0">
               <img class="middle-img" src="../assets/img/calendar-circle.png" alt="">
@@ -260,13 +260,14 @@
     margin-right: 30px;
   }
 
-  .contianer {
+  .container {
+    transform: scale(.75);
+    margin: -100px auto;
     display: flex;
     flex-direction: column;
     background: url('../assets/img/set-bg.png') no-repeat;
     width: 90vw;
     max-width: 1200px;
-    margin: 60px auto;
     background-color: #fff;
     padding: 30px;
     .sel-date {
@@ -330,12 +331,19 @@
           width: 240px;
         }
         .inner-txt {
-          font-size: 24px;
+          font-size: 20px;
           margin-bottom: 10px;
           color: #142343;
         }
         .group1 {
           margin-bottom: 30px;
+        }
+      }
+      .tab-inner.small {
+        .el-radio,.el-checkbox {
+          border: 1px solid #ddd;
+          box-shadow: 1px 1px 1px #ddd;
+          padding: 5px 10px;
         }
       }
     }
@@ -351,33 +359,16 @@
         }
       }
     }
-    .opr-btns {
-      align-self: flex-end;
-      display: flex;
-      flex-wrap: wrap;
-      margin-top: 40px;
-      padding-top: 20px;
-      border-top: 2px solid #eee;
-      button {
-        margin: 0 30px 10px 0;
-        padding: 15px 5vw;
-      }
-    }
 
     .middle-img {
       vertical-align: middle;
     }
   }
-
   @media screen and(max-width: 750px) {
     .container {
-      padding: 15px;
-    }
-    .opr-btns {
-      align-self: center;
-      button {
-        width: 100%;
-      }
+      transform: scale(1) !important;
+      margin: 40px auto !important;
+      padding: 15px !important;
     }
   }
 </style>

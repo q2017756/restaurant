@@ -254,12 +254,13 @@
   }
 
   .container {
+    transform: scale(.75);
+    margin: -80px auto;
     display: flex;
     flex-direction: column;
     background: url('../assets/img/set-bg.png') no-repeat;
     width: 90vw;
     max-width: 1200px;
-    margin: 60px auto;
     background-color: #fff;
     padding: 30px;
     .tab {
@@ -317,7 +318,7 @@
           }
         }
         .inner-txt {
-          font-size: 24px;
+          font-size: 20px;
           margin-bottom: 10px;
           color: #142343;
         }
@@ -342,29 +343,12 @@
         }
       }
     }
-    .opr-btns {
-      align-self: flex-end;
-      display: flex;
-      flex-wrap: wrap;
-      margin-top: 40px;
-      padding-top: 20px;
-      border-top: 2px solid #eee;
-      button {
-        margin: 0 30px 10px 0;
-        padding: 15px 5vw;
-      }
-    }
   }
-
   @media screen and(max-width: 750px) {
     .container {
-      padding: 15px;
-    }
-    .opr-btns {
-      align-self: center;
-      button {
-        width: 100%;
-      }
+      transform: scale(1) !important;
+      margin: 40px auto !important;
+      padding: 15px !important;
     }
   }
 

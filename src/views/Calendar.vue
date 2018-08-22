@@ -78,9 +78,10 @@
     computed: {},
     methods: {
       getData() {
-        this.axios.get('calendar/getcalendarinfo').then(res=>{
-          console.log(res)
-        })
+        // this.axios.get('topics').then(res=>{
+        // this.axios.post('calendar/getcalendarinfo').then(res=>{
+        //   console.log(res)
+        // })
         this.events = [
           {
             "DailyDate": "2018/08/05",

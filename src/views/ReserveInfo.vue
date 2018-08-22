@@ -1,17 +1,10 @@
 <template>
   <div class="unified-bg">
     <app-header></app-header>
-    <div class="contianer">
+    <div class="container">
       <div class="inner-left">
-        <div>123{{filterOptions}}</div>
-        <el-select v-model="value8" filterable placeholder="请选择">
-          <el-option
-                  v-for="(item,index) in filterOptions"
-                  :key="index"
-
-                  :value="index">{{item}}
-          </el-option>
-        </el-select>
+        <!--<input type="text" v-model="CustTel">-->
+        <!--<div>{{filterOptionsTel}}</div>-->
         <div v-show="setInfoType === '1' ? false : true" class="tab sel-date">
           <div class="tab-title pull-left mr30">
             <span class="title-line"></span>
@@ -52,31 +45,110 @@
               <div class="inner-txt">時間</div>
               <el-select class="mb20" v-model="inputInfo.StartTime" placeholder="">
                 <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
+                        v-for="item in timeOptions"
+                        :key="item"
+                        :label="item"
+                        :value="item">
                 </el-option>
               </el-select>
               <div class="inner-txt">TEL</div>
-              <el-input class="mb20 tel-input" v-model="inputInfo.CustTel"></el-input>
-              <div class="info">
-                <div class="pull-left">
+              <el-autocomplete
+                      popper-class="my-autocomplete"
+                      v-model="CustTel"
+                      :fetch-suggestions="querySearchTel"
+                      placeholder="请输入内容"
+                      @select="handleSelect">
+                <template slot-scope="{ item }">
+                  <span v-if="item.CustTel">
+                    <span class="font-bold">電話番号：</span>{{item.CustTel}}
+                  </span>
+                  <span v-if="item.CustName">
+                    <span class="font-bold">予約者：</span>{{item.CustName}}
+                  </span>
+                  <span v-if="item.CustCompanyName">
+                    <span class="font-bold">法人名（団体）：</span>{{item.CustCompanyName}}
+                  </span>
+                  <span v-if="item.ReservationDate">
+                    <span class="font-bold">予定日：</span>{{item.ReservationDate}}
+                  </span>
+                  <span v-if="item.EnkaiDate || item.EnkaiName">
+                    <span class="font-bold">宴会日·宴会名：</span>{{item.EnkaiDate}}·{{item.EnkaiName}}
+                  </span>
+                  <span v-if="item.JissiDate || item.Kankei">
+                    <span class="font-bold">婚礼日·関係：</span>{{item.JissiDate}}·{{item.Kankei}}
+                  </span>
+                </template>
+              </el-autocomplete>
+              <div class="info" style="margin-top: 20px">
+                <div class="">
                   <div class="inner-txt">法人・団体名</div>
-                  <el-input v-model="inputInfo.CustCompanyName" class="mr30"></el-input>
+                  <el-autocomplete
+                          popper-class="my-autocomplete"
+                          v-model="CustCompanyName"
+                          :fetch-suggestions="querySearchCompany"
+                          placeholder="请输入内容"
+                          @select="handleSelect">
+                    <template slot-scope="{ item }">
+                      <span v-if="item.CustName">
+                        <span class="font-bold">予約者：</span>{{item.CustName}}
+                      </span>
+                      <span v-if="item.CustCompanyName">
+                        <span class="font-bold">法人名（団体）：</span>{{item.CustCompanyName}}
+                      </span>
+                      <span v-if="item.CustTel">
+                        <span class="font-bold">電話番号：</span>{{item.CustTel}}
+                      </span>
+                      <span v-if="item.ReservationDate">
+                        <span class="font-bold">予定日：</span>{{item.ReservationDate}}
+                      </span>
+                      <span v-if="item.EnkaiDate || item.EnkaiName">
+                        <span class="font-bold">宴会日·宴会名：</span>{{item.EnkaiDate}}·{{item.EnkaiName}}
+                      </span>
+                      <span v-if="item.JissiDate || item.Kankei">
+                        <span class="font-bold">婚礼日·関係：</span>{{item.JissiDate}}·{{item.Kankei}}
+                      </span>
+                    </template>
+                  </el-autocomplete>
                 </div>
-                <div class="pull-left name-wrap">
+                <div class="name-wrap">
                   <div class="inner-txt">部署名</div>
                   <el-input v-model="inputInfo.CustBusyoName"></el-input>
                 </div>
               </div>
               <div class="info">
-                <div class="pull-left">
-                  <div class="inner-txt">预约人名称</div>
-                  <el-input v-model="inputInfo.CustName" class="mr30"></el-input>
+                <div class="">
+                  <div class="inner-txt">予約者</div>
+                  <!--<el-input v-model="inputInfo.CustName" class="mr30"></el-input>-->
+                  <el-autocomplete
+                          popper-class="my-autocomplete"
+                          v-model="CustName"
+                          :fetch-suggestions="querySearchName"
+                          placeholder="请输入内容"
+                          @select="handleSelect">
+                    <template slot-scope="{ item }">
+                      <span v-if="item.CustName">
+                        <span class="font-bold">予約者：</span>{{item.CustName}}
+                      </span>
+                      <span v-if="item.CustCompanyName">
+                        <span class="font-bold">法人名（団体）：</span>{{item.CustCompanyName}}
+                      </span>
+                      <span v-if="item.CustTel">
+                        <span class="font-bold">電話番号：</span>{{item.CustTel}}
+                      </span>
+                      <span v-if="item.ReservationDate">
+                        <span class="font-bold">予定日：</span>{{item.ReservationDate}}
+                      </span>
+                      <span v-if="item.EnkaiDate || item.EnkaiName">
+                        <span class="font-bold">宴会日·宴会名：</span>{{item.EnkaiDate}}·{{item.EnkaiName}}
+                      </span>
+                      <span v-if="item.JissiDate || item.Kankei">
+                        <span class="font-bold">婚礼日·関係：</span>{{item.JissiDate}}·{{item.Kankei}}
+                      </span>
+                    </template>
+                  </el-autocomplete>
                 </div>
-                <div class="pull-left">
-                  <div class="inner-txt">ふりが</div>
+                <div class="name-wrap">
+                  <div class="inner-txt">ふりがな</div>
                   <el-input v-model="inputInfo.CustNameKana"></el-input>
                 </div>
               </div>
@@ -91,11 +163,11 @@
               </el-select>
             </div>
             <div class="info">
-              <div class="pull-left">
+              <div class="">
                 <div class="inner-txt">大人人数</div>
                 <el-input v-model="inputInfo.AdultNum" class="mr30"></el-input>
               </div>
-              <div class="pull-left">
+              <div class="name-wrap">
                 <div class="inner-txt">子供人数</div>
                 <el-input v-model="inputInfo.ChildNum"></el-input>
               </div>
@@ -166,16 +238,16 @@
             <span class="title-txt">備考</span>
           </div>
           <div class="tab-inner remark">
-            <div class="inner-txt mb20">料理詳細
-              <el-checkbox class="pull-right" label="強調" name="type"></el-checkbox>
+            <div class="inner-txt mb20 flex-center">料理詳細
+              <el-checkbox class="font-small" label="強調" name="type"></el-checkbox>
             </div>
             <el-input class="mb30" type="textarea" v-model="inputInfo.RyouriRemark"></el-input>
-            <div class="inner-txt mb20">シチュエーション
-              <el-checkbox class="pull-right" label="強調" name="type"></el-checkbox>
+            <div class="inner-txt mb20 flex-center">シチュエーション
+              <el-checkbox class="font-small" label="強調" name="type"></el-checkbox>
             </div>
             <el-input type="textarea" class="mb30" v-model="inputInfo.SituationRemark"></el-input>
-            <div class="inner-txt mb20">その他備考
-              <el-checkbox class="pull-right" label="強調" name="type"></el-checkbox>
+            <div class="inner-txt mb20 flex-center">その他備考
+              <el-checkbox class="font-small" label="強調" name="type"></el-checkbox>
             </div>
             <el-input type="textarea" class="mb30" v-model="inputInfo.OthersRemarke"></el-input>
           </div>
@@ -188,7 +260,7 @@
         <el-button class="remarks-btn" plain @click="delReserve()">データ削除</el-button>
       </div>
     </div>
-    <div v-if="calendarShow" class="calendar-contianer">
+    <div v-if="calendarShow" class="calendar-container">
       <a @click="closeCalendar" class="xd xd-close">close</a>
       <app-calendar :events="eventsData"
                     :dateItemRender="itemRender"
@@ -197,11 +269,12 @@
                     @event-click="chooseDate2"
                     @event-dragend="changeDate"></app-calendar>
     </div>
-    <app-modal :options="modalOptions" v-show="modalOptions.show">
+    <app-modal :options="modalOptions" v-show="modalOptions.show" @submit="doConfirm">
       <div slot="body">
         <p class="model-body-txt">{{ modalMsg }}</p>
       </div>
     </app-modal>
+
   </div>
 </template>
 
@@ -209,39 +282,24 @@
   import AppModal from "../components/AppModal.vue"
   import AppHeader from "../components/AppHeader.vue"
   import AppCalendar from '../components/AppCalendar'
+  import {getTimeList} from '../utils/func'
 
   export default {
     data() {
       return {
-        options1: [{
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-        }],
-        value8: '',
-        filterOptionsData: [],
-
-
-        allData: {},
         clickDate: localStorage.clickDate,
         setInfoType: localStorage.setInfoType,
-
+        timeOptions: [],
         fieldOptions: [],
         tableOptions: [],
         typeOptions: [],
         foodOptions: [],
         ownerOptions: [],
+        filterOptionsData: [],
+
+        CustTel: '', // 电话
+        CustCompanyName: '', // 法人团体名
+        CustName: '', // 预约人姓名
         inputInfo: {
           KaijoName: '', // 会场
           TableNo: '', // 桌号
@@ -273,13 +331,14 @@
         value1: '',
         input: '',
         modalMsg: '111',
+        modalStatus: 1,
         modalOptions: {
           show: false,
           title: ' ',
           showCancelButton: true,
-          cancelButtonText: '取消',
+          cancelButtonText: 'キャンセル',
           showConfirmButton: true,
-          confirmButtonText: '確認'
+          confirmButtonText: 'OK'
         },
         calendarShow: false,
         events: [
@@ -319,7 +378,7 @@
         itemRender(item) {
           const h = this.$createElement
           return h('div', {
-                class: 'calendar-text-contianer'
+                class: 'calendar-text-container'
               },
               [
                 h('span', {
@@ -344,13 +403,61 @@
         let arr = this.events.filter(item => item.TimeKbn === localStorage.mealsType)
         return arr
       },
-      filterOptions() {
-//        return this.filterOptionsData.filter(item => item.CustTel === val || item.CustName === val || item.CustCompanyName === val)
-          return this.filterOptionsData.filter(item => item.CustTel === this.inputInfo.CustTel)
-      }
     },
     methods: {
+      handleSelect(item) {
+        console.log(item)
+        this.CustTel = item.CustTel
+        this.CustName = item.CustName
+        this.CustCompanyName = item.CustCompanyName
+        this.inputInfo.CustBusyoName = item.CustBusyoName
+        this.inputInfo.KonReiJissiDate = item.KonReiJissiDate
+        this.inputInfo.EnkaiNum = item.EnkaiNum
+        this.inputInfo.ReservationNum = item.ReservationNum
+      },
+      querySearchTel(queryString, cb) {
+        let arr = this.filterOptionsData
+        let results =  arr.filter(this.createFilterTel(queryString))
+        // 调用 callback 返回建议列表的数据
+        cb(results)
+      },
+      createFilterTel(queryString) {
+        return (item) => {
+          return (String(item.CustTel).indexOf(String(queryString)) > -1)
+              && (String(item.CustCompanyName).indexOf(String(this.CustCompanyName)) > -1)
+              && (String(item.CustName).indexOf(String(this.CustName)) > -1)
+        }
+      },
+
+      querySearchCompany(queryString, cb) {
+        let arr = this.filterOptionsData
+        let results =   arr.filter(this.createFilterCompany(queryString))
+        // 调用 callback 返回建议列表的数据
+        cb(results)
+      },
+      createFilterCompany(queryString) {
+        return (item) => {
+          return (String(item.CustCompanyName).indexOf(String(queryString)) > -1)
+              && (String(item.CustTel).indexOf(String(this.CustTel)) > -1)
+              && (String(item.CustName).indexOf(String(this.CustName)) > -1)
+        }
+      },
+
+      querySearchName(queryString, cb) {
+        let arr = this.filterOptionsData
+        let results =  arr.filter(this.createFilterName(queryString))
+        // 调用 callback 返回建议列表的数据
+        cb(results)
+      },
+      createFilterName(queryString) {
+        return (item) => {
+          return (String(item.CustName).indexOf(String(queryString)) > -1)
+              && (String(item.CustCompanyName).indexOf(String(this.CustCompanyName)) > -1)
+              && (String(item.CustTel).indexOf(String(this.CustTel)) > -1)
+        }
+      },
       getData() {
+        this.timeOptions = getTimeList()
         // 会场
         this.fieldOptions = [
           {
@@ -431,12 +538,81 @@
             "EnkaiName": null,
             "EnkaiDate": null,
             "EnkaiNum": "",
-            "JissiDate": null,
+            "JissiDate": '111',
             "HiroenEnkaijo": null,
             "Name": null,
             "NameKana": null,
             "Tel": null,
-            "Kankei": null
+            "Kankei": '222'
+          },
+          {
+            "PrimaryId": null,
+            "ReservationDate": "2018/08/20",
+            "KbnName": "LLLLLLLLLDDDD",
+            "CustName": "于",
+            "CustNameKana": "レイハン",
+            "CustCompanyName": "DATAMAX",
+            "CustBusyoName": "開発部",
+            "CustTel": "080XXXXXXXX",
+            "ReservationNum": "2",
+            "EnkaiSyusaiName": null,
+            "EnkaiSyusaiNameKana": null,
+            "EnkaiSyusaiTel": null,
+            "EnkaiName": null,
+            "EnkaiDate": null,
+            "EnkaiNum": "",
+            "JissiDate": '111',
+            "HiroenEnkaijo": null,
+            "Name": null,
+            "NameKana": null,
+            "Tel": null,
+            "Kankei": '222'
+          },
+          {
+            "PrimaryId": null,
+            "ReservationDate": "2018/08/20",
+            "KbnName": "LLLLLLLLLDDDD",
+            "CustName": "王",
+            "CustNameKana": "レイハン",
+            "CustCompanyName": "baidu",
+            "CustBusyoName": "開発部",
+            "CustTel": "080XXXXXXXX",
+            "ReservationNum": "2",
+            "EnkaiSyusaiName": null,
+            "EnkaiSyusaiNameKana": null,
+            "EnkaiSyusaiTel": null,
+            "EnkaiName": null,
+            "EnkaiDate": null,
+            "EnkaiNum": "",
+            "JissiDate": '111',
+            "HiroenEnkaijo": null,
+            "Name": null,
+            "NameKana": null,
+            "Tel": null,
+            "Kankei": '222'
+          },
+          {
+            "PrimaryId": null,
+            "ReservationDate": "2018/08/20",
+            "KbnName": "LLLLLLLLLDDDD",
+            "CustName": "yu",
+            "CustNameKana": "レイハン",
+            "CustCompanyName": "sina",
+            "CustBusyoName": "開発部",
+            "CustTel": "080XXXXXXXX",
+            "ReservationNum": "2",
+            "EnkaiSyusaiName": null,
+            "EnkaiSyusaiNameKana": null,
+            "EnkaiSyusaiTel": null,
+            "EnkaiName": null,
+            "EnkaiDate": null,
+            "EnkaiNum": "",
+            "JissiDate": '111',
+            "HiroenEnkaijo": null,
+            "Name": null,
+            "NameKana": null,
+            "Tel": null,
+            "Kankei": '222'
           },
           {
             "PrimaryId": null,
@@ -446,7 +622,7 @@
             "CustNameKana": null,
             "CustCompanyName": null,
             "CustBusyoName": null,
-            "CustTel": null,
+            "CustTel": "080123456",
             "ReservationNum": "",
             "EnkaiSyusaiName": "前橋龍様・金沢直美様ｱﾌﾀｰﾊﾟｰﾃｨｰ",
             "EnkaiSyusaiNameKana": null,
@@ -469,7 +645,7 @@
             "CustNameKana": null,
             "CustCompanyName": null,
             "CustBusyoName": null,
-            "CustTel": null,
+            "CustTel": "0801111",
             "ReservationNum": "",
             "EnkaiSyusaiName": "風間・風間様　披露パーティー",
             "EnkaiSyusaiNameKana": null,
@@ -492,7 +668,7 @@
             "CustNameKana": null,
             "CustCompanyName": null,
             "CustBusyoName": null,
-            "CustTel": null,
+            "CustTel": "0802222",
             "ReservationNum": "",
             "EnkaiSyusaiName": "土屋賢太郎様・鈴木紗保美様ｱﾌﾀｰﾊﾟｰﾃｨｰ",
             "EnkaiSyusaiNameKana": null,
@@ -515,7 +691,7 @@
             "CustNameKana": null,
             "CustCompanyName": null,
             "CustBusyoName": null,
-            "CustTel": null,
+            "CustTel": "0803333",
             "ReservationNum": "",
             "EnkaiSyusaiName": "石井家・長尾家ｱﾌﾀｰﾊﾟｰﾃｨ",
             "EnkaiSyusaiNameKana": null,
@@ -538,7 +714,7 @@
             "CustNameKana": null,
             "CustCompanyName": null,
             "CustBusyoName": null,
-            "CustTel": null,
+            "CustTel": "0804444",
             "ReservationNum": "",
             "EnkaiSyusaiName": "新倉家・服部家ｱﾌﾀｰﾊﾟｰﾃｨｰ",
             "EnkaiSyusaiNameKana": null,
@@ -647,9 +823,11 @@
           },
         ]
         // 修改时从前页传过来的全部信息
-        console.log(this.allData)
         if (localStorage.setInfoType === '2') {
           this.inputInfo = JSON.parse(localStorage.getItem('scheduleInfo'))
+          this.CustTel = this.inputInfo.CustTel
+          this.CustCompanyName = this.inputInfo.CustCompanyName
+          this.CustName = this.inputInfo.CustName
         }
 
       },
@@ -660,6 +838,7 @@
       sign() {
         this.modalOptions.show = true
         this.modalMsg = '台帳に戻ってよろしいでしょうか？'
+        this.modalStatus = 2
       },
       cancel() {
         this.modalOptions.show = true
@@ -668,6 +847,13 @@
       delReserve() {
         this.modalOptions.show = true
         this.modalMsg = '予約データを削除してよろしいでしょうか？'
+      },
+      doConfirm() {
+        if (this.modalStatus === 1) {
+          console.log('接口：保存')
+        } else if (this.modalStatus === 2) {
+          this.$router.push('calendar')
+        }
       },
       showCalendar() {
         this.calendarShow = true
@@ -683,7 +869,8 @@
         })
       },
       chooseDate(e, date) {
-        console.log(date)
+        this.clickDate = date
+        this.calendarShow = false
       },
       chooseDate2(e, item) {
         console.log(item.date)
@@ -695,7 +882,7 @@
   }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
   .pull-left {
     float: left;
   }
@@ -724,13 +911,14 @@
     margin-bottom: 30px;
   }
 
-  .contianer {
+  .container {
+    transform: scale(.75);
+    margin: -140px auto;
     display: flex;
     flex-wrap: wrap;
     width: 90vw;
     max-width: 1200px;
     background: url('../assets/img/info-bg.png') no-repeat;
-    margin: 60px auto;
     background-color: #fff;
     padding: 60px 30px 150px 30px;
     overflow: hidden;
@@ -748,7 +936,6 @@
       padding-left: 30px;
     }
     .sel-date {
-      height: 42px;
       .el-input {
         width: 240px;
       }
@@ -800,7 +987,7 @@
           width: 240px;
         }
         .inner-txt {
-          font-size: 24px;
+          font-size: 20px;
           margin-bottom: 10px;
           color: #142343;
         }
@@ -809,7 +996,8 @@
         }
       }
       .info {
-        height: 110px;
+        display: flex;
+        flex-wrap: wrap;
         > div {
           margin-bottom: 20px;
         }
@@ -818,31 +1006,20 @@
         }
       }
       .name-wrap {
-        margin-top: 4px;
+        margin-left: 10px;
       }
       .remark {
         .el-checkbox {
           .el-checkbox__label {
-            font-size: 24px;
+            font-size: 18px;
           }
         }
       }
     }
-    .opr-btns {
-      align-self: flex-end;
-      display: flex;
-      flex-wrap: wrap;
-      margin-top: 40px;
-      padding-top: 20px;
-      border-top: 2px solid #eee;
-      button {
-        margin: 0 30px 10px 0;
-        padding: 15px 5vw;
-      }
-    }
+
   }
 
-  .calendar-contianer {
+  .calendar-container {
     position: absolute;
     top: 200px;
     left: 15vw;
@@ -867,14 +1044,18 @@
     }
   }
 
+  .font-bold {
+    font-weight: bold;
+  }
+
   @media screen and(max-width: 1250px) {
-    .contianer .tab .info {
-      height: 215px;
+    .container .tab .name-wrap {
+      margin-left: 0;
     }
   }
 
   @media screen and(max-width: 750px) {
-    .contianer {
+    .container {
       flex-direction: column;
       .inner-left, .inner-right {
         width: 100%;
@@ -885,7 +1066,7 @@
         padding-left: 0;
       }
     }
-    .calendar-contianer {
+    .calendar-container {
       position: absolute;
       top: 200px;
       left: 0;
@@ -896,17 +1077,18 @@
         z-index: 999;
       }
     }
-    .contianer .sel-date {
-      margin-bottom: 131px;
+    .container .tab .info {
     }
-    .contianer .tab .info {
-      height: 215px;
-    }
-    .opr-btns {
-      align-self: center;
-      button {
-        width: 100%;
-      }
+    .container .tab .name-wrap {
+      margin-left: 0;
     }
   }
+  @media screen and(max-width: 750px) {
+    .container {
+      transform: scale(1) !important;
+      margin: 40px auto !important;
+      padding: 15px !important;
+    }
+  }
+
 </style>

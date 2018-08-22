@@ -80,7 +80,7 @@ export default {
   position: absolute;
   left: 50%;
 	top: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(.7);
   width: 50vw;
   background: #fff;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -125,7 +125,7 @@ export default {
 }
 @media screen and(max-width: 750px) {
   .modal-dialog {
-    width: 90vw;
+    width: 110vw;
   }
 }
 </style>

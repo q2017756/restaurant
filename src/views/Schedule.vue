@@ -1,7 +1,7 @@
 <template>
   <div class="unified-bg">
     <app-header :btnShow="$store.isRoot"></app-header>
-    <div class="contianer">
+    <div class="container-b">
       <div class="remarks">
         <p class="title">当日備考:</p>
         <el-input
@@ -11,13 +11,13 @@
                 placeholder=""
                 v-model="remarks">
         </el-input>
-        <div class="btn-contianer">
+        <div class="btn-container">
           <el-button class="remarks-btn" size="mini" plain>料理MENU</el-button>
           <el-button class="remarks-btn" size="mini" plain>ドリンクMENU</el-button>
           <el-button class="remarks-btn" size="mini" plain>その他資料</el-button>
         </div>
       </div>
-      <div class="table-contianer">
+      <div class="table-container">
         <div class="add-btn" @click="showModal">
           <img src="/img/add.png" alt="">
           <span>新規登録</span>
@@ -116,9 +116,9 @@
           show: false,
           title: ' ',
           showCancelButton: true,
-          cancelButtonText: '取消',
+          cancelButtonText: 'キャンセル',
           showConfirmButton: true,
-          confirmButtonText: '確認'
+          confirmButtonText: 'OK'
         },
         leaveModalOptions: {
           show: false,
@@ -267,7 +267,7 @@
 </script>
 
 <style scoped lang="scss">
-  .contianer {
+  .container-b {
     width: 80vw;
     min-width: 1000px;
     margin: 60px auto;
@@ -287,7 +287,7 @@
       height: 120px;
       font-size: 18px;
     }
-    .btn-contianer {
+    .btn-container {
       flex: 0;
       display: flex;
       flex-direction: column;
@@ -301,7 +301,7 @@
     }
   }
 
-  .table-contianer {
+  .table-container {
     .add-btn {
       display: flex;
       justify-content: center;

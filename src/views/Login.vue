@@ -74,90 +74,138 @@
 
 <style lang="scss" scoped>
   @import "../assets/css/common.scss";
-
   .container {
     position: relative;
-    width: 8rem;
+    width: 80vw;
     height: 50vh;
     max-width: 100vw;
     margin: 25vh auto;
     background: url("../assets/img/login-form-bg.jpg") no-repeat;
     background-size: 100% 100%;
+    .form {
+      position: absolute;
+      right: 3vw;
+      top: 5vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+      width: 330px;
+      height: 40vh;
+      background: #fff;
+      border-radius: 5px;
+      text-align: center;
+      padding: 4vh 1vw;
+      .title {
+        letter-spacing: 3px;
+        white-space: nowrap;
+        font-size: 24px;
+      }
+
+      .sub-title {
+        margin: .5vh 0 .8vh;
+        color: #777;
+        font-size: 20px;
+      }
+
+      .username, .pwd {
+        box-sizing: border-box;
+        width: 80%;
+        margin-bottom: .5vh;
+        padding: 1vh 15%;
+        background-repeat: no-repeat;
+        background-size: 30px;
+        background-position: left;
+        border: none;
+        border-bottom: 1px solid #dcdcdc;
+        outline: none;
+      }
+
+      .username {
+        background-image: url("../assets/img/login-user.png");
+      }
+
+      .pwd {
+        background-image: url("../assets/img/login-password.png");
+      }
+
+      .login-btn {
+        width: 80%;
+        height: 45px;
+        background: #D0C487;
+        text-align: center;
+        line-height: 45px;
+        color: #fff;
+        font-size: 22px;
+        letter-spacing: 5px;
+        cursor: pointer;
+        user-select: none;
+      }
+    }
   }
 
-  .form {
-    box-sizing: border-box;
-    position: absolute;
-    right: .5rem;
-    top: .5rem;
-    width: 324px;
-    height: 360px;
-    background: #fff;
-    border-radius: 5px;
-    text-align: center;
-    padding: 40px;
-  }
-
-
-
-  .title {
-    letter-spacing: 3px;
-    white-space: nowrap;
-    font-size: 26px;
-  }
-
-  .sub-title {
-    margin: 9px 0 15px;
-    color: #777;
-    font-size: 24px;
-  }
-
-  .username, .pwd {
-    box-sizing: border-box;
-    width: 90%;
-    margin-bottom: 15px;
-    padding: 10px 40px;
-    background-repeat: no-repeat;
-    background-size: 30px;
-    border: none;
-    border-bottom: 1px solid #dcdcdc;
-    outline: none;
-  }
-
-  .username {
-    background-image: url("../assets/img/login-user.png");
-  }
-
-  .pwd {
-    background-image: url("../assets/img/login-password.png");
-  }
-
-  .login-btn {
-    width: 222px;
-    height: 45px;
-    margin: 10px auto;
-    background: #D0C487;
-    text-align: center;
-    line-height: 45px;
-    color: #fff;
-    font-size: 24px;
-    letter-spacing: 5px;
-    cursor: pointer;
-    user-select: none;
-  }
   @media screen and(max-width: 750px){
     .container {
       width: 100vw;
       height: 60vh;
+      margin: 20vh auto;
     }
     .form {
-      right: 10%;
-      top: 10%;
-      width: 8rem;
-      width: 8rem;
-      height: 50vh;
+      right: 10vw !important;
+      top: 5vh !important;
+      width: 80vw !important;
+      height: 50vh !important;
       max-width: 100vw;
-      padding: .8rem .4rem;
+      padding: 4vh 4vw;
     }
+  }
+  @media screen and(max-height: 800px)and(min-width: 750px){
+    .container {
+      .form {
+        width: 40vh !important;
+        .title {
+          font-size: 20px;
+        }
+
+        .sub-title {
+          margin: .5vh 0 .8vh;
+          font-size: 16px;
+        }
+        .username, .pwd {
+          background-size: 25px;
+        }
+        .login-btn {
+          height: 40px;
+          line-height: 40px;
+          font-size: 18px;
+        }
+      }
+    }
+
+  }
+  @media screen and(max-height: 600px)and(min-width: 750px){
+    .container {
+      .form {
+        width: 40vh !important;
+        padding: 4vh 1vw !important;
+        .title {
+          font-size: 18px;
+        }
+
+        .sub-title {
+          margin: .5vh 0 .8vh;
+          font-size: 14px;
+        }
+        .username, .pwd {
+          background-size: 20px;
+        }
+        .login-btn {
+          height: 35px;
+          line-height: 35px;
+          font-size: 16px;
+        }
+      }
+    }
+
   }
 </style>

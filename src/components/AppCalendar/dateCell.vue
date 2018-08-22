@@ -17,8 +17,8 @@
              :class="{ expanded }"
              :style="detailsPost"
              ref="details">
-            <div v-show="expanded"
-                 class="schedule-calendar-details-hd">{{ dateString }}</div>
+            <!--<div v-show="expanded"-->
+                 <!--class="schedule-calendar-details-hd">{{ dateString }}</div>-->
             <div class="schedule-calendar-details-bd" :class="{ scale: scale1 }">
                 <event-item v-if="details.length"
                             v-for="item in displayDetails"
@@ -242,8 +242,22 @@ export default {
 }
 .schedule-calendar-details-bd.scale {
     position: absolute;
-    transform: scale(0.8);
-    bottom: 0;
+    transform: scale(0.9);
+    top: 0;
     right: 0;
+}
+@media screen and(max-height: 580px) {
+    .schedule-calendar-details-bd.scale {
+        transform: scale(0.5);
+        top: -12px;
+        right: 0;
+    }
+}
+@media screen and(max-height: 680px) {
+    .schedule-calendar-details-bd.scale {
+        transform: scale(0.7);
+        top: -6px;
+        right: 0;
+    }
 }
 </style>
