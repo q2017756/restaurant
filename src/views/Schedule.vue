@@ -3,12 +3,15 @@
     <app-header :btnShow="$store.isRoot"></app-header>
     <div class="container-b">
       <div class="remarks">
-        <p class="title">当日備考:</p>
+        <div class="add-btn" @click="showModal">
+          <!--<img src="../assets/img/add.png" alt="">-->
+          新規登録
+        </div>
         <el-input
                 class="remarks-content"
                 type="textarea"
                 :autosize="{ minRows: 4, maxRows: 4}"
-                placeholder=""
+                placeholder="当日備考"
                 v-model="remarks">
         </el-input>
         <div class="btn-container">
@@ -18,10 +21,6 @@
         </div>
       </div>
       <div class="table-container">
-        <div class="add-btn" @click="showModal">
-          <img src="/img/add.png" alt="">
-          <span>新規登録</span>
-        </div>
         <table>
           <thead>
           <tr>
@@ -277,13 +276,25 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    .title {
-      flex: 0 0 auto;
-      margin-right: 10px;
-      font-size: 24px;
+    margin-bottom: 20px;
+    .add-btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 120px;
+      height: 120px;
+      background: #DED5A7;
+      border: 1px solid #DED5A7;
+      box-shadow: 2px 2px 10px 2px #666;
+      font-size: 20px;
       font-weight: bold;
+      cursor: pointer;
+      &:hover {
+        box-shadow: 2px 2px 10px 0 #666;
+      }
     }
     .remarks-content {
+      width: 60%;
       height: 120px;
       font-size: 18px;
     }
@@ -302,25 +313,7 @@
   }
 
   .table-container {
-    .add-btn {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 240px;
-      height: 45px;
-      margin: 30px 0;
-      background: #DED5A7;
-      border: 1px solid #DED5A7;
-      font-size: 24px;
-      font-weight: bold;
-      cursor: pointer;
-      img {
-        margin-right: 10px;
-      }
-      &:hover {
-        border: 1px solid #eee;
-      }
-    }
+
     table {
       width: 100%;
       border-collapse: collapse;

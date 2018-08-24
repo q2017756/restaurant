@@ -3,6 +3,7 @@
         <header-bar ref="header" :year="year"
                     :month="month"
                     :day="day"
+                    :currentYear="currentYear"
                     :currentMonth="currentMonth"
                     @updateValue="updateView"></header-bar>
         <div class="schedule-calendar-body">
@@ -45,6 +46,7 @@ export default {
             year: new Date().getFullYear(),
             month: new Date().getMonth(),
             day: new Date().getDate(),
+            currentYear: new Date().getFullYear(),
             currentMonth: new Date().getMonth(),
             dragItem: null
         }

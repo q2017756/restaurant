@@ -331,7 +331,7 @@
           width: 240px;
         }
         .inner-txt {
-          font-size: 20px;
+          font-size: 24px;
           margin-bottom: 10px;
           color: #142343;
         }

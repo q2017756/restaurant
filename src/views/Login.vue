@@ -51,21 +51,21 @@
           this.modalOptions.show = true
           this.modalMsg = 'アカウントとパスワードは空けてはいけません'
         } else {
-//          this.axios.post('user/userauth', {
+         this.axios.post('user/userauth', {
 //          this.axios.post('setting/updatedailymessage', {
-//              DailyDate: '2018/08/17',
-//              DailyMessage: 'test'
-//          })
-//              .then(res => {
-//                console.log(res)
-//              })
-          if (this.username !== '1' || this.password !== '1') {
-            this.modalOptions.show = true;
-            this.modalMsg = 'ユーザー名又はパスワードが違いました。';
-          } else {
-            this.$store.dispatch('login',1);
-            this.$router.push('calendar');
-          }
+           UserId: this.username,
+           Password: this.password
+         })
+             .then(res => {
+               console.log(res)
+             })
+          // if (this.username !== '1' || this.password !== '1') {
+          //   this.modalOptions.show = true;
+          //   this.modalMsg = 'ユーザー名又はパスワードが違いました。';
+          // } else {
+          //   this.$store.dispatch('login',1);
+          //   this.$router.push('calendar');
+          // }
         }
       }
     }
@@ -76,7 +76,7 @@
   @import "../assets/css/common.scss";
   .container {
     position: relative;
-    width: 80vw;
+    width: 60vw;
     height: 50vh;
     max-width: 100vw;
     margin: 25vh auto;

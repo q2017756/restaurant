@@ -300,6 +300,7 @@
         }
         .el-checkbox {
           margin: 0 20px 20px 0;
+          font-size: 24px;
         }
         .time-line {
           width: 1px;
@@ -318,7 +319,7 @@
           }
         }
         .inner-txt {
-          font-size: 20px;
+          font-size: 24px;
           margin-bottom: 10px;
           color: #142343;
         }

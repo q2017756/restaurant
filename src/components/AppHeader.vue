@@ -81,6 +81,7 @@
     font-size: 24px;
     cursor: pointer;
     .btn {
+      font-size: 16px;
       padding: 10px 15px;
     }
   }

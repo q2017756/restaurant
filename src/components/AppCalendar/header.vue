@@ -12,7 +12,9 @@
         </div>
         <ul class="month-selector">
             <li v-for="n in 12"
-                :class="{prev: n < (currentMonth + 1), current: n === currentMonth + 1, active: n === month + 1}"
+                :class="{prev: (n < (currentMonth + 1) && year === currentYear) || (year < currentYear),
+                current: (n === currentMonth + 1 && year === currentYear),
+                active: (n === month + 1)}"
                 @click="updateValue(year,n - 1)">{{n}}</li>
         </ul>
     </div>
@@ -28,6 +30,7 @@ export default {
     props: {
         year: Number,
         month: Number,
+        currentYear: Number,
         currentMonth: Number,
         day: Number
     },

@@ -56,27 +56,10 @@
                       popper-class="my-autocomplete"
                       v-model="CustTel"
                       :fetch-suggestions="querySearchTel"
-                      placeholder="请输入内容"
+                      placeholder="内容を入力してください"
                       @select="handleSelect">
                 <template slot-scope="{ item }">
-                  <span v-if="item.CustTel">
-                    <span class="font-bold">電話番号：</span>{{item.CustTel}}
-                  </span>
-                  <span v-if="item.CustName">
-                    <span class="font-bold">予約者：</span>{{item.CustName}}
-                  </span>
-                  <span v-if="item.CustCompanyName">
-                    <span class="font-bold">法人名（団体）：</span>{{item.CustCompanyName}}
-                  </span>
-                  <span v-if="item.ReservationDate">
-                    <span class="font-bold">予定日：</span>{{item.ReservationDate}}
-                  </span>
-                  <span v-if="item.EnkaiDate || item.EnkaiName">
-                    <span class="font-bold">宴会日·宴会名：</span>{{item.EnkaiDate}}·{{item.EnkaiName}}
-                  </span>
-                  <span v-if="item.JissiDate || item.Kankei">
-                    <span class="font-bold">婚礼日·関係：</span>{{item.JissiDate}}·{{item.Kankei}}
-                  </span>
+                  <app-info :item="item"></app-info>
                 </template>
               </el-autocomplete>
               <div class="info" style="margin-top: 20px">
@@ -86,27 +69,10 @@
                           popper-class="my-autocomplete"
                           v-model="CustCompanyName"
                           :fetch-suggestions="querySearchCompany"
-                          placeholder="请输入内容"
+                          placeholder="内容を入力してください"
                           @select="handleSelect">
                     <template slot-scope="{ item }">
-                      <span v-if="item.CustName">
-                        <span class="font-bold">予約者：</span>{{item.CustName}}
-                      </span>
-                      <span v-if="item.CustCompanyName">
-                        <span class="font-bold">法人名（団体）：</span>{{item.CustCompanyName}}
-                      </span>
-                      <span v-if="item.CustTel">
-                        <span class="font-bold">電話番号：</span>{{item.CustTel}}
-                      </span>
-                      <span v-if="item.ReservationDate">
-                        <span class="font-bold">予定日：</span>{{item.ReservationDate}}
-                      </span>
-                      <span v-if="item.EnkaiDate || item.EnkaiName">
-                        <span class="font-bold">宴会日·宴会名：</span>{{item.EnkaiDate}}·{{item.EnkaiName}}
-                      </span>
-                      <span v-if="item.JissiDate || item.Kankei">
-                        <span class="font-bold">婚礼日·関係：</span>{{item.JissiDate}}·{{item.Kankei}}
-                      </span>
+                      <app-info :item="item"></app-info>
                     </template>
                   </el-autocomplete>
                 </div>
@@ -123,33 +89,25 @@
                           popper-class="my-autocomplete"
                           v-model="CustName"
                           :fetch-suggestions="querySearchName"
-                          placeholder="请输入内容"
+                          placeholder="内容を入力してください"
                           @select="handleSelect">
                     <template slot-scope="{ item }">
-                      <span v-if="item.CustName">
-                        <span class="font-bold">予約者：</span>{{item.CustName}}
-                      </span>
-                      <span v-if="item.CustCompanyName">
-                        <span class="font-bold">法人名（団体）：</span>{{item.CustCompanyName}}
-                      </span>
-                      <span v-if="item.CustTel">
-                        <span class="font-bold">電話番号：</span>{{item.CustTel}}
-                      </span>
-                      <span v-if="item.ReservationDate">
-                        <span class="font-bold">予定日：</span>{{item.ReservationDate}}
-                      </span>
-                      <span v-if="item.EnkaiDate || item.EnkaiName">
-                        <span class="font-bold">宴会日·宴会名：</span>{{item.EnkaiDate}}·{{item.EnkaiName}}
-                      </span>
-                      <span v-if="item.JissiDate || item.Kankei">
-                        <span class="font-bold">婚礼日·関係：</span>{{item.JissiDate}}·{{item.Kankei}}
-                      </span>
+                      <app-info :item="item"></app-info>
                     </template>
                   </el-autocomplete>
                 </div>
                 <div class="name-wrap">
                   <div class="inner-txt">ふりがな</div>
-                  <el-input v-model="inputInfo.CustNameKana"></el-input>
+                  <el-autocomplete
+                          popper-class="my-autocomplete"
+                          v-model="CustNameKana"
+                          :fetch-suggestions="querySearchName2"
+                          placeholder="内容を入力してください"
+                          @select="handleSelect">
+                    <template slot-scope="{ item }">
+                      <app-info :item="item"></app-info>
+                    </template>
+                  </el-autocomplete>
                 </div>
               </div>
               <div class="inner-txt">区分</div>
@@ -191,14 +149,11 @@
               </el-option>
             </el-select>
             <div class="inner-txt">受日</div>
-            <el-select class="mb20" v-model="inputInfo.UkerukeDate" placeholder="">
-              <el-option
-                      v-for="item in options"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-              </el-option>
-            </el-select>
+            <el-date-picker
+                    v-model="dayValue"
+                    type="date"
+                    placeholder="日付選択">
+            </el-date-picker>
           </div>
         </div>
       </div>
@@ -282,6 +237,7 @@
   import AppModal from "../components/AppModal.vue"
   import AppHeader from "../components/AppHeader.vue"
   import AppCalendar from '../components/AppCalendar'
+  import AppInfo from '../components/AppInfo'
   import {getTimeList} from '../utils/func'
 
   export default {
@@ -300,6 +256,7 @@
         CustTel: '', // 电话
         CustCompanyName: '', // 法人团体名
         CustName: '', // 预约人姓名
+        CustNameKana: '', // 预约人姓名
         inputInfo: {
           KaijoName: '', // 会场
           TableNo: '', // 桌号
@@ -326,6 +283,7 @@
           OthersRemark: '', // 其他备注
           OthersRemarke: '', // 其他备注勾选 1选中
         },
+        dayValue: '',
         value: '',
         options: [],
         value1: '',
@@ -396,7 +354,8 @@
     components: {
       AppModal,
       AppHeader,
-      AppCalendar
+      AppCalendar,
+      AppInfo
     },
     computed: {
       eventsData() {
@@ -426,6 +385,7 @@
           return (String(item.CustTel).indexOf(String(queryString)) > -1)
               && (String(item.CustCompanyName).indexOf(String(this.CustCompanyName)) > -1)
               && (String(item.CustName).indexOf(String(this.CustName)) > -1)
+              && (String(item.CustNameKana).indexOf(String(this.CustNameKana)) > -1)
         }
       },
 
@@ -440,6 +400,7 @@
           return (String(item.CustCompanyName).indexOf(String(queryString)) > -1)
               && (String(item.CustTel).indexOf(String(this.CustTel)) > -1)
               && (String(item.CustName).indexOf(String(this.CustName)) > -1)
+              && (String(item.CustNameKana).indexOf(String(this.CustNameKana)) > -1)
         }
       },
 
@@ -454,8 +415,25 @@
           return (String(item.CustName).indexOf(String(queryString)) > -1)
               && (String(item.CustCompanyName).indexOf(String(this.CustCompanyName)) > -1)
               && (String(item.CustTel).indexOf(String(this.CustTel)) > -1)
+              && (String(item.CustNameKana).indexOf(String(this.CustNameKana)) > -1)
         }
       },
+
+      querySearchName2(queryString, cb) {
+        let arr = this.filterOptionsData
+        let results =  arr.filter(this.createFilterName2(queryString))
+        // 调用 callback 返回建议列表的数据
+        cb(results)
+      },
+      createFilterName2(queryString) {
+        return (item) => {
+          return (String(item.CustNameKana).indexOf(String(queryString)) > -1)
+              && (String(item.CustCompanyName).indexOf(String(this.CustCompanyName)) > -1)
+              && (String(item.CustTel).indexOf(String(this.CustTel)) > -1)
+              && (String(item.CustName).indexOf(String(this.CustName)) > -1)
+        }
+      },
+
       getData() {
         this.timeOptions = getTimeList()
         // 会场
@@ -987,7 +965,7 @@
           width: 240px;
         }
         .inner-txt {
-          font-size: 20px;
+          font-size: 24px;
           margin-bottom: 10px;
           color: #142343;
         }
@@ -999,7 +977,7 @@
         display: flex;
         flex-wrap: wrap;
         > div {
-          margin-bottom: 20px;
+          margin: 0 10px 20px 0;
         }
         .el-input {
           width: 240px;
