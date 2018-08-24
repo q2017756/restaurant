@@ -11,7 +11,7 @@ axios.defaults.baseURL = 'http://test.web-edi.jp/hanzoya14rest/api/'
 axios.interceptors.request.use(
   config => {
     if (store.state.token) {
-      config.headers.Authorization = `token ${store.state.token}`
+      config.headers.Authorization = `${store.state.token}`
     }
     return config
   },

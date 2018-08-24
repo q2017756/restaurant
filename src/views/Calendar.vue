@@ -78,60 +78,60 @@
     computed: {},
     methods: {
       getData() {
-        // this.axios.get('topics').then(res=>{
-        // this.axios.post('calendar/getcalendarinfo').then(res=>{
-        //   console.log(res)
-        // })
-        this.events = [
-          {
-            "DailyDate": "2018/08/05",
-            "TimeKbn": "1",
-            "YoyakuLevel": "0",
-            "DayoffKbn": "1"
-          },
-          {
-            "DailyDate": "2018/08/05",
-            "TimeKbn": "2",
-            "YoyakuLevel": "1",
-            "DayoffKbn": "1"
-          },
-          {
-            "DailyDate": "2018/08/06",
-            "TimeKbn": "1",
-            "YoyakuLevel": "2",
-            "DayoffKbn": "1"
-          },
-          {
-            "DailyDate": "2018/08/06",
-            "TimeKbn": "2",
-            "YoyakuLevel": "1",
-            "DayoffKbn": "1"
-          },
-          {
-            "DailyDate": "2018/08/09",
-            "TimeKbn": "1",
-            "YoyakuLevel": "0",
-            "DayoffKbn": "0"
-          },
-          {
-            "DailyDate": "2018/08/09",
-            "TimeKbn": "2",
-            "YoyakuLevel": "2",
-            "DayoffKbn": "0"
-          },
-          {
-            "DailyDate": "2018/08/19",
-            "TimeKbn": "1",
-            "YoyakuLevel": "1",
-            "DayoffKbn": "0"
-          },
-          {
-            "DailyDate": "2018/08/19",
-            "TimeKbn": "2",
-            "YoyakuLevel": "2",
-            "DayoffKbn": "0"
-          }
-        ]
+        this.axios.post('calendar/getcalendarinfo').then(res=>{
+          console.log(res)
+          this.events = res.data
+        })
+        // this.events = [
+        //   {
+        //     "DailyDate": "2018/08/05",
+        //     "TimeKbn": "1",
+        //     "YoyakuLevel": "0",
+        //     "DayoffKbn": "1"
+        //   },
+        //   {
+        //     "DailyDate": "2018/08/05",
+        //     "TimeKbn": "2",
+        //     "YoyakuLevel": "1",
+        //     "DayoffKbn": "1"
+        //   },
+        //   {
+        //     "DailyDate": "2018/08/06",
+        //     "TimeKbn": "1",
+        //     "YoyakuLevel": "2",
+        //     "DayoffKbn": "1"
+        //   },
+        //   {
+        //     "DailyDate": "2018/08/06",
+        //     "TimeKbn": "2",
+        //     "YoyakuLevel": "1",
+        //     "DayoffKbn": "1"
+        //   },
+        //   {
+        //     "DailyDate": "2018/08/09",
+        //     "TimeKbn": "1",
+        //     "YoyakuLevel": "0",
+        //     "DayoffKbn": "0"
+        //   },
+        //   {
+        //     "DailyDate": "2018/08/09",
+        //     "TimeKbn": "2",
+        //     "YoyakuLevel": "2",
+        //     "DayoffKbn": "0"
+        //   },
+        //   {
+        //     "DailyDate": "2018/08/19",
+        //     "TimeKbn": "1",
+        //     "YoyakuLevel": "1",
+        //     "DayoffKbn": "0"
+        //   },
+        //   {
+        //     "DailyDate": "2018/08/19",
+        //     "TimeKbn": "2",
+        //     "YoyakuLevel": "2",
+        //     "DayoffKbn": "0"
+        //   }
+        // ]
       },
       toNext(e, item) {
         if (item.TimeKbn === "1") {

@@ -18,7 +18,7 @@
 </template>
 
 <script>
-  import { mapActions } from 'vuex'
+  import {mapActions} from 'vuex'
   import AppModal from "../components/AppModal.vue"
 
   export default {
@@ -51,14 +51,14 @@
           this.modalOptions.show = true
           this.modalMsg = 'アカウントとパスワードは空けてはいけません'
         } else {
-         this.axios.post('user/userauth', {
-//          this.axios.post('setting/updatedailymessage', {
-           UserId: this.username,
-           Password: this.password
-         })
-             .then(res => {
-               console.log(res)
-             })
+          this.axios.post('user/userauth', {
+            UserId: this.username,
+            Password: this.password
+          })
+              .then(res => {
+                this.$store.dispatch('login', res.data.Token)
+                this.$router.push('calendar')
+              })
           // if (this.username !== '1' || this.password !== '1') {
           //   this.modalOptions.show = true;
           //   this.modalMsg = 'ユーザー名又はパスワードが違いました。';
@@ -74,6 +74,7 @@
 
 <style lang="scss" scoped>
   @import "../assets/css/common.scss";
+
   .container {
     position: relative;
     width: 60vw;
@@ -144,7 +145,7 @@
     }
   }
 
-  @media screen and(max-width: 750px){
+  @media screen and(max-width: 750px) {
     .container {
       width: 100vw;
       height: 60vh;
@@ -159,7 +160,8 @@
       padding: 4vh 4vw;
     }
   }
-  @media screen and(max-height: 800px)and(min-width: 750px){
+
+  @media screen and(max-height: 800px) and(min-width: 750px) {
     .container {
       .form {
         width: 40vh !important;
@@ -183,7 +185,8 @@
     }
 
   }
-  @media screen and(max-height: 600px)and(min-width: 750px){
+
+  @media screen and(max-height: 600px) and(min-width: 750px) {
     .container {
       .form {
         width: 40vh !important;
