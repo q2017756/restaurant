@@ -86,11 +86,11 @@
           </div>
           <div class="group-input group1">
             <div>
-              <el-input v-model="inputValue.group1" placeholder="内容を入力してください"></el-input>
+              <el-input v-model="inputValue.group1" placeholder="内容を入力してください"/>
               <span class="ml12 mr24">組以上</span>
             </div>
             <div>
-              <el-input v-model="inputValue.people1" placeholder="内容を入力してください"></el-input>
+              <el-input v-model="inputValue.people1" placeholder="内容を入力してください"/>
               <span class="ml12">人以上</span>
             </div>
           </div>
@@ -99,11 +99,11 @@
           </div>
           <div class="group-input">
             <div>
-              <el-input v-model="inputValue.group2" placeholder="内容を入力してください"></el-input>
+              <el-input v-model="inputValue.group2" placeholder="内容を入力してください"/>
               <span class="ml12 mr24">組以上</span>
             </div>
             <div>
-              <el-input v-model="inputValue.people2" placeholder="内容を入力してください"></el-input>
+              <el-input v-model="inputValue.people2" placeholder="内容を入力してください"/>
               <span class="ml12">人以上</span>
             </div>
           </div>

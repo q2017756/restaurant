@@ -1,6 +1,6 @@
 <template>
   <div class="unified-bg" v-loading="loading">
-    <app-header></app-header>
+    <app-header />
     <div class="container">
       <div class="inner-left">
         <div v-if="setInfoType === '1' ? false : true" class="tab sel-date">
@@ -9,7 +9,7 @@
             <span class="title-txt">予約日</span>
           </div>
           <div class="pull-left">
-            <el-input v-model="clickDate" class="mr30"></el-input>
+            <el-input v-model="inputInfo.ReservationDate" class="mr30"/>
             <el-button class="remarks-btn" type="primary" @click="showCalendar">予約日変更</el-button>
           </div>
         </div>
@@ -53,12 +53,12 @@
               <div class="inner-txt">TEL</div>
               <el-autocomplete
                       popper-class="my-autocomplete"
-                      v-model="CustTel"
+                      v-model="inputInfo.CustTel"
                       :fetch-suggestions="querySearchTel"
                       placeholder="内容を入力してください"
                       @select="handleSelect">
                 <template slot-scope="{ item }">
-                  <app-info :item="item"></app-info>
+                  <app-info :item="item" />
                 </template>
               </el-autocomplete>
               <div class="info" style="margin-top: 20px">
@@ -66,32 +66,31 @@
                   <div class="inner-txt">法人・団体名</div>
                   <el-autocomplete
                           popper-class="my-autocomplete"
-                          v-model="CustCompanyName"
+                          v-model="inputInfo.CustCompanyName"
                           :fetch-suggestions="querySearchCompany"
                           placeholder="内容を入力してください"
                           @select="handleSelect">
                     <template slot-scope="{ item }">
-                      <app-info :item="item"></app-info>
+                      <app-info :item="item" />
                     </template>
                   </el-autocomplete>
                 </div>
                 <div class="name-wrap">
                   <div class="inner-txt">部署名</div>
-                  <el-input v-model="inputInfo.CustBusyoName"></el-input>
+                  <el-input v-model="inputInfo.CustBusyoName"/>
                 </div>
               </div>
               <div class="info">
                 <div class="">
                   <div class="inner-txt">予約者</div>
-                  <!--<el-input v-model="inputInfo.CustName" class="mr30"></el-input>-->
                   <el-autocomplete
                           popper-class="my-autocomplete"
-                          v-model="CustName"
+                          v-model="inputInfo.CustName"
                           :fetch-suggestions="querySearchName"
                           placeholder="内容を入力してください"
                           @select="handleSelect">
                     <template slot-scope="{ item }">
-                      <app-info :item="item"></app-info>
+                      <app-info :item="item" />
                     </template>
                   </el-autocomplete>
                 </div>
@@ -99,12 +98,12 @@
                   <div class="inner-txt">ふりがな</div>
                   <el-autocomplete
                           popper-class="my-autocomplete"
-                          v-model="CustNameKana"
+                          v-model="inputInfo.CustNameKana"
                           :fetch-suggestions="querySearchName2"
                           placeholder="内容を入力してください"
                           @select="handleSelect">
                     <template slot-scope="{ item }">
-                      <app-info :item="item"></app-info>
+                      <app-info :item="item" />
                     </template>
                   </el-autocomplete>
                 </div>
@@ -122,11 +121,11 @@
             <div class="info">
               <div class="">
                 <div class="inner-txt">大人人数</div>
-                <el-input v-model="inputInfo.AdultNum" class="mr30"></el-input>
+                <el-input v-model="inputInfo.AdultNum" class="mr30"/>
               </div>
               <div class="name-wrap">
                 <div class="inner-txt">子供人数</div>
-                <el-input v-model="inputInfo.ChildNum"></el-input>
+                <el-input v-model="inputInfo.ChildNum"/>
               </div>
             </div>
             <div class="inner-txt">料理</div>
@@ -149,7 +148,7 @@
             </el-select>
             <div class="inner-txt">受日</div>
             <el-date-picker
-                    v-model="dayValue"
+                    v-model="inputInfo.UketukeDate"
                     type="date"
                     format="yyyy/MM/dd"
                     value-format="yyyy/MM/dd"
@@ -169,21 +168,21 @@
             <div class="info">
               <div class="pull-left">
                 <div class="inner-txt">宴会履歴</div>
-                <el-input v-model="inputInfo.EnkaiNum" class="mr30"></el-input>
+                <el-input v-model="inputInfo.EnkaiNum" class="mr30" />
               </div>
               <div class="pull-left">
                 <div class="inner-txt">法人レストラン履</div>
-                <el-input v-model="inputInfo.CompanyReservationNum"></el-input>
+                <el-input v-model="inputInfo.CompanyReservationNum" />
               </div>
             </div>
             <div class="info">
               <div class="pull-left">
                 <div class="inner-txt">結婚式</div>
-                <el-input v-model="inputInfo.KonReiJissiDate" class="mr30"></el-input>
+                <el-input v-model="inputInfo.KonreiJissidate" class="mr30" />
               </div>
               <div class="pull-left">
                 <div class="inner-txt">个人レストラン履</div>
-                <el-input v-model="inputInfo.ReservationNum"></el-input>
+                <el-input v-model="inputInfo.ReservationNum" />
               </div>
             </div>
           </div>
@@ -195,17 +194,17 @@
           </div>
           <div class="tab-inner remark">
             <div class="inner-txt mb20 flex-center">料理詳細
-              <el-checkbox class="font-small" label="強調" name="type"></el-checkbox>
+              <el-checkbox class="font-small" label="強調" name="type" v-model="inputInfo.RyouriRemarke" true-label="1" false-label="0" />
             </div>
-            <el-input class="mb30" type="textarea" v-model="inputInfo.RyouriRemark"></el-input>
+            <el-input class="mb30" type="textarea" v-model="inputInfo.RyouriRemark" />
             <div class="inner-txt mb20 flex-center">シチュエーション
-              <el-checkbox class="font-small" label="強調" name="type"></el-checkbox>
+              <el-checkbox class="font-small" label="強調" name="type" v-model="inputInfo.SituationRemarke" true-label="1" false-label="0" />
             </div>
-            <el-input type="textarea" class="mb30" v-model="inputInfo.SituationRemark"></el-input>
+            <el-input type="textarea" class="mb30" v-model="inputInfo.SituationRemark" />
             <div class="inner-txt mb20 flex-center">その他備考
-              <el-checkbox class="font-small" label="強調" name="type"></el-checkbox>
+              <el-checkbox class="font-small" label="強調" name="type" v-model="inputInfo.OthersRemarke" true-label="1" false-label="0" />
             </div>
-            <el-input type="textarea" class="mb30" v-model="inputInfo.OthersRemarke"></el-input>
+            <el-input type="textarea" class="mb30" v-model="inputInfo.OthersRemark" />
           </div>
         </div>
       </div>
@@ -214,7 +213,8 @@
         <el-button class="remarks-btn" plain @click="toPre">戻る</el-button>
         <el-button v-if="setInfoType === '1' ? false : true" class="remarks-btn" plain @click="cancelSet">予約ＣＸＬ
         </el-button>
-        <el-button v-if="setInfoType === '1' ? false : true" class="remarks-btn" plain @click="deleteSet">データ削除</el-button>
+        <el-button v-if="setInfoType === '1' ? false : true" class="remarks-btn" plain @click="deleteSet">データ削除
+        </el-button>
       </div>
     </div>
     <div v-if="calendarShow" class="calendar-container">
@@ -224,7 +224,7 @@
                     :startWeek="0"
                     @date-click="chooseDate"
                     @event-click="chooseDate2"
-                    @event-dragend="changeDate"></app-calendar>
+                    @event-dragend="changeDate" />
     </div>
     <app-modal :options="modalOptions" v-show="modalOptions.show" @submit="doConfirm">
       <div slot="body">
@@ -250,64 +250,50 @@
     data() {
       return {
         loading: true,
-        clickDate: localStorage.clickDate,
-        setInfoType: localStorage.setInfoType,
+        loading2: true,
+        setInfoType: localStorage.setInfoType, // 提交状态 1新增 2修改
+        // 下拉框
         fieldOptions: [],
         tableOptions: [],
         typeOptions: [],
         foodOptions: [],
         ownerOptions: [],
         filterOptionsData: [],
-
-        ReservationCode: '',
-        CustTel: '', // 电话
-        CustCompanyName: '', // 法人团体名
-        CustName: '', // 预约人姓名
-        CustNameKana: '', // 预约人姓名
+        // 表单信息
         inputInfo: {
+          ReservationCode: '', // 日期编码
+          ReservationDate: localStorage.getItem('clickDate'), // 日期
+          TimeKbn: localStorage.getItem('mealsType'), // 预定时间段
           KbnName: '', // 区分
           StartTime: '', // 时间
+          EndTime: '', // 时间
           CustName: '', // 预约人姓名
+          CustNameKana: '', // 预约人日文发音
+          CustCompanyName: '', // 法人团体名
+          CustBusyoName: '', // 公司部门名
           CustTel: '', // 电话
           AdultNum: '', // 大人数
           ChildNum: '', // 小孩数
           OwnerName: '', // 担当人信息
-          UkerukeDate: '', // 预订提交日期
-
-
-
-
-
-
-
-
-
-          CustNameKana: '', // 预约人日文发音
+          UketukeDate: '', // 预订提交日期
+          VisitingPlace: '', // 预定地点
+          MenuName: '', // 料理
           KaijoName: '', // 会场
           TableNo: '', // 桌号
-          EndTime: '', // 时间
-
-
-
-          MenuName: '', // 料理
-
-          EnkaiNum: '', // 宴会次数
-          CompanyReservationNum: '', // 法人餐厅预约次数
-          KonReiJissiDate: '', // 婚礼日期
-          ReservationNum: '', // 个人餐厅预约次数
           RyouriRemark: '', // 料理备注
-          RyouriRemarke: '', // 料理备注勾选 1选中
           SituationRemark: '', // 情况备注
-          SituationRemarke: '', // 情况备注勾选 1选中
           OthersRemark: '', // 其他备注
+          RyouriRemarke: '', // 料理备注勾选 1选中
+          SituationRemarke: '', // 情况备注勾选 1选中
           OthersRemarke: '', // 其他备注勾选 1选中
+          EnkaiNum: '', // 宴会次数
+          KonreiJissidate: '', // 婚礼日期
+          ReservationNum: '', // 个人餐厅预约次数
+          CompanyReservationNum: '', // 法人餐厅预约次数
+          ActiveFlg: "", // 状态 0 取消或删除 “1”=取消 “2”=删除
         },
-        dayValue: '',
-        value: '',
-        options: [],
-        value1: '',
-        input: '',
-        modalMsg: '111',
+        // 模态框
+        modalMsg: '',
         modalStatus: 1,
         modalOptions: {
           show: false,
@@ -326,22 +312,23 @@
           showConfirmButton: true,
           confirmButtonText: 'OK'
         },
+        // 日历
         calendarShow: false,
         events: [],
         itemRender(item) {
           const h = this.$createElement
           return h('div', {
-              class: 'calendar-text-container'
-            },
-            [
-              h('span', {
-                  class: 'calendar-text'
-                }, item.TimeKbn === "1" ? 'ランチ' : 'ディナー'
-              ),
-              h('span', {
-                class: item.YoyakuLevel === '0' ? 'calendar-icon-circle' : (item.YoyakuLevel === '1' ? 'calendar-icon-triangle' : 'calendar-icon-x')
-              })
-            ]
+                class: 'calendar-text-container'
+              },
+              [
+                h('span', {
+                      class: 'calendar-text'
+                    }, item.TimeKbn === "1" ? 'ランチ' : 'ディナー'
+                ),
+                h('span', {
+                  class: item.YoyakuLevel === '0' ? 'calendar-icon-circle' : (item.YoyakuLevel === '1' ? 'calendar-icon-triangle' : 'calendar-icon-x')
+                })
+              ]
           )
         },
       }
@@ -366,9 +353,6 @@
         if (this.setInfoType === '2') {
           // 获取上一页信息
           this.inputInfo = JSON.parse(localStorage.getItem('scheduleInfo'))
-          this.CustTel = this.inputInfo.CustTel
-          this.CustCompanyName = this.inputInfo.CustCompanyName
-          this.CustName = this.inputInfo.CustName
           // 获取日历
           this.loading = true
           this.axios.post('calendar/getcalendarinfo').then(res => {
@@ -380,12 +364,11 @@
             }
           })
           // 时间
-          this.axios.post('setting/starttime',{
+          this.axios.post('setting/starttime', {
             DailyDate: localStorage.getItem('clickDate'),
             TimeKbn: localStorage.getItem('mealsType')
           }).then(res => {
             if (res.data.Code === "SC-001") {
-              this.loading = false
             } else {
               this.$message.error(res.data.Message)
             }
@@ -396,7 +379,6 @@
         // 会场
         this.axios.post('master/getkaijo').then(res => {
           if (res.data.Code === "SC-001") {
-            this.loading = false
             this.fieldOptions = res.data.Data
           } else {
             this.$message.error(res.data.Message)
@@ -405,7 +387,6 @@
         // 桌号
         this.axios.post('master/gettable').then(res => {
           if (res.data.Code === "SC-001") {
-            this.loading = false
             this.tableOptions = res.data.Data
           } else {
             this.$message.error(res.data.Message)
@@ -414,7 +395,6 @@
         // 区分
         this.axios.post('master/getkbn').then(res => {
           if (res.data.Code === "SC-001") {
-            this.loading = false
             this.typeOptions = res.data.Data
           } else {
             this.$message.error(res.data.Message)
@@ -423,7 +403,6 @@
         // 料理
         this.axios.post('master/getmenu').then(res => {
           if (res.data.Code === "SC-001") {
-            this.loading = false
             this.foodOptions = res.data.Data
           } else {
             this.$message.error(res.data.Message)
@@ -439,14 +418,14 @@
           }
         })
         // 获取推荐信息
-//        this.axios.post('reservation/suggestdata').then(res => {
-//          if (res.data.Code === "SC-001") {
-//            this.loading = false
-//            this.filterOptionsData = res.data.Data
-//          } else {
-//            this.$message.error(res.data.Message)
-//          }
-//        })
+        this.axios.post('reservation/suggestdata').then(res => {
+          if (res.data.Code === "SC-001") {
+            this.loading2 = false
+            this.filterOptionsData = res.data.Data
+          } else {
+            this.$message.error(res.data.Message)
+          }
+        })
       },
       setInfo() {
         this.modalOptions.show = true
@@ -455,7 +434,7 @@
       },
       toPre() {
         this.modalOptions.show = true
-        this.modalMsg = this.setInfoType === '1' ? '入力情報は登録されていません。一覧画面に戻ってよろしいでしょうか？' :'台帳に戻ってよろしいでしょうか？'
+        this.modalMsg = this.setInfoType === '1' ? '入力情報は登録されていません。一覧画面に戻ってよろしいでしょうか？' : '台帳に戻ってよろしいでしょうか？'
         this.modalStatus = 2
       },
       cancelSet() {
@@ -472,42 +451,13 @@
         if (this.modalStatus === 1) {
           console.log('接口：保存')
           this.loading = true
-          this.axios.post('setting/updatedetailsetting',{
-            ReservationCode: this.ReservationCode,
-            ReservationDate: this.dayValue.replace(/\//g,''),
-            TimeKbn: localStorage.getItem('mealsType'),
-//            KbnName: this.,
-//            KbnName: this.,
-//            KbnName: this.,
-//            KbnName: this.,
-//            KbnName: this.,
-//            KbnName: this.,
-//            KbnName: this.,
-//            KbnName: this.,
-//            KbnName: this.,
-//            KbnName: this.,
-//            KbnName: this.,
-//            KbnName: this.,
-//            KbnName: this.,
-//            KbnName: this.,
-//            KbnName: this.,
-            LunchStartTime: this.timeValue.lunchStart,
-            LunchEndTime: this.timeValue.lunchEnd,
-            DinnerStartTime: this.timeValue.dinnerStart,
-            DinnerEndTime: this.timeValue.dinnerEnd,
-            YoyakuAvalibleNum: this.inputValue.group1,
-            YoyakusyaAvalibleNum: this.inputValue.people1,
-            YoyakuUnavalibleNum: this.inputValue.group2,
-            YoyakusyaUnavalibleNum: this.inputValue.people2,
-            WeeklyWorkdayId: this.checkList.join(','),
-            DayOffKbn: this.DayOffKbn,
-          }).then(res=>{
-            if(res.data.Code === "SC-001") {
-              this.loading = false
+          this.axios.post('setting/updatedetailsetting', this.inputInfo).then(res => {
+            this.loading = false
+            if (res.data.Code === "SC-001") {
               this.modalOptions.show = false
               this.modalOptions2.show = true
               this.modalMsg2 = '登録は成功しました'
-            }else {
+            } else {
               this.$message.error(res.data.Message)
             }
           })
@@ -529,7 +479,7 @@
         })
       },
       chooseDate(e, date) {
-        this.clickDate = date
+        this.inputInfo.ReservationDate = date
         this.calendarShow = false
       },
       chooseDate2(e, item) {
@@ -540,11 +490,11 @@
       },
       handleSelect(item) {
         console.log(item)
-        this.CustTel = item.CustTel
-        this.CustName = item.CustName
-        this.CustCompanyName = item.CustCompanyName
+        this.inputInfo.CustTel = item.CustTel
+        this.inputInfo.CustName = item.CustName
+        this.inputInfo.CustCompanyName = item.CustCompanyName
         this.inputInfo.CustBusyoName = item.CustBusyoName
-        this.inputInfo.KonReiJissiDate = item.KonReiJissiDate
+        this.inputInfo.KonreiJissidate = item.KonreiJissidate
         this.inputInfo.EnkaiNum = item.EnkaiNum
         this.inputInfo.ReservationNum = item.ReservationNum
       },
@@ -557,9 +507,9 @@
       createFilterTel(queryString) {
         return (item) => {
           return (String(item.CustTel).indexOf(String(queryString)) > -1)
-            && (String(item.CustCompanyName).indexOf(String(this.CustCompanyName)) > -1)
-            && (String(item.CustName).indexOf(String(this.CustName)) > -1)
-            && (String(item.CustNameKana).indexOf(String(this.CustNameKana)) > -1)
+              && (String(item.CustCompanyName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
+              && (String(item.CustName).indexOf(String(this.inputInfo.CustName)) > -1)
+              && (String(item.CustNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
         }
       },
       querySearchCompany(queryString, cb) {
@@ -571,9 +521,9 @@
       createFilterCompany(queryString) {
         return (item) => {
           return (String(item.CustCompanyName).indexOf(String(queryString)) > -1)
-            && (String(item.CustTel).indexOf(String(this.CustTel)) > -1)
-            && (String(item.CustName).indexOf(String(this.CustName)) > -1)
-            && (String(item.CustNameKana).indexOf(String(this.CustNameKana)) > -1)
+              && (String(item.CustTel).indexOf(String(this.inputInfo.CustTel)) > -1)
+              && (String(item.CustName).indexOf(String(this.inputInfo.CustName)) > -1)
+              && (String(item.CustNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
         }
       },
       querySearchName(queryString, cb) {
@@ -585,9 +535,9 @@
       createFilterName(queryString) {
         return (item) => {
           return (String(item.CustName).indexOf(String(queryString)) > -1)
-            && (String(item.CustCompanyName).indexOf(String(this.CustCompanyName)) > -1)
-            && (String(item.CustTel).indexOf(String(this.CustTel)) > -1)
-            && (String(item.CustNameKana).indexOf(String(this.CustNameKana)) > -1)
+              && (String(item.CustCompanyName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
+              && (String(item.CustTel).indexOf(String(this.inputInfo.CustTel)) > -1)
+              && (String(item.CustNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
         }
       },
       querySearchName2(queryString, cb) {
@@ -599,9 +549,9 @@
       createFilterName2(queryString) {
         return (item) => {
           return (String(item.CustNameKana).indexOf(String(queryString)) > -1)
-            && (String(item.CustCompanyName).indexOf(String(this.CustCompanyName)) > -1)
-            && (String(item.CustTel).indexOf(String(this.CustTel)) > -1)
-            && (String(item.CustName).indexOf(String(this.CustName)) > -1)
+              && (String(item.CustCompanyName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
+              && (String(item.CustTel).indexOf(String(this.inputInfo.CustTel)) > -1)
+              && (String(item.CustName).indexOf(String(this.inputInfo.CustName)) > -1)
         }
       },
     },

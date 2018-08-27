@@ -94,11 +94,11 @@
           </div>
           <div class="group-input group1">
             <div>
-              <el-input v-model="inputValue.group1" placeholder="内容を入力してください"></el-input>
+              <el-input v-model="inputValue.group1" placeholder="内容を入力してください"/>
               <span class="ml12 mr24">組以上</span>
             </div>
             <div>
-              <el-input v-model="inputValue.people1" placeholder="内容を入力してください"></el-input>
+              <el-input v-model="inputValue.people1" placeholder="内容を入力してください"/>
               <span class="ml12">人以上</span>
             </div>
           </div>
@@ -107,11 +107,11 @@
           </div>
           <div class="group-input">
             <div>
-              <el-input v-model="inputValue.group2" placeholder="内容を入力してください"></el-input>
+              <el-input v-model="inputValue.group2" placeholder="内容を入力してください"/>
               <span class="ml12 mr24">組以上</span>
             </div>
             <div>
-              <el-input v-model="inputValue.people2" placeholder="内容を入力してください"></el-input>
+              <el-input v-model="inputValue.people2" placeholder="内容を入力してください"/>
               <span class="ml12">人以上</span>
             </div>
           </div>
@@ -218,7 +218,6 @@
         this.axios.post('/setting/getdetailsetting',{
           DailyDate: date,
         }).then(res=>{
-
           if(res.data.Code === "SC-001") {
             this.loading = false
             const info = res.data.Data[0][0]
@@ -238,7 +237,9 @@
               people2: info.YoyakusyaUnavalibleNum,
             }
             this.checkList = info.YoyakuLevel.split(',')
-          }else{
+          }else if(res.data.Code === "EC-001") {
+            this.loading = false
+          } else{
             this.$message.error(res.data.Message)
           }
 
@@ -269,8 +270,10 @@
             YoyakusyaAvalibleNum: this.inputValue.people1,
             YoyakuUnavalibleNum: this.inputValue.group2,
             YoyakusyaUnavalibleNum: this.inputValue.people2,
-            WeeklyWorkdayId: this.checkList.join(','),
+            YoyakuLevel: this.checkList.join(','),
             DayOffKbn: this.DayOffKbn,
+            RegDate: localStorage.getItem('clickDate'),
+            RegUserId: JSON.parse(localStorage.getItem('userInfo')).UserName,
           }).then(res=>{
 
             if(res.data.Code === "SC-001") {
