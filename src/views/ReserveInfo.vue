@@ -451,7 +451,7 @@
         if (this.modalStatus === 1) {
           console.log('接口：保存')
           this.loading = true
-          this.axios.post('setting/updatedetailsetting', this.inputInfo).then(res => {
+          this.axios.post('reservation/updatereservation', this.inputInfo).then(res => {
             this.loading = false
             if (res.data.Code === "SC-001") {
               this.modalOptions.show = false
