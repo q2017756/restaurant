@@ -1,7 +1,7 @@
 <template>
   <div class="unified-bg">
     <app-header :btnShow="false"></app-header>
-    <div class="container">
+    <div class="container" v-loading="loading">
       <div class="tab">
         <div class="tab-title">
           <span class="title-line"></span>
@@ -29,44 +29,48 @@
           <div class="time-wrap">
             <div class="pull-left">
               <div class="inner-txt">ランチ</div>
-              <el-select v-model="timeValue.lunchStart" placeholder="OPEN">
-                <el-option
-                        v-for="item in options"
-                        :key="item"
-                        :label="item"
-                        :value="item">
-                </el-option>
-              </el-select>
+              <el-time-select
+                      v-model="timeValue.lunchStart"
+                      :picker-options="{
+                        start: '00:00',
+                        step: '00:30',
+                        end: '24:00'
+                      }"
+                      placeholder="OPEN">
+              </el-time-select>
               -
-              <el-select v-model="timeValue.lunchEnd" placeholder="L.O">
-                <el-option
-                        v-for="item in options"
-                        :key="item"
-                        :label="item"
-                        :value="item">
-                </el-option>
-              </el-select>
+              <el-time-select
+                      v-model="timeValue.lunchEnd"
+                      :picker-options="{
+                        start: '00:00',
+                        step: '00:30',
+                        end: '24:00'
+                      }"
+                      placeholder="L.O">
+              </el-time-select>
             </div>
             <div class="time-line pull-left"></div>
             <div class="pull-left">
               <div class="inner-txt">ディナー</div>
-              <el-select v-model="timeValue.dinnerStart" placeholder="OPEN">
-                <el-option
-                        v-for="item in options"
-                        :key="item"
-                        :label="item"
-                        :value="item">
-                </el-option>
-              </el-select>
+              <el-time-select
+                      v-model="timeValue.dinnerStart"
+                      :picker-options="{
+                        start: '00:00',
+                        step: '00:30',
+                        end: '24:00'
+                      }"
+                      placeholder="OPEN">
+              </el-time-select>
               -
-              <el-select v-model="timeValue.dinnerEnd" placeholder="L.O">
-                <el-option
-                        v-for="item in options"
-                        :key="item"
-                        :label="item"
-                        :value="item">
-                </el-option>
-              </el-select>
+              <el-time-select
+                      v-model="timeValue.dinnerEnd"
+                      :picker-options="{
+                        start: '00:00',
+                        step: '00:30',
+                        end: '24:00'
+                      }"
+                      placeholder="L.O">
+              </el-time-select>
             </div>
           </div>
         </div>
@@ -133,6 +137,11 @@
         <p class="model-body-txt">{{ modalMsg }}</p>
       </div>
     </app-modal>
+    <app-modal :options="modalOptions2" v-show="modalOptions2.show" @submit="doConfirm2">
+      <div slot="body">
+        <p class="model-body-txt">{{ modalMsg2 }}</p>
+      </div>
+    </app-modal>
   </div>
 </template>
 
@@ -144,8 +153,8 @@
   export default {
     data() {
       return {
+        loading: true,
         checkList: [],
-
         timeValue: {
           lunchStart: '',
           lunchEnd: '',
@@ -171,6 +180,15 @@
           cancelButtonText: 'キャンセル',
           showConfirmButton: true,
           confirmButtonText: 'OK'
+        },
+        modalMsg2: '',
+        modalOptions2: {
+          show: false,
+          title: ' ',
+          showCancelButton: false,
+          cancelButtonText: 'キャンセル',
+          showConfirmButton: true,
+          confirmButtonText: 'OK'
         }
       }
     },
@@ -181,32 +199,32 @@
     computed: {},
     methods: {
       getData() {
-        this.data = {
-          "WeeklyWorkdayId": "01,02,03,04",
-          "LunchStartTime": "12：00",
-          "LunchEndTime": "15：00",
-          "DinnerStartTime": "17：00",
-          "DinnerEndTime": "21:00",
-          "YoyakuAvalibleNum": "10",
-          "YoyakuUnavalibleNum": "20",
-          "YoyakuSyaAvalibleNum": "50",
-          "YoyakuSyaUnavalibleNum": "100",
-          "TantoMail": "rei@datamax.co.jp",
-        }
-        this.checkList = this.data.WeeklyWorkdayId.split(',')
-        this.timeValue = {
-          lunchStart: this.data.LunchStartTime,
-          lunchEnd: this.data.LunchEndTime,
-          dinnerStart: this.data.DinnerStartTime,
-          dinnerEnd: this.data.DinnerEndTime,
-        }
-        this.inputValue = {
-          group1: this.data.YoyakuAvalibleNum,
-          people1: this.data.YoyakuSyaAvalibleNum,
-          group2: this.data.YoyakuUnavalibleNum,
-          people2: this.data.YoyakuSyaUnavalibleNum,
-        }
-        this.email = this.data.TantoMail.split()
+        this.axios.post('setting/getbasesetting').then(res=>{
+
+          if(res.data.Code === "SC-001") {
+            if(res.data.Data[0]) {
+              this.loading = false
+              const info = res.data.Data[0]
+              this.checkList = info.WeeklyWorkdayId.split(',')
+              this.timeValue = {
+                lunchStart: info.LunchStartTime,
+                lunchEnd: info.LunchEndTime,
+                dinnerStart: info.DinnerStartTime,
+                dinnerEnd: info.DinnerEndTime,
+              }
+              this.inputValue = {
+                group1: info.YoyakuAvalibleNum,
+                people1: info.YoyakusyaAvalibleNum,
+                group2: info.YoyakuUnavalibleNum,
+                people2: info.YoyakusyaUnavalibleNum,
+              }
+              this.email = info.TantoMail.split()
+            }
+          }else {
+            this.$message.error(res.data.Message)
+          }
+        })
+        
         this.options = getTimeList()
       },
       toDetail() {
@@ -224,10 +242,37 @@
       },
       doConfirm() {
         if (this.modalStatus === 1) {
-          console.log('接口：保存')
+          this.loading = true
+          this.axios.post('setting/updatebasesetting',{
+            WeeklyWorkdayId: this.checkList.join(','),
+            LunchStartTime: this.timeValue.lunchStart,
+            LunchEndTime: this.timeValue.lunchEnd,
+            DinnerStartTime: this.timeValue.dinnerStart,
+            DinnerEndTime: this.timeValue.dinnerEnd,
+            YoyakuAvalibleNum: this.inputValue.group1,
+            YoyakusyaAvalibleNum: this.inputValue.people1,
+            YoyakuUnavalibleNum: this.inputValue.group2,
+            YoyakusyaUnavalibleNum: this.inputValue.people2,
+            TantoMail: this.email.join(','),
+            RegDate: localStorage.getItem('clickDate'),
+            RegUserId: JSON.parse(localStorage.getItem('userInfo')).UserName,
+          }).then(res=>{
+
+            if(res.data.Code === "SC-001") {
+              this.loading = false
+              this.modalOptions.show = false
+              this.modalOptions2.show = true
+              this.modalMsg2 = '登録は成功しました'
+            }else {
+              this.$message.error(res.data.Message)
+            }
+          })
         } else if (this.modalStatus === 2) {
           this.$router.push('calendar')
         }
+      },
+      doConfirm2() {
+        this.$router.push('calendar')
       }
     },
     mounted() {

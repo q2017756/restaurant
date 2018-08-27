@@ -1,7 +1,7 @@
 <template>
   <div class="unified-bg">
     <app-header :btnShow="false"></app-header>
-    <div class="container">
+    <div class="container"  v-loading="loading">
       <div class="tab sel-date">
         <div class="tab-title pull-left mr30">
           <span class="title-line"></span>
@@ -11,6 +11,9 @@
           <el-date-picker
                   v-model="dayValue"
                   type="date"
+                  format="yyyy/MM/dd"
+                  value-format="yyyy/MM/dd"
+                  @change="getInfo"
                   placeholder="日付選択">
           </el-date-picker>
         </div>
@@ -21,8 +24,8 @@
           <span class="title-txt">営業</span>
         </div>
         <div class="tab-inner">
-          <el-radio v-model="radio" label="0">営業日</el-radio>
-          <el-radio v-model="radio" label="1">定休日</el-radio>
+          <el-radio v-model="DayOffKbn" label="0">営業日</el-radio>
+          <el-radio v-model="DayOffKbn" label="1">定休日</el-radio>
         </div>
       </div>
       <div class="tab">
@@ -34,44 +37,48 @@
           <div class="time-wrap">
             <div class="pull-left">
               <div class="inner-txt">ランチ</div>
-              <el-select v-model="timeValue.lunchStart" placeholder="OPEN">
-                <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                </el-option>
-              </el-select>
+              <el-time-select
+                      v-model="timeValue.lunchStart"
+                      :picker-options="{
+                        start: '00:00',
+                        step: '00:30',
+                        end: '24:00'
+                      }"
+                      placeholder="OPEN">
+              </el-time-select>
               -
-              <el-select v-model="timeValue.lunchEnd" placeholder="L.O">
-                <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                </el-option>
-              </el-select>
+              <el-time-select
+                      v-model="timeValue.lunchEnd"
+                      :picker-options="{
+                        start: '00:00',
+                        step: '00:30',
+                        end: '24:00'
+                      }"
+                      placeholder="L.O">
+              </el-time-select>
             </div>
             <div class="time-line pull-left"></div>
             <div class="pull-left">
               <div class="inner-txt">ディナー</div>
-              <el-select v-model="timeValue.dinnerStart" placeholder="OPEN">
-                <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                </el-option>
-              </el-select>
+              <el-time-select
+                      v-model="timeValue.dinnerStart"
+                      :picker-options="{
+                        start: '00:00',
+                        step: '00:30',
+                        end: '24:00'
+                      }"
+                      placeholder="OPEN">
+              </el-time-select>
               -
-              <el-select v-model="timeValue.dinnerEnd" placeholder="L.O">
-                <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                </el-option>
-              </el-select>
+              <el-time-select
+                      v-model="timeValue.dinnerEnd"
+                      :picker-options="{
+                        start: '00:00',
+                        step: '00:30',
+                        end: '24:00'
+                      }"
+                      placeholder="L.O">
+              </el-time-select>
             </div>
           </div>
         </div>
@@ -139,6 +146,11 @@
         <p class="model-body-txt">{{ modalMsg }}</p>
       </div>
     </app-modal>
+    <app-modal :options="modalOptions2" v-show="modalOptions2.show" @submit="doConfirm2">
+      <div slot="body">
+        <p class="model-body-txt">{{ modalMsg2 }}</p>
+      </div>
+    </app-modal>
   </div>
 </template>
 
@@ -149,9 +161,10 @@
   export default {
     data() {
       return {
+        loading: localStorage.getItem('clickDate') ? true : false,
         dayValue: '',
-        radio: '',
-        checkList: ['0'],
+        DayOffKbn: '',
+        checkList: [],
         timeValue: {
           lunchStart: '',
           lunchEnd: '',
@@ -174,6 +187,15 @@
           cancelButtonText: 'キャンセル',
           showConfirmButton: true,
           confirmButtonText: 'OK'
+        },
+        modalMsg2: '',
+        modalOptions2: {
+          show: false,
+          title: ' ',
+          showCancelButton: false,
+          cancelButtonText: 'キャンセル',
+          showConfirmButton: true,
+          confirmButtonText: 'OK'
         }
       }
     },
@@ -184,36 +206,43 @@
     computed: {},
     methods: {
       getData() {
-        this.data = {
-          "DailyId": "20171221",
-          "DailyDate": "2017/12/21",
-          "LunchStartTime": "12：00",
-          "LunchEndTime": "15：00",
-          "DinnerStartTime": "17：00",
-          "DinnerEndTime": "21:00",
-          "YoyakuAvalibleNum": "10",
-          "YoyakuUnavalibleNum": "20",
-          "YoyakuSyaAvalibleNum": "50",
-          "YoyakuSyaUnavalibleNum": "100",
-          "YoyakuLevel": "1",
-          "DayOffKbn": "1",
+        if(localStorage.getItem('clickDate')) {
+          this.fillData(localStorage.getItem('clickDate'))
         }
-        this.dayValue = this.data.DailyDate
-        this.radio = this.data.DayOffKbn
-        this.timeValue = {
-          lunchStart: this.data.LunchStartTime,
-          lunchEnd: this.data.LunchEndTime,
-          dinnerStart: this.data.DinnerStartTime,
-          dinnerEnd: this.data.DinnerEndTime,
-        }
-        this.inputValue = {
-          group1: this.data.YoyakuAvalibleNum,
-          people1: this.data.YoyakuSyaAvalibleNum,
-          group2: this.data.YoyakuUnavalibleNum,
-          people2: this.data.YoyakuSyaUnavalibleNum,
-        }
-        this.checkList = this.data.YoyakuLevel.split(',')
+      },
+      getInfo(e) {
+        this.fillData(e)
+      },
+      fillData(date) {
+        this.loading = true
+        this.axios.post('/setting/getdetailsetting',{
+          DailyDate: date,
+        }).then(res=>{
 
+          if(res.data.Code === "SC-001") {
+            this.loading = false
+            const info = res.data.Data[0][0]
+            console.log(info);
+            this.dayValue = info.DailyDate
+            this.DayOffKbn = info.DayoffKbn
+            this.timeValue = {
+              lunchStart: info.LunchStartTime,
+              lunchEnd: info.LunchEndTime,
+              dinnerStart: info.DinnerStartTime,
+              dinnerEnd: info.DinnerEndTime,
+            }
+            this.inputValue = {
+              group1: info.YoyakuAvalibleNum,
+              people1: info.YoyakusyaAvalibleNum,
+              group2: info.YoyakuUnavalibleNum,
+              people2: info.YoyakusyaUnavalibleNum,
+            }
+            this.checkList = info.YoyakuLevel.split(',')
+          }else{
+            this.$message.error(res.data.Message)
+          }
+
+        })
       },
       setInfo() {
         this.modalOptions.show = true
@@ -228,9 +257,37 @@
       doConfirm() {
         if (this.modalStatus === 1) {
           console.log('接口：保存')
+          this.loading = true
+          this.axios.post('setting/updatedetailsetting',{
+            DaillyId: this.dayValue.replace(/\//g,''),
+            DailyDate: this.dayValue,
+            LunchStartTime: this.timeValue.lunchStart,
+            LunchEndTime: this.timeValue.lunchEnd,
+            DinnerStartTime: this.timeValue.dinnerStart,
+            DinnerEndTime: this.timeValue.dinnerEnd,
+            YoyakuAvalibleNum: this.inputValue.group1,
+            YoyakusyaAvalibleNum: this.inputValue.people1,
+            YoyakuUnavalibleNum: this.inputValue.group2,
+            YoyakusyaUnavalibleNum: this.inputValue.people2,
+            WeeklyWorkdayId: this.checkList.join(','),
+            DayOffKbn: this.DayOffKbn,
+          }).then(res=>{
+
+            if(res.data.Code === "SC-001") {
+              this.loading = false
+              this.modalOptions.show = false
+              this.modalOptions2.show = true
+              this.modalMsg2 = '登録は成功しました'
+            }else {
+              this.$message.error(res.data.Message)
+            }
+          })
         } else if (this.modalStatus === 2) {
           this.$router.push('calendar')
         }
+      },
+      doConfirm2() {
+        this.$router.push('calendar')
       }
     },
     mounted() {
@@ -300,7 +357,7 @@
           display: flex;
           flex-wrap: wrap;
         }
-        .el-radio,.el-checkbox {
+        .el-radio, .el-checkbox {
           border: 1px solid #ddd;
           box-shadow: 1px 1px 1px #ddd;
           padding: 15px 20px;
@@ -308,7 +365,7 @@
             font-size: 24px;
           }
         }
-        .el-radio,.el-checkbox {
+        .el-radio, .el-checkbox {
           margin: 0 20px 20px 0;
         }
         .time-line {
@@ -340,7 +397,7 @@
         }
       }
       .tab-inner.small {
-        .el-radio,.el-checkbox {
+        .el-radio, .el-checkbox {
           border: 1px solid #ddd;
           box-shadow: 1px 1px 1px #ddd;
           padding: 5px 10px;
@@ -364,6 +421,7 @@
       vertical-align: middle;
     }
   }
+
   @media screen and(max-width: 750px) {
     .container {
       transform: scale(1) !important;

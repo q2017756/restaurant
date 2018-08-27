@@ -1,7 +1,7 @@
 <template>
   <div class="unified-bg">
     <app-header :btnShow="$store.isRoot"></app-header>
-    <div class="contianer">
+    <div class="contianer" v-loading="loading">
       <app-calendar :events="events"
                     :dateItemRender="itemRender"
                     :startWeek="0"
@@ -19,40 +19,8 @@
     data() {
       return {
         isRoot: true,
-        events: [
-          {
-            id: 1,
-            date: '2018/08/02',
-            DailyDate: "2018/08/20",
-            TimeKbn: "1",
-            YoyakuLevel: "2",
-            DayoffKben: "0"
-          },
-          {
-            id: 2,
-            date: '2018/08/02',
-            DailyDate: "2018/08/20",
-            TimeKbn: "2",
-            YoyakuLevel: "1",
-            DayoffKben: "0"
-          },
-          {
-            id: 3,
-            date: '2018/08/09',
-            DailyDate: "2018/08/21",
-            TimeKbn: "1",
-            YoyakuLevel: "0",
-            DayoffKben: "0"
-          },
-          {
-            id: 4,
-            date: '2018/08/09',
-            DailyDate: "2018/08/21",
-            TimeKbn: "2",
-            YoyakuLevel: "2",
-            DayoffKben: "0"
-          }
-        ],
+        loading: true,
+        events: [],
         itemRender(item) {
           const h = this.$createElement
           return h('div', {
@@ -78,68 +46,25 @@
     computed: {},
     methods: {
       getData() {
+        localStorage.setItem('clickDate','')
         this.axios.post('calendar/getcalendarinfo').then(res=>{
-          console.log(res)
-          this.events = res.data
+
+          if(res.data.Code === "SC-001") {
+            this.loading = false
+            this.events = res.data.Data
+          }else {
+            this.$message.error(res.data.Message)
+          }
         })
-        // this.events = [
-        //   {
-        //     "DailyDate": "2018/08/05",
-        //     "TimeKbn": "1",
-        //     "YoyakuLevel": "0",
-        //     "DayoffKbn": "1"
-        //   },
-        //   {
-        //     "DailyDate": "2018/08/05",
-        //     "TimeKbn": "2",
-        //     "YoyakuLevel": "1",
-        //     "DayoffKbn": "1"
-        //   },
-        //   {
-        //     "DailyDate": "2018/08/06",
-        //     "TimeKbn": "1",
-        //     "YoyakuLevel": "2",
-        //     "DayoffKbn": "1"
-        //   },
-        //   {
-        //     "DailyDate": "2018/08/06",
-        //     "TimeKbn": "2",
-        //     "YoyakuLevel": "1",
-        //     "DayoffKbn": "1"
-        //   },
-        //   {
-        //     "DailyDate": "2018/08/09",
-        //     "TimeKbn": "1",
-        //     "YoyakuLevel": "0",
-        //     "DayoffKbn": "0"
-        //   },
-        //   {
-        //     "DailyDate": "2018/08/09",
-        //     "TimeKbn": "2",
-        //     "YoyakuLevel": "2",
-        //     "DayoffKbn": "0"
-        //   },
-        //   {
-        //     "DailyDate": "2018/08/19",
-        //     "TimeKbn": "1",
-        //     "YoyakuLevel": "1",
-        //     "DayoffKbn": "0"
-        //   },
-        //   {
-        //     "DailyDate": "2018/08/19",
-        //     "TimeKbn": "2",
-        //     "YoyakuLevel": "2",
-        //     "DayoffKbn": "0"
-        //   }
-        // ]
       },
       toNext(e, item) {
         if (item.TimeKbn === "1") {
-          localStorage.mealsType = '1';
+          localStorage.setItem('mealsType','1')
         } else {
-          localStorage.mealsType = '2';
+          localStorage.setItem('mealsType','2')
         }
-        localStorage.clickDate = item.DailyDate
+        localStorage.setItem('clickDate',item.DailyDate.replace(/-/g, '/'))
+        localStorage.setItem('mealsStatus',item.YoyakuLevel)
         this.$router.push('schedule');
 
       },

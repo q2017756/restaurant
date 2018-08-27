@@ -55,17 +55,17 @@
             UserId: this.username,
             Password: this.password
           })
-              .then(res => {
-                this.$store.dispatch('login', res.data.Token)
-                this.$router.push('calendar')
-              })
-          // if (this.username !== '1' || this.password !== '1') {
-          //   this.modalOptions.show = true;
-          //   this.modalMsg = 'ユーザー名又はパスワードが違いました。';
-          // } else {
-          //   this.$store.dispatch('login',1);
-          //   this.$router.push('calendar');
-          // }
+            .then(res => {
+              ;
+              if (res.data.Code === "EC-001") {
+                this.modalOptions.show = true;
+                this.modalMsg = 'ユーザー名又はパスワードが違いました。';
+                return false
+              }
+              this.$store.dispatch('login', res.data.Data[0].Token)
+              localStorage.setItem('userInfo',JSON.stringify(res.data.Data[0]))
+              this.$router.push('calendar')
+            })
         }
       }
     }

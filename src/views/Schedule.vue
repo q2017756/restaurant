@@ -7,7 +7,7 @@
           <!--<img src="../assets/img/add.png" alt="">-->
           新規登録
         </div>
-        <el-input
+        <el-input  v-loading="loading"
                 class="remarks-content"
                 type="textarea"
                 :autosize="{ minRows: 4, maxRows: 4}"
@@ -20,7 +20,7 @@
           <el-button class="remarks-btn" size="mini" plain>その他資料</el-button>
         </div>
       </div>
-      <div class="table-container">
+      <div class="table-container" v-loading="loading2">
         <table>
           <thead>
           <tr>
@@ -103,12 +103,14 @@
       return {
         oldRemarks: '',
         remarks: '',
+        loading: true,
+        loading2: true,
         tableInfo: [],
         canILeave: false, // 能否进行路有跳转
         toName: '', // 路由将要跳转的地址
 
         // modal相关
-        modalStatus: 1,
+        modalStatus: localStorage.getItem('mealsStatus'),
         modalMsg: '',
         otherBtnShow: false,
         modalOptions: {
@@ -137,108 +139,72 @@
     methods: {
       getData() {
         //  调用获取备注接口
-        const remarkInfo = {
-          "DailyDate": "2017/11/21",
-          "DailyMessage": "今天是个好日子，大家好好工作XXXXXXXXXXXXXXX",
-        }
-        this.oldRemarks = remarkInfo.DailyMessage
-        this.remarks = remarkInfo.DailyMessage
-        //  调用获取表格信息接口
-        this.tableInfo = [
-          {
-            "ReservationCode": "20170214001",
-            "ReservationDate": "2017/02/14",
-            "TimeKbn": "1",
-            "KbnName": "結婚記念日",
-            "StartTime": "12：00",
-            "EndTime": "14：00",
-            "CustName": "黎汉",
-            "CustNameKana": "レイハン",
-            "CustCompanyName": "（DATAMAX）",
-            "CustBusyoName": "（DATAMAX 本部）",
-            "CustTel": "080-XXXX-XXXX",
-            "AdultNum": "10",
-            "ChildNum": "1",
-            "OwnerName": "西村",
-            "UkerukeDate": "2017/02/10",
-            "VisitingPlace": "レストラン",
-            "MenuName": "当日",
-            "KaijoName": "１Fレストラン",
-            "TableNo": "T-1-bis",
-            "RyouriRemark": "不能吃香菜",
-            "SituationRemark": "不要放香菜，小孩不能喝酒",
-            "OthersRemark": "没了",
-            "RyouriRemarke": "0",
-            "SituationRemarke": "0",
-            "OthersRemarke": "0",
-            "KonReiNum": "1",
-            "EnkaiNum": "6",
-            "KonReiJissiDate": "2016/11/08",
-            "ReservationNum": "10",
-            "CompanyReservationNum": "10",
-            "ActiveFlg": "0"
-          },
-          {
-            "ReservationCode": "20170215002",
-            "ReservationDate": "2017/02/15",
-            "TimeKbn": "1",
-            "KbnName": "結婚記念日",
-            "StartTime": "13：00",
-            "EndTime": "15：00",
-            "CustName": "謝",
-            "CustNameKana": "シャ",
-            "CustCompanyName": "（DATAMAX）",
-            "CustBusyoName": "（DATAMAX 本部）",
-            "CustTel": "080-XXXX-XXXX",
-            "AdultNum": "11",
-            "ChildNum": "12",
-            "OwnerName": "西村",
-            "UkerukeDate": "2017/02/08",
-            "VisitingPlace": "レストラン",
-            "MenuName": "結納メニュー",
-            "KaijoName": "１Fレストラン",
-            "TableNo": "T-1-bis",
-            "RyouriRemark": "不能吃肉",
-            "SituationRemark": "不要放肉，小孩不能喝酒",
-            "OthersRemark": "没了",
-            "RyouriRemarke": "1",
-            "SituationRemarke": "1",
-            "OthersRemarke": "0",
-            "KonReiNum": "1",
-            "EnkaiNum": "10",
-            "KonReiJissiDate": "2017/11/08",
-            "ReservationNum": "10",
-            "CompanyReservationNum": "10",
-            "ActiveFlg": "0"
+        this.axios.post('setting/getdailyInfo',{
+          DailyDate: localStorage.getItem('clickDate'),
+          TimeKbn: localStorage.getItem('mealsType')
+        }).then(res=>{
+
+          if(res.data.Code === "SC-001") {
+            this.loading = false
+            this.oldRemarks = res.data.Data[0].DailyMessage
+            this.remarks = res.data.Data[0].DailyMessage
+          }else {
+            this.$message.error(res.data.Message)
           }
-        ]
+        })
+        //  调用获取表格信息接口
+        this.axios.post('reservation/reservationdata',{
+          DailyDate: localStorage.getItem('clickDate'),
+          TimeKbn: localStorage.getItem('mealsType')
+        }).then(res=>{
+
+          if(res.data.Code === "SC-001") {
+            this.loading2 = false
+            this.tableInfo = res.data.Data
+          }else {
+            this.$message.error(res.data.Message)
+          }
+        })
       },
       showModal() {
-        this.modalOptions.show = true
-        if (this.modalStatus === 1) {
-          this.modalMsg = '混雑条件以上なっています！'
-        } else if (this.modalStatus === 2) {
-          this.modalMsg = '満席条件以上入っています！'
-        } else if (this.modalStatus === 3) {
+        if (this.modalStatus === "0") {
+          localStorage.setItem('setInfoType', '1')
+          localStorage.setItem('scheduleInfo','')
+          this.$router.push('reserveInfo')
+        } else if (this.modalStatus === "1") {
+          this.modalOptions.show = true
+          this.modalMsg = '混雑条件以上入っています！'
+        } else if (this.modalStatus === "2") {
+          this.modalOptions.show = true
           this.modalMsg = '満席条件以上入っています！'
         }
       },
       toAdd() {
-        if (this.modalStatus === 1 || this.modalStatus === 2) {
-          localStorage.setInfoType = 1
-          this.$router.push('reserveInfo')
+        if (this.modalStatus === "0" || this.modalStatus === "1") {
           localStorage.setItem('scheduleInfo','')
+          localStorage.setItem('setInfoType', '1')
+          this.$router.push('reserveInfo')
         }
       },
       toEdit() {
-        localStorage.setInfoType = 2
-        this.$router.push('reserveInfo')
+        localStorage.setItem('setInfoType', '2')
         localStorage.setItem('scheduleInfo',JSON.stringify(this.tableInfo[0]))
+        this.$router.push('reserveInfo')
       },
       saveAndLeave() {
         console.log('保存备注')
-        this.canILeave = true
-        this.$router.push(this.toName)
+        this.axios.post('setting/updatedailymessage',{
+          DailyDate: localStorage.getItem('clickDate'),
+          DailyMessage: this.remarks
+        }).then(res=>{
+          if(res.data.Code === "SC-001") {
+            this.canILeave = true
+            this.$router.push(this.toName)
+          }else {
+            this.$message.error(res.data.Message)
+          }
+        })
+
       },
       forceLeave() {
         console.log('不保存备注，强制离开')

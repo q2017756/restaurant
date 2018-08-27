@@ -3,7 +3,7 @@ import store from './store'
 import router from './router'
 
 // axios 配置
-axios.defaults.timeout = 5000
+axios.defaults.timeout = 15000
 axios.defaults.baseURL = 'http://test.web-edi.jp/hanzoya14rest/api/'
 // axios.defaults.baseURL = 'https://cnodejs.org/api/v1/'
 

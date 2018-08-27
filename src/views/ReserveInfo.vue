@@ -1,11 +1,9 @@
 <template>
-  <div class="unified-bg">
+  <div class="unified-bg" v-loading="loading">
     <app-header></app-header>
     <div class="container">
       <div class="inner-left">
-        <!--<input type="text" v-model="CustTel">-->
-        <!--<div>{{filterOptionsTel}}</div>-->
-        <div v-show="setInfoType === '1' ? false : true" class="tab sel-date">
+        <div v-if="setInfoType === '1' ? false : true" class="tab sel-date">
           <div class="tab-title pull-left mr30">
             <span class="title-line"></span>
             <span class="title-txt">予約日</span>
@@ -43,14 +41,15 @@
                 </el-select>
               </div>
               <div class="inner-txt">時間</div>
-              <el-select class="mb20" v-model="inputInfo.StartTime" placeholder="">
-                <el-option
-                        v-for="item in timeOptions"
-                        :key="item"
-                        :label="item"
-                        :value="item">
-                </el-option>
-              </el-select>
+              <el-time-select class="mb20"
+                              v-model="inputInfo.StartTime"
+                              :picker-options="{
+                        start: inputInfo.StartTime ? inputInfo.StartTime : '00:00',
+                        step: '00:30',
+                        end: inputInfo.EndTime ? inputInfo.EndTime : '24:00'
+                      }"
+                              placeholder="">
+              </el-time-select>
               <div class="inner-txt">TEL</div>
               <el-autocomplete
                       popper-class="my-autocomplete"
@@ -152,6 +151,8 @@
             <el-date-picker
                     v-model="dayValue"
                     type="date"
+                    format="yyyy/MM/dd"
+                    value-format="yyyy/MM/dd"
                     placeholder="日付選択">
             </el-date-picker>
           </div>
@@ -209,10 +210,11 @@
         </div>
       </div>
       <div class="opr-btns">
-        <el-button class="remarks-btn" type="primary" @click="login()">登録</el-button>
-        <el-button class="remarks-btn" plain @click="sign()">戻る</el-button>
-        <el-button class="remarks-btn" plain @click="cancel()">予約ＣＸＬ</el-button>
-        <el-button class="remarks-btn" plain @click="delReserve()">データ削除</el-button>
+        <el-button class="remarks-btn" type="primary" @click="setInfo">登録</el-button>
+        <el-button class="remarks-btn" plain @click="toPre">戻る</el-button>
+        <el-button v-if="setInfoType === '1' ? false : true" class="remarks-btn" plain @click="cancelSet">予約ＣＸＬ
+        </el-button>
+        <el-button v-if="setInfoType === '1' ? false : true" class="remarks-btn" plain @click="deleteSet">データ削除</el-button>
       </div>
     </div>
     <div v-if="calendarShow" class="calendar-container">
@@ -229,7 +231,11 @@
         <p class="model-body-txt">{{ modalMsg }}</p>
       </div>
     </app-modal>
-
+    <app-modal :options="modalOptions2" v-show="modalOptions2.show" @submit="doConfirm2">
+      <div slot="body">
+        <p class="model-body-txt">{{ modalMsg2 }}</p>
+      </div>
+    </app-modal>
   </div>
 </template>
 
@@ -243,9 +249,9 @@
   export default {
     data() {
       return {
+        loading: true,
         clickDate: localStorage.clickDate,
         setInfoType: localStorage.setInfoType,
-        timeOptions: [],
         fieldOptions: [],
         tableOptions: [],
         typeOptions: [],
@@ -253,25 +259,38 @@
         ownerOptions: [],
         filterOptionsData: [],
 
+        ReservationCode: '',
         CustTel: '', // 电话
         CustCompanyName: '', // 法人团体名
         CustName: '', // 预约人姓名
         CustNameKana: '', // 预约人姓名
         inputInfo: {
-          KaijoName: '', // 会场
-          TableNo: '', // 桌号
-          StartTime: '', // 时间
-          CustTel: '', // 电话
-          CustCompanyName: '', // 法人团体名
-          CustBusyoName: '', // 部署名
-          CustName: '', // 预约人姓名
-          CustNameKana: '', // 预约人日文发音
           KbnName: '', // 区分
+          StartTime: '', // 时间
+          CustName: '', // 预约人姓名
+          CustTel: '', // 电话
           AdultNum: '', // 大人数
           ChildNum: '', // 小孩数
-          MenuName: '', // 料理
           OwnerName: '', // 担当人信息
           UkerukeDate: '', // 预订提交日期
+
+
+
+
+
+
+
+
+
+          CustNameKana: '', // 预约人日文发音
+          KaijoName: '', // 会场
+          TableNo: '', // 桌号
+          EndTime: '', // 时间
+
+
+
+          MenuName: '', // 料理
+
           EnkaiNum: '', // 宴会次数
           CompanyReservationNum: '', // 法人餐厅预约次数
           KonReiJissiDate: '', // 婚礼日期
@@ -298,55 +317,31 @@
           showConfirmButton: true,
           confirmButtonText: 'OK'
         },
+        modalMsg2: '',
+        modalOptions2: {
+          show: false,
+          title: ' ',
+          showCancelButton: false,
+          cancelButtonText: 'キャンセル',
+          showConfirmButton: true,
+          confirmButtonText: 'OK'
+        },
         calendarShow: false,
-        events: [
-          {
-            id: 1,
-            date: '2018/08/02',
-            DailyDate: "2018/08/20",
-            TimeKbn: "1",
-            YoyakuLevel: "2",
-            DayoffKben: "0"
-          },
-          {
-            id: 2,
-            date: '2018/08/02',
-            DailyDate: "2018/08/20",
-            TimeKbn: "2",
-            YoyakuLevel: "1",
-            DayoffKben: "0"
-          },
-          {
-            id: 3,
-            date: '2018/08/09',
-            DailyDate: "2018/08/21",
-            TimeKbn: "1",
-            YoyakuLevel: "0",
-            DayoffKben: "0"
-          },
-          {
-            id: 4,
-            date: '2018/08/09',
-            DailyDate: "2018/08/21",
-            TimeKbn: "2",
-            YoyakuLevel: "2",
-            DayoffKben: "0"
-          }
-        ],
+        events: [],
         itemRender(item) {
           const h = this.$createElement
           return h('div', {
-                class: 'calendar-text-container'
-              },
-              [
-                h('span', {
-                      class: 'calendar-text'
-                    }, item.TimeKbn === "1" ? 'ランチ' : 'ディナー'
-                ),
-                h('span', {
-                  class: item.YoyakuLevel === '0' ? 'calendar-icon-circle' : (item.YoyakuLevel === '1' ? 'calendar-icon-triangle' : 'calendar-icon-x')
-                })
-              ]
+              class: 'calendar-text-container'
+            },
+            [
+              h('span', {
+                  class: 'calendar-text'
+                }, item.TimeKbn === "1" ? 'ランチ' : 'ディナー'
+              ),
+              h('span', {
+                class: item.YoyakuLevel === '0' ? 'calendar-icon-circle' : (item.YoyakuLevel === '1' ? 'calendar-icon-triangle' : 'calendar-icon-x')
+              })
+            ]
           )
         },
       }
@@ -364,473 +359,160 @@
       },
     },
     methods: {
-      handleSelect(item) {
-        console.log(item)
-        this.CustTel = item.CustTel
-        this.CustName = item.CustName
-        this.CustCompanyName = item.CustCompanyName
-        this.inputInfo.CustBusyoName = item.CustBusyoName
-        this.inputInfo.KonReiJissiDate = item.KonReiJissiDate
-        this.inputInfo.EnkaiNum = item.EnkaiNum
-        this.inputInfo.ReservationNum = item.ReservationNum
-      },
-      querySearchTel(queryString, cb) {
-        let arr = this.filterOptionsData
-        let results =  arr.filter(this.createFilterTel(queryString))
-        // 调用 callback 返回建议列表的数据
-        cb(results)
-      },
-      createFilterTel(queryString) {
-        return (item) => {
-          return (String(item.CustTel).indexOf(String(queryString)) > -1)
-              && (String(item.CustCompanyName).indexOf(String(this.CustCompanyName)) > -1)
-              && (String(item.CustName).indexOf(String(this.CustName)) > -1)
-              && (String(item.CustNameKana).indexOf(String(this.CustNameKana)) > -1)
-        }
-      },
-
-      querySearchCompany(queryString, cb) {
-        let arr = this.filterOptionsData
-        let results =   arr.filter(this.createFilterCompany(queryString))
-        // 调用 callback 返回建议列表的数据
-        cb(results)
-      },
-      createFilterCompany(queryString) {
-        return (item) => {
-          return (String(item.CustCompanyName).indexOf(String(queryString)) > -1)
-              && (String(item.CustTel).indexOf(String(this.CustTel)) > -1)
-              && (String(item.CustName).indexOf(String(this.CustName)) > -1)
-              && (String(item.CustNameKana).indexOf(String(this.CustNameKana)) > -1)
-        }
-      },
-
-      querySearchName(queryString, cb) {
-        let arr = this.filterOptionsData
-        let results =  arr.filter(this.createFilterName(queryString))
-        // 调用 callback 返回建议列表的数据
-        cb(results)
-      },
-      createFilterName(queryString) {
-        return (item) => {
-          return (String(item.CustName).indexOf(String(queryString)) > -1)
-              && (String(item.CustCompanyName).indexOf(String(this.CustCompanyName)) > -1)
-              && (String(item.CustTel).indexOf(String(this.CustTel)) > -1)
-              && (String(item.CustNameKana).indexOf(String(this.CustNameKana)) > -1)
-        }
-      },
-
-      querySearchName2(queryString, cb) {
-        let arr = this.filterOptionsData
-        let results =  arr.filter(this.createFilterName2(queryString))
-        // 调用 callback 返回建议列表的数据
-        cb(results)
-      },
-      createFilterName2(queryString) {
-        return (item) => {
-          return (String(item.CustNameKana).indexOf(String(queryString)) > -1)
-              && (String(item.CustCompanyName).indexOf(String(this.CustCompanyName)) > -1)
-              && (String(item.CustTel).indexOf(String(this.CustTel)) > -1)
-              && (String(item.CustName).indexOf(String(this.CustName)) > -1)
-        }
-      },
-
       getData() {
-        this.timeOptions = getTimeList()
-        // 会场
-        this.fieldOptions = [
-          {
-            "KaijoId": "001",
-            "KaijoName": "１Fレストラン",
-          },
-          {
-            "KaijoId": "002",
-            "KaijoName": "2Fダイニング",
-          }
-        ]
-        // 桌号
-        this.tableOptions = [
-          {
-            "TableId": "010",
-            "KaijoId": "001",
-            "TableName": "T-1",
-          },
-          {
-            "TableId": "020",
-            "KaijoId": "001",
-            "TableName": "T-1-bis",
-          }
-        ]
-        // 时间
-        this.timeData = {
-          "StartTime": "13：00",
-          "EndTime": "15：00"
-        }
-        // 区分
-        this.typeOptions = [
-          {
-            "KbnId": "010",
-            "KbnName": "Ticket",
-          },
-          {
-            "KbnId": "020",
-            "KbnName": "Soigner",
-          }
-        ]
-        // 料理
-        this.foodOptions = [
-          {
-            "MenuId": "010",
-            "MenuName": "当日",
-          },
-          {
-            "MenuId": "020",
-            "MenuName": "2800",
-          }
-        ]
-        // 所有者信息
-        this.ownerOptions = [
-          {
-            "OwnerCode": "A0001",
-            "OwnerName": "社長",
-          },
-          {
-            "OwnerCode": "N0001",
-            "OwnerName": "常務",
-          }
-        ]
-        // 模糊查询
-        this.filterOptionsData = [
-          {
-            "PrimaryId": null,
-            "ReservationDate": "2018/08/20",
-            "KbnName": "LLLLLLLLLDDDD",
-            "CustName": "黎漢",
-            "CustNameKana": "レイハン",
-            "CustCompanyName": "DATAMAX",
-            "CustBusyoName": "開発部",
-            "CustTel": "080XXXXXXXX",
-            "ReservationNum": "2",
-            "EnkaiSyusaiName": null,
-            "EnkaiSyusaiNameKana": null,
-            "EnkaiSyusaiTel": null,
-            "EnkaiName": null,
-            "EnkaiDate": null,
-            "EnkaiNum": "",
-            "JissiDate": '111',
-            "HiroenEnkaijo": null,
-            "Name": null,
-            "NameKana": null,
-            "Tel": null,
-            "Kankei": '222'
-          },
-          {
-            "PrimaryId": null,
-            "ReservationDate": "2018/08/20",
-            "KbnName": "LLLLLLLLLDDDD",
-            "CustName": "于",
-            "CustNameKana": "レイハン",
-            "CustCompanyName": "DATAMAX",
-            "CustBusyoName": "開発部",
-            "CustTel": "080XXXXXXXX",
-            "ReservationNum": "2",
-            "EnkaiSyusaiName": null,
-            "EnkaiSyusaiNameKana": null,
-            "EnkaiSyusaiTel": null,
-            "EnkaiName": null,
-            "EnkaiDate": null,
-            "EnkaiNum": "",
-            "JissiDate": '111',
-            "HiroenEnkaijo": null,
-            "Name": null,
-            "NameKana": null,
-            "Tel": null,
-            "Kankei": '222'
-          },
-          {
-            "PrimaryId": null,
-            "ReservationDate": "2018/08/20",
-            "KbnName": "LLLLLLLLLDDDD",
-            "CustName": "王",
-            "CustNameKana": "レイハン",
-            "CustCompanyName": "baidu",
-            "CustBusyoName": "開発部",
-            "CustTel": "080XXXXXXXX",
-            "ReservationNum": "2",
-            "EnkaiSyusaiName": null,
-            "EnkaiSyusaiNameKana": null,
-            "EnkaiSyusaiTel": null,
-            "EnkaiName": null,
-            "EnkaiDate": null,
-            "EnkaiNum": "",
-            "JissiDate": '111',
-            "HiroenEnkaijo": null,
-            "Name": null,
-            "NameKana": null,
-            "Tel": null,
-            "Kankei": '222'
-          },
-          {
-            "PrimaryId": null,
-            "ReservationDate": "2018/08/20",
-            "KbnName": "LLLLLLLLLDDDD",
-            "CustName": "yu",
-            "CustNameKana": "レイハン",
-            "CustCompanyName": "sina",
-            "CustBusyoName": "開発部",
-            "CustTel": "080XXXXXXXX",
-            "ReservationNum": "2",
-            "EnkaiSyusaiName": null,
-            "EnkaiSyusaiNameKana": null,
-            "EnkaiSyusaiTel": null,
-            "EnkaiName": null,
-            "EnkaiDate": null,
-            "EnkaiNum": "",
-            "JissiDate": '111',
-            "HiroenEnkaijo": null,
-            "Name": null,
-            "NameKana": null,
-            "Tel": null,
-            "Kankei": '222'
-          },
-          {
-            "PrimaryId": null,
-            "ReservationDate": null,
-            "KbnName": null,
-            "CustName": null,
-            "CustNameKana": null,
-            "CustCompanyName": null,
-            "CustBusyoName": null,
-            "CustTel": "080123456",
-            "ReservationNum": "",
-            "EnkaiSyusaiName": "前橋龍様・金沢直美様ｱﾌﾀｰﾊﾟｰﾃｨｰ",
-            "EnkaiSyusaiNameKana": null,
-            "EnkaiSyusaiTel": "090-2933-9985",
-            "EnkaiName": "前橋龍様・金沢直美様ｱﾌﾀｰﾊﾟｰﾃｨｰ",
-            "EnkaiDate": "2003/01/11",
-            "EnkaiNum": "1",
-            "JissiDate": null,
-            "HiroenEnkaijo": null,
-            "Name": null,
-            "NameKana": null,
-            "Tel": null,
-            "Kankei": null
-          },
-          {
-            "PrimaryId": null,
-            "ReservationDate": null,
-            "KbnName": null,
-            "CustName": null,
-            "CustNameKana": null,
-            "CustCompanyName": null,
-            "CustBusyoName": null,
-            "CustTel": "0801111",
-            "ReservationNum": "",
-            "EnkaiSyusaiName": "風間・風間様　披露パーティー",
-            "EnkaiSyusaiNameKana": null,
-            "EnkaiSyusaiTel": "090-4527-3100",
-            "EnkaiName": "風間・風間様　披露パーティー",
-            "EnkaiDate": "2003/01/12",
-            "EnkaiNum": "1",
-            "JissiDate": null,
-            "HiroenEnkaijo": null,
-            "Name": null,
-            "NameKana": null,
-            "Tel": null,
-            "Kankei": null
-          },
-          {
-            "PrimaryId": null,
-            "ReservationDate": null,
-            "KbnName": null,
-            "CustName": null,
-            "CustNameKana": null,
-            "CustCompanyName": null,
-            "CustBusyoName": null,
-            "CustTel": "0802222",
-            "ReservationNum": "",
-            "EnkaiSyusaiName": "土屋賢太郎様・鈴木紗保美様ｱﾌﾀｰﾊﾟｰﾃｨｰ",
-            "EnkaiSyusaiNameKana": null,
-            "EnkaiSyusaiTel": "046-234-0261",
-            "EnkaiName": "土屋賢太郎様・鈴木紗保美様ｱﾌﾀｰﾊﾟｰﾃｨｰ",
-            "EnkaiDate": "2003/01/25",
-            "EnkaiNum": "1",
-            "JissiDate": null,
-            "HiroenEnkaijo": null,
-            "Name": null,
-            "NameKana": null,
-            "Tel": null,
-            "Kankei": null
-          },
-          {
-            "PrimaryId": null,
-            "ReservationDate": null,
-            "KbnName": null,
-            "CustName": null,
-            "CustNameKana": null,
-            "CustCompanyName": null,
-            "CustBusyoName": null,
-            "CustTel": "0803333",
-            "ReservationNum": "",
-            "EnkaiSyusaiName": "石井家・長尾家ｱﾌﾀｰﾊﾟｰﾃｨ",
-            "EnkaiSyusaiNameKana": null,
-            "EnkaiSyusaiTel": "03-5483-7187",
-            "EnkaiName": "石井家・長尾家ｱﾌﾀｰﾊﾟｰﾃｨ",
-            "EnkaiDate": "2003/02/01",
-            "EnkaiNum": "1",
-            "JissiDate": null,
-            "HiroenEnkaijo": null,
-            "Name": null,
-            "NameKana": null,
-            "Tel": null,
-            "Kankei": null
-          },
-          {
-            "PrimaryId": null,
-            "ReservationDate": null,
-            "KbnName": null,
-            "CustName": null,
-            "CustNameKana": null,
-            "CustCompanyName": null,
-            "CustBusyoName": null,
-            "CustTel": "0804444",
-            "ReservationNum": "",
-            "EnkaiSyusaiName": "新倉家・服部家ｱﾌﾀｰﾊﾟｰﾃｨｰ",
-            "EnkaiSyusaiNameKana": null,
-            "EnkaiSyusaiTel": "070-6655-9268",
-            "EnkaiName": "新倉家・服部家ｱﾌﾀｰﾊﾟｰﾃｨｰ",
-            "EnkaiDate": "2003/02/02",
-            "EnkaiNum": "1",
-            "JissiDate": null,
-            "HiroenEnkaijo": null,
-            "Name": null,
-            "NameKana": null,
-            "Tel": null,
-            "Kankei": null
-          },
-          {
-            "PrimaryId": null,
-            "ReservationDate": null,
-            "KbnName": null,
-            "CustName": null,
-            "CustNameKana": null,
-            "CustCompanyName": null,
-            "CustBusyoName": null,
-            "CustTel": null,
-            "ReservationNum": "",
-            "EnkaiSyusaiName": "遠藤様・榊原様二次会ﾊﾟｰﾃｨｰ",
-            "EnkaiSyusaiNameKana": null,
-            "EnkaiSyusaiTel": "0466-29-3103",
-            "EnkaiName": "遠藤様・榊原様二次会ﾊﾟｰﾃｨｰ",
-            "EnkaiDate": "2003/02/08",
-            "EnkaiNum": "1",
-            "JissiDate": null,
-            "HiroenEnkaijo": null,
-            "Name": null,
-            "NameKana": null,
-            "Tel": null,
-            "Kankei": null
-          },
-          {
-            "PrimaryId": null,
-            "ReservationDate": null,
-            "KbnName": null,
-            "CustName": null,
-            "CustNameKana": null,
-            "CustCompanyName": null,
-            "CustBusyoName": null,
-            "CustTel": null,
-            "ReservationNum": "",
-            "EnkaiSyusaiName": "青木雄一様・佐藤倫子様二次会パーティー",
-            "EnkaiSyusaiNameKana": null,
-            "EnkaiSyusaiTel": "042-770-5319",
-            "EnkaiName": "青木雄一様・佐藤倫子様二次会パーティー",
-            "EnkaiDate": "2003/02/11",
-            "EnkaiNum": "1",
-            "JissiDate": null,
-            "HiroenEnkaijo": null,
-            "Name": null,
-            "NameKana": null,
-            "Tel": null,
-            "Kankei": null
-          },
-          {
-            "PrimaryId": null,
-            "ReservationDate": null,
-            "KbnName": null,
-            "CustName": null,
-            "CustNameKana": null,
-            "CustCompanyName": null,
-            "CustBusyoName": null,
-            "CustTel": null,
-            "ReservationNum": "",
-            "EnkaiSyusaiName": "宇野家・丹家ｱﾌﾀｰﾊﾟｰﾃｨｰ",
-            "EnkaiSyusaiNameKana": null,
-            "EnkaiSyusaiTel": "090-9137-0707",
-            "EnkaiName": "宇野家・丹家ｱﾌﾀｰﾊﾟｰﾃｨｰ",
-            "EnkaiDate": "2003/02/15",
-            "EnkaiNum": "1",
-            "JissiDate": null,
-            "HiroenEnkaijo": null,
-            "Name": null,
-            "NameKana": null,
-            "Tel": null,
-            "Kankei": null
-          },
-          {
-            "PrimaryId": null,
-            "ReservationDate": null,
-            "KbnName": null,
-            "CustName": null,
-            "CustNameKana": null,
-            "CustCompanyName": null,
-            "CustBusyoName": null,
-            "CustTel": null,
-            "ReservationNum": "",
-            "EnkaiSyusaiName": "柏田家・江口家ｱﾌﾀｰﾊﾟｰﾃｨ",
-            "EnkaiSyusaiNameKana": null,
-            "EnkaiSyusaiTel": "0466-44-2709",
-            "EnkaiName": "柏田家・江口家ｱﾌﾀｰﾊﾟｰﾃｨ",
-            "EnkaiDate": "2003/02/22",
-            "EnkaiNum": "1",
-            "JissiDate": null,
-            "HiroenEnkaijo": null,
-            "Name": null,
-            "NameKana": null,
-            "Tel": null,
-            "Kankei": null
-          },
-        ]
-        // 修改时从前页传过来的全部信息
-        if (localStorage.setInfoType === '2') {
+        // 获取下拉框信息
+        this.getSelectInfo()
+        // 如果为修改
+        if (this.setInfoType === '2') {
+          // 获取上一页信息
           this.inputInfo = JSON.parse(localStorage.getItem('scheduleInfo'))
           this.CustTel = this.inputInfo.CustTel
           this.CustCompanyName = this.inputInfo.CustCompanyName
           this.CustName = this.inputInfo.CustName
+          // 获取日历
+          this.loading = true
+          this.axios.post('calendar/getcalendarinfo').then(res => {
+            if (res.data.Code === "SC-001") {
+              this.loading = false
+              this.events = res.data.Data
+            } else {
+              this.$message.error(res.data.Message)
+            }
+          })
+          // 时间
+          this.axios.post('setting/starttime',{
+            DailyDate: localStorage.getItem('clickDate'),
+            TimeKbn: localStorage.getItem('mealsType')
+          }).then(res => {
+            if (res.data.Code === "SC-001") {
+              this.loading = false
+            } else {
+              this.$message.error(res.data.Message)
+            }
+          })
         }
-
       },
-      login() {
+      getSelectInfo() {
+        // 会场
+        this.axios.post('master/getkaijo').then(res => {
+          if (res.data.Code === "SC-001") {
+            this.loading = false
+            this.fieldOptions = res.data.Data
+          } else {
+            this.$message.error(res.data.Message)
+          }
+        })
+        // 桌号
+        this.axios.post('master/gettable').then(res => {
+          if (res.data.Code === "SC-001") {
+            this.loading = false
+            this.tableOptions = res.data.Data
+          } else {
+            this.$message.error(res.data.Message)
+          }
+        })
+        // 区分
+        this.axios.post('master/getkbn').then(res => {
+          if (res.data.Code === "SC-001") {
+            this.loading = false
+            this.typeOptions = res.data.Data
+          } else {
+            this.$message.error(res.data.Message)
+          }
+        })
+        // 料理
+        this.axios.post('master/getmenu').then(res => {
+          if (res.data.Code === "SC-001") {
+            this.loading = false
+            this.foodOptions = res.data.Data
+          } else {
+            this.$message.error(res.data.Message)
+          }
+        })
+        // 所有者信息
+        this.axios.post('master/getowner').then(res => {
+          if (res.data.Code === "SC-001") {
+            this.loading = false
+            this.ownerOptions = res.data.Data
+          } else {
+            this.$message.error(res.data.Message)
+          }
+        })
+        // 获取推荐信息
+//        this.axios.post('reservation/suggestdata').then(res => {
+//          if (res.data.Code === "SC-001") {
+//            this.loading = false
+//            this.filterOptionsData = res.data.Data
+//          } else {
+//            this.$message.error(res.data.Message)
+//          }
+//        })
+      },
+      setInfo() {
         this.modalOptions.show = true
         this.modalMsg = '登録してよろしいでしょうか？'
+        this.modalStatus = 1
       },
-      sign() {
+      toPre() {
         this.modalOptions.show = true
-        this.modalMsg = '台帳に戻ってよろしいでしょうか？'
+        this.modalMsg = this.setInfoType === '1' ? '入力情報は登録されていません。一覧画面に戻ってよろしいでしょうか？' :'台帳に戻ってよろしいでしょうか？'
         this.modalStatus = 2
       },
-      cancel() {
+      cancelSet() {
         this.modalOptions.show = true
         this.modalMsg = '予約をキャンセルしてよろしいでしょうか？'
+        this.modalStatus = 3
       },
-      delReserve() {
+      deleteSet() {
         this.modalOptions.show = true
         this.modalMsg = '予約データを削除してよろしいでしょうか？'
+        this.modalStatus = 4
       },
       doConfirm() {
         if (this.modalStatus === 1) {
           console.log('接口：保存')
+          this.loading = true
+          this.axios.post('setting/updatedetailsetting',{
+            ReservationCode: this.ReservationCode,
+            ReservationDate: this.dayValue.replace(/\//g,''),
+            TimeKbn: localStorage.getItem('mealsType'),
+//            KbnName: this.,
+//            KbnName: this.,
+//            KbnName: this.,
+//            KbnName: this.,
+//            KbnName: this.,
+//            KbnName: this.,
+//            KbnName: this.,
+//            KbnName: this.,
+//            KbnName: this.,
+//            KbnName: this.,
+//            KbnName: this.,
+//            KbnName: this.,
+//            KbnName: this.,
+//            KbnName: this.,
+//            KbnName: this.,
+            LunchStartTime: this.timeValue.lunchStart,
+            LunchEndTime: this.timeValue.lunchEnd,
+            DinnerStartTime: this.timeValue.dinnerStart,
+            DinnerEndTime: this.timeValue.dinnerEnd,
+            YoyakuAvalibleNum: this.inputValue.group1,
+            YoyakusyaAvalibleNum: this.inputValue.people1,
+            YoyakuUnavalibleNum: this.inputValue.group2,
+            YoyakusyaUnavalibleNum: this.inputValue.people2,
+            WeeklyWorkdayId: this.checkList.join(','),
+            DayOffKbn: this.DayOffKbn,
+          }).then(res=>{
+            if(res.data.Code === "SC-001") {
+              this.loading = false
+              this.modalOptions.show = false
+              this.modalOptions2.show = true
+              this.modalMsg2 = '登録は成功しました'
+            }else {
+              this.$message.error(res.data.Message)
+            }
+          })
         } else if (this.modalStatus === 2) {
-          this.$router.push('calendar')
+          this.$router.push('schedule')
         }
       },
       showCalendar() {
@@ -852,7 +534,76 @@
       },
       chooseDate2(e, item) {
         console.log(item.date)
-      }
+      },
+      doConfirm2() {
+        this.$router.push('calendar')
+      },
+      handleSelect(item) {
+        console.log(item)
+        this.CustTel = item.CustTel
+        this.CustName = item.CustName
+        this.CustCompanyName = item.CustCompanyName
+        this.inputInfo.CustBusyoName = item.CustBusyoName
+        this.inputInfo.KonReiJissiDate = item.KonReiJissiDate
+        this.inputInfo.EnkaiNum = item.EnkaiNum
+        this.inputInfo.ReservationNum = item.ReservationNum
+      },
+      querySearchTel(queryString, cb) {
+        let arr = this.filterOptionsData
+        let results = arr.filter(this.createFilterTel(queryString))
+        // 调用 callback 返回建议列表的数据
+        cb(results.slice(0, 10))
+      },
+      createFilterTel(queryString) {
+        return (item) => {
+          return (String(item.CustTel).indexOf(String(queryString)) > -1)
+            && (String(item.CustCompanyName).indexOf(String(this.CustCompanyName)) > -1)
+            && (String(item.CustName).indexOf(String(this.CustName)) > -1)
+            && (String(item.CustNameKana).indexOf(String(this.CustNameKana)) > -1)
+        }
+      },
+      querySearchCompany(queryString, cb) {
+        let arr = this.filterOptionsData
+        let results = arr.filter(this.createFilterCompany(queryString))
+        // 调用 callback 返回建议列表的数据
+        cb(results.slice(0, 10))
+      },
+      createFilterCompany(queryString) {
+        return (item) => {
+          return (String(item.CustCompanyName).indexOf(String(queryString)) > -1)
+            && (String(item.CustTel).indexOf(String(this.CustTel)) > -1)
+            && (String(item.CustName).indexOf(String(this.CustName)) > -1)
+            && (String(item.CustNameKana).indexOf(String(this.CustNameKana)) > -1)
+        }
+      },
+      querySearchName(queryString, cb) {
+        let arr = this.filterOptionsData
+        let results = arr.filter(this.createFilterName(queryString))
+        // 调用 callback 返回建议列表的数据
+        cb(results.slice(0, 10))
+      },
+      createFilterName(queryString) {
+        return (item) => {
+          return (String(item.CustName).indexOf(String(queryString)) > -1)
+            && (String(item.CustCompanyName).indexOf(String(this.CustCompanyName)) > -1)
+            && (String(item.CustTel).indexOf(String(this.CustTel)) > -1)
+            && (String(item.CustNameKana).indexOf(String(this.CustNameKana)) > -1)
+        }
+      },
+      querySearchName2(queryString, cb) {
+        let arr = this.filterOptionsData
+        let results = arr.filter(this.createFilterName2(queryString))
+        // 调用 callback 返回建议列表的数据
+        cb(results.slice(0, 10))
+      },
+      createFilterName2(queryString) {
+        return (item) => {
+          return (String(item.CustNameKana).indexOf(String(queryString)) > -1)
+            && (String(item.CustCompanyName).indexOf(String(this.CustCompanyName)) > -1)
+            && (String(item.CustTel).indexOf(String(this.CustTel)) > -1)
+            && (String(item.CustName).indexOf(String(this.CustName)) > -1)
+        }
+      },
     },
     mounted() {
       this.getData()
@@ -1061,6 +812,7 @@
       margin-left: 0;
     }
   }
+
   @media screen and(max-width: 750px) {
     .container {
       transform: scale(1) !important;
