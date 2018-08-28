@@ -257,7 +257,7 @@ export default {
     .schedule-calendar-details-bd.scale {
         transform: scale(0.7);
         top: -6px;
-        right: 0;
+        right: -15px;
     }
 }
 </style>

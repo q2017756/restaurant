@@ -46,8 +46,7 @@
           </tr>
           </thead>
           <tbody v-for="item in tableInfo" :key="item.ReservationCode">
-          <tr>
-            <!--{{ item. }}-->
+          <tr :class="item.ActiveFlg === '1' ? 'tr-disabled': (item.ActiveFlg === '2' ? 'tr-hidden': '')">
             <td>{{ item.KaijoName }}</td>
             <td>{{ item.CustCompanyName }}</td>
             <td>{{ item.KbnName }}</td>
@@ -58,11 +57,10 @@
             <td><span class="color-btn blue">宴</span></td>
             <td class="long-td">{{ item.EnkaiNum }}</td>
             <td>
-              <el-button size="mini" plain @click="toEdit">修正</el-button>
+              <el-button size="mini" plain @click="toEdit(item)">修正</el-button>
             </td>
           </tr>
-          <!--<tr class="tr-disabled">-->
-          <tr>
+          <tr :class="item.ActiveFlg === '1' ? 'tr-disabled': (item.ActiveFlg === '2' ? 'tr-hidden': '')">
             <td>{{ item.StartTime }}</td>
             <td>{{ item.CustName }}({{ item.CustNameKana}})</td>
             <td>{{ item.AdultNum }}({{ item.ChildNum }})</td>
@@ -186,9 +184,9 @@
           this.$router.push('reserveInfo')
         }
       },
-      toEdit() {
+      toEdit(item) {
         localStorage.setItem('setInfoType', '2')
-        localStorage.setItem('scheduleInfo',JSON.stringify(this.tableInfo[0]))
+        localStorage.setItem('scheduleInfo',JSON.stringify(item))
         this.$router.push('reserveInfo')
       },
       saveAndLeave() {
@@ -299,6 +297,9 @@
         }
         .tr-disabled {
           opacity: 0.3;
+        }
+        .tr-hidden {
+          display: none;
         }
         td {
           width: 70px;

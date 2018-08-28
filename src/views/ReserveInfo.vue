@@ -10,7 +10,7 @@
           </div>
           <div class="pull-left">
             <el-input v-model="inputInfo.ReservationDate" class="mr30"/>
-            <el-button class="remarks-btn" type="primary" @click="showCalendar">予約日変更</el-button>
+            <el-button class="remarks-btn" type="primary" @click="calendarShow = true">予約日変更</el-button>
           </div>
         </div>
         <div class="tab">
@@ -178,7 +178,13 @@
             <div class="info">
               <div class="pull-left">
                 <div class="inner-txt">結婚式</div>
-                <el-input v-model="inputInfo.KonreiJissidate" class="mr30" />
+                <el-date-picker
+                        v-model="inputInfo.KonreiJissidate"
+                        type="date"
+                        format="yyyy/MM/dd"
+                        value-format="yyyy/MM/dd"
+                        placeholder="日付選択">
+                </el-date-picker>
               </div>
               <div class="pull-left">
                 <div class="inner-txt">个人レストラン履</div>
@@ -218,7 +224,7 @@
       </div>
     </div>
     <div v-if="calendarShow" class="calendar-container">
-      <a @click="closeCalendar" class="xd xd-close">close</a>
+      <a @click="calendarShow = false" class="xd xd-close">close</a>
       <app-calendar :events="eventsData"
                     :dateItemRender="itemRender"
                     :startWeek="0"
@@ -451,6 +457,7 @@
         if (this.modalStatus === 1) {
           console.log('接口：保存')
           this.loading = true
+          this.inputInfo.ActiveFlg = '0'
           this.axios.post('reservation/updatereservation', this.inputInfo).then(res => {
             this.loading = false
             if (res.data.Code === "SC-001") {
@@ -463,13 +470,44 @@
           })
         } else if (this.modalStatus === 2) {
           this.$router.push('schedule')
+        } else if (this.modalStatus === 3) {
+          console.log('接口：取消')
+          this.loading = true
+          this.inputInfo.ActiveFlg = '1'
+          this.axios.post('reservation/updatereservation', this.inputInfo).then(res => {
+            this.loading = false
+            if (res.data.Code === "SC-001") {
+              this.modalOptions.show = false
+              this.modalOptions2.show = true
+              this.modalMsg2 = '予約をキャンセルしました'
+            } else {
+              // this.modalOptions.show = false
+              // this.modalOptions2.show = true
+              // this.modalMsg2 = '問題が発生しました。システム管理者へ連絡してください'
+              this.$message.error(res.data.Message)
+            }
+          })
+        } else if (this.modalStatus === 4) {
+          console.log('接口：删除')
+          this.loading = true
+          this.inputInfo.ActiveFlg = '2'
+          this.axios.post('reservation/updatereservation', this.inputInfo).then(res => {
+            this.loading = false
+            if (res.data.Code === "SC-001") {
+              this.modalOptions.show = false
+              this.modalOptions2.show = true
+              this.modalMsg2 = '予約データを削除しました'
+            } else {
+              // this.modalOptions.show = false
+              // this.modalOptions2.show = true
+              // this.modalMsg2 = '問題が発生しました。システム管理者へ連絡してください'
+              this.$message.error(res.data.Message)
+            }
+          })
         }
       },
-      showCalendar() {
-        this.calendarShow = true
-      },
-      closeCalendar() {
-        this.calendarShow = false
+      doConfirm2() {
+        this.$router.push('calendar')
       },
       changeDate(e, item, date) {
         const updateIndex = this.events.findIndex(ele => ele.id === item.id)
@@ -479,19 +517,18 @@
         })
       },
       chooseDate(e, date) {
-        this.inputInfo.ReservationDate = date
+        this.inputInfo.ReservationDate = date.replace(/-/g, '/')
         this.calendarShow = false
       },
       chooseDate2(e, item) {
-        console.log(item.date)
-      },
-      doConfirm2() {
-        this.$router.push('calendar')
+        this.inputInfo.ReservationDate = item.DailyDate.replace(/-/g, '/')
+        this.calendarShow = false
       },
       handleSelect(item) {
         console.log(item)
         this.inputInfo.CustTel = item.CustTel
         this.inputInfo.CustName = item.CustName
+        this.inputInfo.CustNameKana = item.CustNameKana
         this.inputInfo.CustCompanyName = item.CustCompanyName
         this.inputInfo.CustBusyoName = item.CustBusyoName
         this.inputInfo.KonreiJissidate = item.KonreiJissidate

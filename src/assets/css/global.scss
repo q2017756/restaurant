@@ -186,7 +186,9 @@ html, body {
     }
   }
 }
-
+.el-loading-mask {
+  position: fixed !important;
+}
 .el-input, .el-checkbox__label,.el-input__inner{
   font-size: 18px !important;
 }
