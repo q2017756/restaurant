@@ -45,6 +45,10 @@ export default {
     methods: {
         updateValue(year, month = this.month) {
             this.$emit('updateValue', year, month)
+          const data = this.$store.state.calendarData.filter((item) => {
+            return item.DailyDate.indexOf(year + '/' + ((month+1)< 10 ? '0' +(month+1) : (month+1))) > -1
+          })
+          this.$store.dispatch('setCalendarDataOne', data)
         },
         prevYear() {
             this.updateValue(this.year - 1)
@@ -55,10 +59,18 @@ export default {
         prevMonth() {
             const { year, month } = calcPrevMonth(this.year, this.month)
             this.updateValue(year, month)
+          const data = this.$store.state.calendarData.filter((item) => {
+            return item.DailyDate.indexOf(year + '/' + ((month+1)< 10 ? '0' +(month+1) : (month+1))) > -1
+          })
+          this.$store.dispatch('setCalendarDataOne', data)
         },
         nextMonth() {
             const { year, month } = calcNextMonth(this.year, this.month)
             this.updateValue(year, month)
+          const data = this.$store.state.calendarData.filter((item) => {
+            return item.DailyDate.indexOf(year + '/' + ((month+1)< 10 ? '0' +(month+1) : (month+1))) > -1
+          })
+          this.$store.dispatch('setCalendarDataOne', data)
         },
         clickOutSide(e) {
             if (this.pickerVisible && !this.$refs.picker.contains(e.target)) {

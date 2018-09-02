@@ -37,7 +37,9 @@ export default {
         },
         events: {
             type: Array,
-            default: []
+            default: function () {
+              return []
+            }
         },
         dateItemRender: Function
     },

@@ -9,3 +9,12 @@ export const getTimeList = () => {
   }
   return list
 }
+
+export const getCalendarData = (events) => {
+  return events.filter((item) => {
+    const date = new Date()
+    const year = date.getFullYear()
+    const month = (date.getMonth()+1) < 10 ? ('0'+ (date.getMonth()+1)) : (date.getMonth()+1);
+    return item.DailyDate.indexOf(year + '/' + month) > -1
+  })
+}

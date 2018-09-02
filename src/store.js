@@ -8,7 +8,9 @@ const state = {
   isRoot: true,
   scheduleInfo: {
 
-  }
+  },
+  calendarData: [],
+  calendarDataOne: [],
 }
 
 // actions
@@ -16,6 +18,8 @@ const actions = {
   login: ({ commit },data) => commit('login',data),
   logout: ({ commit }) => commit('logout'),
   setScheduleInfo: ({ commit },data) => commit('setScheduleInfo',data),
+  setCalendarData: ({ commit },data) => commit('setCalendarData',data),
+  setCalendarDataOne: ({ commit },data) => commit('setCalendarDataOne',data),
 }
 
 // mutations
@@ -31,7 +35,13 @@ const mutations = {
   setScheduleInfo (state, data) {
     localStorage.scheduleInfo = data;
     state.scheduleInfo = JSON.parse(data);
-  }
+  },
+  setCalendarData (state, data) {
+    state.calendarData = data
+  },
+  setCalendarDataOne (state, data) {
+    state.calendarDataOne = data
+  },
 }
 
 // getters

@@ -1,12 +1,11 @@
 <template>
   <div class="unified-bg">
-    <app-header :btnShow="$store.isRoot"></app-header>
+    <app-header :btnShow="$store.state.isRoot"></app-header>
     <div class="contianer" v-loading="loading">
-      <app-calendar :events="events"
+      <app-calendar :events="$store.state.calendarDataOne"
                     :dateItemRender="itemRender"
                     :startWeek="0"
-                    @event-click="toNext"
-                    @event-dragend="changeDate"></app-calendar>
+                    @event-click="toNext"></app-calendar>
     </div>
   </div>
 </template>
@@ -20,7 +19,6 @@
       return {
         isRoot: true,
         loading: true,
-        events: [],
         itemRender(item) {
           const h = this.$createElement
           return h('div', {
@@ -48,10 +46,16 @@
       getData() {
         localStorage.setItem('clickDate','')
         this.axios.post('calendar/getcalendarinfo').then(res=>{
-
           if(res.data.Code === "SC-001") {
             this.loading = false
-            this.events = res.data.Data
+            this.$store.dispatch('setCalendarData', res.data.Data)
+            const data = res.data.Data.filter((item) => {
+              const date = new Date()
+              const year = date.getFullYear()
+              const month = (date.getMonth()+1) < 10 ? ('0'+ (date.getMonth()+1)) : (date.getMonth()+1);
+              return item.DailyDate.indexOf(year + '/' + month) > -1
+            })
+            this.$store.dispatch('setCalendarDataOne', data)
           }else {
             this.$message.error(res.data.Message)
           }
@@ -67,13 +71,6 @@
         localStorage.setItem('mealsStatus',item.YoyakuLevel)
         this.$router.push('schedule');
 
-      },
-      changeDate(e, item, date) {
-        const updateIndex = this.events.findIndex(ele => ele.id === item.id)
-        this.$set(this.events, updateIndex, {
-          ...this.events[updateIndex],
-          date
-        });
       }
     },
     mounted() {
