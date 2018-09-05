@@ -321,8 +321,7 @@
   }
 
   .container {
-    transform: scale(.75);
-    margin: -100px auto;
+    margin: 20px auto;
     display: flex;
     flex-direction: column;
     background: url('../assets/img/set-bg.png') no-repeat;
@@ -345,14 +344,14 @@
         .title-line {
           display: inline-block;
           width: 6px;
-          height: 36px;
+          height: 30px;
           margin-right: 24px;
           background-color: #ded5a7;
         }
         .title-txt {
           display: inline-block;
           vertical-align: top;
-          font-size: 24px;
+          font-size: 20px;
         }
       }
       .tab-inner {
@@ -365,7 +364,7 @@
           box-shadow: 1px 1px 1px #ddd;
           padding: 15px 20px;
           span.el-radio__label {
-            font-size: 24px;
+            font-size: 20px;
           }
         }
         .el-radio, .el-checkbox {
@@ -391,7 +390,7 @@
           width: 240px;
         }
         .inner-txt {
-          font-size: 24px;
+          font-size: 18px;
           margin-bottom: 10px;
           color: #142343;
         }

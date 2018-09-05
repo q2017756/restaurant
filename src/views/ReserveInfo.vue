@@ -1,5 +1,5 @@
 <template>
-  <div class="unified-bg" v-loading="loading">
+  <div class="unified-bg" v-loading="loading || loading2">
     <app-header />
     <div class="container">
       <div class="inner-left">
@@ -50,7 +50,7 @@
                       }"
                               placeholder="">
               </el-time-select>
-              <div class="inner-txt">TEL</div>
+              <div class="inner-txt" >TEL</div>
               <el-autocomplete
                       popper-class="my-autocomplete"
                       v-model="inputInfo.CustTel"
@@ -63,7 +63,7 @@
               </el-autocomplete>
               <div class="info" style="margin-top: 20px">
                 <div class="">
-                  <div class="inner-txt">法人・団体名</div>
+                  <div class="inner-txt" >法人・団体名</div>
                   <el-autocomplete
                           popper-class="my-autocomplete"
                           v-model="inputInfo.CustCompanyName"
@@ -82,7 +82,7 @@
               </div>
               <div class="info">
                 <div class="">
-                  <div class="inner-txt">予約者</div>
+                  <div class="inner-txt" >予約者</div>
                   <el-autocomplete
                           popper-class="my-autocomplete"
                           v-model="inputInfo.CustName"
@@ -187,7 +187,7 @@
                 </el-date-picker>
               </div>
               <div class="pull-left">
-                <div class="inner-txt">个人レストラン履</div>
+                <div class="inner-txt">個人レストラン履</div>
                 <el-input v-model="inputInfo.ReservationNum" />
               </div>
             </div>
@@ -229,8 +229,7 @@
                     :dateItemRender="itemRender"
                     :startWeek="0"
                     @date-click="chooseDate"
-                    @event-click="chooseDate2"
-                    @event-dragend="changeDate" />
+                    @event-click="chooseDate2" />
     </div>
     <app-modal :options="modalOptions" v-show="modalOptions.show" @submit="doConfirm">
       <div slot="body">
@@ -256,7 +255,7 @@
     data() {
       return {
         loading: true,
-        loading2: true,
+        loading2: false,
         setInfoType: localStorage.setInfoType, // 提交状态 1新增 2修改
         // 下拉框
         fieldOptions: [],
@@ -320,7 +319,6 @@
         },
         // 日历
         calendarShow: false,
-        events: [],
         itemRender(item) {
           const h = this.$createElement
           return h('div', {
@@ -347,7 +345,7 @@
     },
     computed: {
       eventsData() {
-        let arr = this.events.filter(item => item.TimeKbn === localStorage.mealsType)
+        let arr = this.$store.state.calendarDataOne.filter(item => item.TimeKbn === localStorage.mealsType)
         return arr
       },
     },
@@ -361,11 +359,18 @@
           this.inputInfo = JSON.parse(localStorage.getItem('scheduleInfo'))
           // 获取日历
           this.loading = true
-          this.axios.post('calendar/getcalendarinfo').then(res => {
-            if (res.data.Code === "SC-001") {
+          this.axios.post('calendar/getcalendarinfo').then(res=>{
+            if(res.data.Code === "SC-001") {
               this.loading = false
-              this.events = res.data.Data
-            } else {
+              this.$store.dispatch('setCalendarData', res.data.Data)
+              const data = res.data.Data.filter((item) => {
+                const date = new Date()
+                const year = date.getFullYear()
+                const month = (date.getMonth()+1) < 10 ? ('0'+ (date.getMonth()+1)) : (date.getMonth()+1);
+                return item.DailyDate.indexOf(year + '/' + month) > -1
+              })
+              this.$store.dispatch('setCalendarDataOne', data)
+            }else {
               this.$message.error(res.data.Message)
             }
           })
@@ -375,6 +380,9 @@
             TimeKbn: localStorage.getItem('mealsType')
           }).then(res => {
             if (res.data.Code === "SC-001") {
+              console.log(res.data)
+              this.inputInfo.StartTime = res.data.Data[0].SrartTime
+              this.inputInfo.EndTime = res.data.Data[0].EndTime
             } else {
               this.$message.error(res.data.Message)
             }
@@ -509,13 +517,6 @@
       doConfirm2() {
         this.$router.push('calendar')
       },
-      changeDate(e, item, date) {
-        const updateIndex = this.events.findIndex(ele => ele.id === item.id)
-        this.$set(this.events, updateIndex, {
-          ...this.events[updateIndex],
-          date
-        })
-      },
       chooseDate(e, date) {
         this.inputInfo.ReservationDate = date.replace(/-/g, '/')
         this.calendarShow = false
@@ -526,14 +527,25 @@
       },
       handleSelect(item) {
         console.log(item)
-        this.inputInfo.CustTel = item.CustTel
-        this.inputInfo.CustName = item.CustName
-        this.inputInfo.CustNameKana = item.CustNameKana
-        this.inputInfo.CustCompanyName = item.CustCompanyName
+        this.inputInfo.CustTel = item.CustTel ? item.CustTel :
+            (item.EnkaiSyusaiTel ? item.EnkaiSyusaiTel :
+                (item.Tel ? item.Tel : ''))
+        this.inputInfo.CustCompanyName = item.CustCompanyName ? item.CustCompanyName :
+            (item.EnkaiSyusaiName ? item.EnkaiSyusaiName : '')
+        this.inputInfo.CustName = item.CustName ? item.CustName :
+            (item.Name ? item.Name : '')
+        this.inputInfo.CustNameKana = item.CustNameKana ? item.CustNameKana :
+            (item.EnkaiSyusaiNameKana ? item.EnkaiSyusaiNameKana :
+                (item.NameKana ? item.NameKana : ''))
         this.inputInfo.CustBusyoName = item.CustBusyoName
-        this.inputInfo.KonreiJissidate = item.KonreiJissidate
+
         this.inputInfo.EnkaiNum = item.EnkaiNum
-        this.inputInfo.ReservationNum = item.ReservationNum
+        this.inputInfo.JissiDate = item.JissiDate
+        if(item.CustCompanyName || item.EnkaiSyusaiName) {
+          this.inputInfo.CompanyReservationNum = item.ReservationNum
+        }else {
+          this.inputInfo.ReservationNum = item.ReservationNum
+        }
       },
       querySearchTel(queryString, cb) {
         let arr = this.filterOptionsData
@@ -543,10 +555,24 @@
       },
       createFilterTel(queryString) {
         return (item) => {
-          return (String(item.CustTel).indexOf(String(queryString)) > -1)
-              && (String(item.CustCompanyName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
-              && (String(item.CustName).indexOf(String(this.inputInfo.CustName)) > -1)
-              && (String(item.CustNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+          return (
+                     (String(item.CustTel).indexOf(String(queryString)) > -1)
+                  || (String(item.EnkaiSyusaiTel).indexOf(String(queryString)) > -1)
+                  || (String(item.Tel).indexOf(String(queryString)) > -1)
+              )
+              && (
+                  (String(item.CustCompanyName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
+                  || (String(item.EnkaiSyusaiName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
+              )
+              && (
+                  (String(item.CustName).indexOf(String(this.inputInfo.CustName)) > -1)
+                  || (String(item.Name).indexOf(String(this.inputInfo.CustName)) > -1)
+              )
+              && (
+                  (String(item.CustNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+                  || (String(item.EnkaiSyusaiNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+                  || (String(item.NameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+              )
         }
       },
       querySearchCompany(queryString, cb) {
@@ -557,10 +583,24 @@
       },
       createFilterCompany(queryString) {
         return (item) => {
-          return (String(item.CustCompanyName).indexOf(String(queryString)) > -1)
-              && (String(item.CustTel).indexOf(String(this.inputInfo.CustTel)) > -1)
-              && (String(item.CustName).indexOf(String(this.inputInfo.CustName)) > -1)
-              && (String(item.CustNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+          return  (
+                  (String(item.CustCompanyName).indexOf(String(queryString)) > -1)
+                  || (String(item.EnkaiSyusaiName).indexOf(String(queryString)) > -1)
+              )
+              && (
+                  (String(item.CustTel).indexOf(String(this.inputInfo.CustTel)) > -1)
+                  || (String(item.EnkaiSyusaiTel).indexOf(String(this.inputInfo.CustTel)) > -1)
+                  || (String(item.Tel).indexOf(String(this.inputInfo.CustTel)) > -1)
+              )
+              && (
+                  (String(item.CustName).indexOf(String(this.inputInfo.CustName)) > -1)
+                  || (String(item.Name).indexOf(String(this.inputInfo.CustName)) > -1)
+              )
+              && (
+                  (String(item.CustNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+                  || (String(item.EnkaiSyusaiNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+                  || (String(item.NameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+              )
         }
       },
       querySearchName(queryString, cb) {
@@ -571,10 +611,24 @@
       },
       createFilterName(queryString) {
         return (item) => {
-          return (String(item.CustName).indexOf(String(queryString)) > -1)
-              && (String(item.CustCompanyName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
-              && (String(item.CustTel).indexOf(String(this.inputInfo.CustTel)) > -1)
-              && (String(item.CustNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+          return (
+                  (String(item.CustName).indexOf(String(queryString)) > -1)
+                  || (String(item.Name).indexOf(String(queryString)) > -1)
+              )
+              && (
+                  (String(item.CustCompanyName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
+                  || (String(item.EnkaiSyusaiName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
+              )
+              && (
+                  (String(item.CustTel).indexOf(String(this.inputInfo.CustTel)) > -1)
+                  || (String(item.EnkaiSyusaiTel).indexOf(String(this.inputInfo.CustTel)) > -1)
+                  || (String(item.Tel).indexOf(String(this.inputInfo.CustTel)) > -1)
+              )
+              && (
+                  (String(item.CustNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+                  || (String(item.EnkaiSyusaiNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+                  || (String(item.NameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+              )
         }
       },
       querySearchName2(queryString, cb) {
@@ -585,10 +639,24 @@
       },
       createFilterName2(queryString) {
         return (item) => {
-          return (String(item.CustNameKana).indexOf(String(queryString)) > -1)
-              && (String(item.CustCompanyName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
-              && (String(item.CustTel).indexOf(String(this.inputInfo.CustTel)) > -1)
-              && (String(item.CustName).indexOf(String(this.inputInfo.CustName)) > -1)
+          return (
+                  (String(item.CustNameKana).indexOf(String(queryString)) > -1)
+                  || (String(item.EnkaiSyusaiNameKana).indexOf(String(queryString)) > -1)
+                  || (String(item.NameKana).indexOf(String(queryString)) > -1)
+              )
+              && (
+                  (String(item.CustCompanyName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
+                  || (String(item.EnkaiSyusaiName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
+              )
+              && (
+                  (String(item.CustTel).indexOf(String(this.inputInfo.CustTel)) > -1)
+                  || (String(item.EnkaiSyusaiTel).indexOf(String(this.inputInfo.CustTel)) > -1)
+                  || (String(item.Tel).indexOf(String(this.inputInfo.CustTel)) > -1)
+              )
+              && (
+                  (String(item.CustName).indexOf(String(this.inputInfo.CustName)) > -1)
+                  || (String(item.Name).indexOf(String(this.inputInfo.CustName)) > -1)
+              )
         }
       },
     },
@@ -628,8 +696,7 @@
   }
 
   .container {
-    transform: scale(.75);
-    margin: -140px auto;
+    margin: 20px auto;
     display: flex;
     flex-wrap: wrap;
     width: 90vw;
@@ -663,12 +730,12 @@
       }
       .tab-title {
         margin-bottom: 25px;
-        font-size: 30px;
+        font-size: 20px;
         color: #142343;
         .title-line {
           display: inline-block;
           width: 6px;
-          height: 36px;
+          height: 30px;
           margin-right: 24px;
           background-color: #ded5a7;
         }
@@ -683,7 +750,7 @@
           box-shadow: 1px 1px 1px #ddd;
           padding: 15px 20px;
           span.el-checkbox__label {
-            font-size: 24px;
+            font-size: 20px;
           }
         }
         .time-line {
@@ -703,7 +770,7 @@
           width: 240px;
         }
         .inner-txt {
-          font-size: 24px;
+          font-size: 18px;
           margin-bottom: 10px;
           color: #142343;
         }

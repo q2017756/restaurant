@@ -159,7 +159,7 @@ html, body {
 }
 
 .title-txt {
-  font-size: 24px;
+  font-size: 20px;
 }
 
 .my-autocomplete {
@@ -182,15 +182,15 @@ html, body {
     margin: 0 30px 10px 0;
     padding: 15px 5vw;
     span {
-      font-size: 22px;
+      font-size: 16px;
     }
   }
 }
 .el-loading-mask {
   position: fixed !important;
 }
-.el-input, .el-checkbox__label,.el-input__inner{
-  font-size: 18px !important;
+.el-input, .el-checkbox__label,.el-input__inner,.el-textarea__inner{
+  font-size: 16px !important;
 }
 .el-input,.el-input.el-input--suffix,.el-checkbox{
   -webkit-backface-visibility: hidden !important;

@@ -299,8 +299,7 @@
   }
 
   .container {
-    transform: scale(.75);
-    margin: -80px auto;
+    margin: 20px auto;
     display: flex;
     flex-direction: column;
     background: url('../assets/img/set-bg.png') no-repeat;
@@ -312,19 +311,18 @@
       margin-bottom: 1vh;
       .tab-title {
         margin-bottom: 1vh;
-        font-size: 30px;
         color: #142343;
         .title-line {
           display: inline-block;
           width: 6px;
-          height: 36px;
+          height: 30px;
           margin-right: 24px;
           background-color: #ded5a7;
         }
         .title-txt {
           display: inline-block;
           vertical-align: top;
-          font-size: 24px;
+          font-size: 20px;
         }
       }
       .group-input .el-input {
@@ -340,12 +338,12 @@
           box-shadow: 1px 1px 1px #ddd;
           padding: 10px 20px;
           span.el-checkbox__label {
-            font-size: 24px;
+            font-size: 20px;
           }
         }
         .el-checkbox {
           margin: 0 20px 20px 0;
-          font-size: 24px;
+          font-size: 20px;
         }
         .time-line {
           width: 1px;
@@ -364,7 +362,7 @@
           }
         }
         .inner-txt {
-          font-size: 24px;
+          font-size: 18px;
           margin-bottom: 10px;
           color: #142343;
         }

@@ -5,7 +5,7 @@
       <app-calendar :events="$store.state.calendarDataOne"
                     :dateItemRender="itemRender"
                     :startWeek="0"
-                    @event-click="toNext"></app-calendar>
+                    @event-click="toNext" />
     </div>
   </div>
 </template>
