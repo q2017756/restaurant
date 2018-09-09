@@ -53,7 +53,7 @@
             <td>{{ item.MenuName }}</td>
             <td>{{ item.RyouriRemark }}</td>
             <td>{{ item.SituationRemark }}</td>
-            <td>{{ item.UkerukeDate }}</td>
+            <td>{{ item.UketukeDate }}</td>
             <td><span class="color-btn blue">宴</span></td>
             <td class="long-td">{{ item.EnkaiNum }}</td>
             <td>

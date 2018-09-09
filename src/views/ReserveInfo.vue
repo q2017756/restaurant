@@ -1,6 +1,6 @@
 <template>
   <div class="unified-bg" v-loading="loading || loading2">
-    <app-header />
+    <app-header/>
     <div class="container">
       <div class="inner-left">
         <div v-if="setInfoType === '1' ? false : true" class="tab sel-date">
@@ -50,7 +50,7 @@
                       }"
                               placeholder="">
               </el-time-select>
-              <div class="inner-txt" >TEL</div>
+              <div class="inner-txt">TEL</div>
               <el-autocomplete
                       popper-class="my-autocomplete"
                       v-model="inputInfo.CustTel"
@@ -58,12 +58,12 @@
                       placeholder="内容を入力してください"
                       @select="handleSelect">
                 <template slot-scope="{ item }">
-                  <app-info :item="item" />
+                  <app-info :item="item"/>
                 </template>
               </el-autocomplete>
               <div class="info" style="margin-top: 20px">
                 <div class="">
-                  <div class="inner-txt" >法人・団体名</div>
+                  <div class="inner-txt">法人・団体名</div>
                   <el-autocomplete
                           popper-class="my-autocomplete"
                           v-model="inputInfo.CustCompanyName"
@@ -71,7 +71,7 @@
                           placeholder="内容を入力してください"
                           @select="handleSelect">
                     <template slot-scope="{ item }">
-                      <app-info :item="item" />
+                      <app-info :item="item"/>
                     </template>
                   </el-autocomplete>
                 </div>
@@ -82,7 +82,7 @@
               </div>
               <div class="info">
                 <div class="">
-                  <div class="inner-txt" >予約者</div>
+                  <div class="inner-txt">予約者</div>
                   <el-autocomplete
                           popper-class="my-autocomplete"
                           v-model="inputInfo.CustName"
@@ -90,7 +90,7 @@
                           placeholder="内容を入力してください"
                           @select="handleSelect">
                     <template slot-scope="{ item }">
-                      <app-info :item="item" />
+                      <app-info :item="item"/>
                     </template>
                   </el-autocomplete>
                 </div>
@@ -103,7 +103,7 @@
                           placeholder="内容を入力してください"
                           @select="handleSelect">
                     <template slot-scope="{ item }">
-                      <app-info :item="item" />
+                      <app-info :item="item"/>
                     </template>
                   </el-autocomplete>
                 </div>
@@ -168,11 +168,11 @@
             <div class="info">
               <div class="pull-left">
                 <div class="inner-txt">宴会履歴</div>
-                <el-input v-model="inputInfo.EnkaiNum" class="mr30" />
+                <el-input v-model="inputInfo.EnkaiNum" class="mr30"/>
               </div>
               <div class="pull-left">
                 <div class="inner-txt">法人レストラン履</div>
-                <el-input v-model="inputInfo.CompanyReservationNum" />
+                <el-input v-model="inputInfo.CompanyReservationNum"/>
               </div>
             </div>
             <div class="info">
@@ -188,7 +188,7 @@
               </div>
               <div class="pull-left">
                 <div class="inner-txt">個人レストラン履</div>
-                <el-input v-model="inputInfo.ReservationNum" />
+                <el-input v-model="inputInfo.ReservationNum"/>
               </div>
             </div>
           </div>
@@ -200,17 +200,20 @@
           </div>
           <div class="tab-inner remark">
             <div class="inner-txt mb20 flex-center">料理詳細
-              <el-checkbox class="font-small" label="強調" name="type" v-model="inputInfo.RyouriRemarke" true-label="1" false-label="0" />
+              <el-checkbox class="font-small" label="強調" name="type" v-model="inputInfo.RyouriRemarke" true-label="1"
+                           false-label="0"/>
             </div>
-            <el-input class="mb30" type="textarea" v-model="inputInfo.RyouriRemark" />
+            <el-input class="mb30" type="textarea" v-model="inputInfo.RyouriRemark"/>
             <div class="inner-txt mb20 flex-center">シチュエーション
-              <el-checkbox class="font-small" label="強調" name="type" v-model="inputInfo.SituationRemarke" true-label="1" false-label="0" />
+              <el-checkbox class="font-small" label="強調" name="type" v-model="inputInfo.SituationRemarke" true-label="1"
+                           false-label="0"/>
             </div>
-            <el-input type="textarea" class="mb30" v-model="inputInfo.SituationRemark" />
+            <el-input type="textarea" class="mb30" v-model="inputInfo.SituationRemark"/>
             <div class="inner-txt mb20 flex-center">その他備考
-              <el-checkbox class="font-small" label="強調" name="type" v-model="inputInfo.OthersRemarke" true-label="1" false-label="0" />
+              <el-checkbox class="font-small" label="強調" name="type" v-model="inputInfo.OthersRemarke" true-label="1"
+                           false-label="0"/>
             </div>
-            <el-input type="textarea" class="mb30" v-model="inputInfo.OthersRemark" />
+            <el-input type="textarea" class="mb30" v-model="inputInfo.OthersRemark"/>
           </div>
         </div>
       </div>
@@ -229,7 +232,7 @@
                     :dateItemRender="itemRender"
                     :startWeek="0"
                     @date-click="chooseDate"
-                    @event-click="chooseDate2" />
+                    @event-click="chooseDate2"/>
     </div>
     <app-modal :options="modalOptions" v-show="modalOptions.show" @submit="doConfirm">
       <div slot="body">
@@ -265,6 +268,13 @@
         ownerOptions: [],
         filterOptionsData: [],
         // 表单信息
+        oldInfo: {
+          CustTel: '', // 电话
+          CustCompanyName: '', // 法人团体名
+          CustName: '', // 预约人姓名
+          CustNameKana: '', // 预约人日文发音
+        },
+        suggestArr: [],
         inputInfo: {
           ReservationCode: '', // 日期编码
           ReservationDate: localStorage.getItem('clickDate'), // 日期
@@ -322,17 +332,17 @@
         itemRender(item) {
           const h = this.$createElement
           return h('div', {
-                class: 'calendar-text-container'
-              },
-              [
-                h('span', {
-                      class: 'calendar-text'
-                    }, item.TimeKbn === "1" ? 'ランチ' : 'ディナー'
-                ),
-                h('span', {
-                  class: item.YoyakuLevel === '0' ? 'calendar-icon-circle' : (item.YoyakuLevel === '1' ? 'calendar-icon-triangle' : 'calendar-icon-x')
-                })
-              ]
+              class: 'calendar-text-container'
+            },
+            [
+              h('span', {
+                  class: 'calendar-text'
+                }, item.TimeKbn === "1" ? 'ランチ' : 'ディナー'
+              ),
+              h('span', {
+                class: item.YoyakuLevel === '0' ? 'calendar-icon-circle' : (item.YoyakuLevel === '1' ? 'calendar-icon-triangle' : 'calendar-icon-x')
+              })
+            ]
           )
         },
       }
@@ -357,20 +367,24 @@
         if (this.setInfoType === '2') {
           // 获取上一页信息
           this.inputInfo = JSON.parse(localStorage.getItem('scheduleInfo'))
+          this.oldInfo.CustTel = this.inputInfo.CustTel
+          this.oldInfo.CustCompanyName = this.inputInfo.CustCompanyName
+          this.oldInfo.CustName = this.inputInfo.CustName
+          this.oldInfo.CustNameKana = this.inputInfo.CustNameKana
           // 获取日历
           this.loading = true
-          this.axios.post('calendar/getcalendarinfo').then(res=>{
-            if(res.data.Code === "SC-001") {
+          this.axios.post('calendar/getcalendarinfo').then(res => {
+            if (res.data.Code === "SC-001") {
               this.loading = false
               this.$store.dispatch('setCalendarData', res.data.Data)
               const data = res.data.Data.filter((item) => {
                 const date = new Date()
                 const year = date.getFullYear()
-                const month = (date.getMonth()+1) < 10 ? ('0'+ (date.getMonth()+1)) : (date.getMonth()+1);
+                const month = (date.getMonth() + 1) < 10 ? ('0' + (date.getMonth() + 1)) : (date.getMonth() + 1);
                 return item.DailyDate.indexOf(year + '/' + month) > -1
               })
               this.$store.dispatch('setCalendarDataOne', data)
-            }else {
+            } else {
               this.$message.error(res.data.Message)
             }
           })
@@ -380,7 +394,6 @@
             TimeKbn: localStorage.getItem('mealsType')
           }).then(res => {
             if (res.data.Code === "SC-001") {
-              console.log(res.data)
               this.inputInfo.StartTime = res.data.Data[0].SrartTime
               this.inputInfo.EndTime = res.data.Data[0].EndTime
             } else {
@@ -432,14 +445,14 @@
           }
         })
         // 获取推荐信息
-        this.axios.post('reservation/suggestdata').then(res => {
-          if (res.data.Code === "SC-001") {
-            this.loading2 = false
-            this.filterOptionsData = res.data.Data
-          } else {
-            this.$message.error(res.data.Message)
-          }
-        })
+//        this.axios.post('reservation/suggestdata').then(res => {
+//          if (res.data.Code === "SC-001") {
+//            this.loading2 = false
+//            this.filterOptionsData = res.data.Data
+//          } else {
+//            this.$message.error(res.data.Message)
+//          }
+//        })
       },
       setInfo() {
         this.modalOptions.show = true
@@ -528,135 +541,222 @@
       handleSelect(item) {
         console.log(item)
         this.inputInfo.CustTel = item.CustTel ? item.CustTel :
-            (item.EnkaiSyusaiTel ? item.EnkaiSyusaiTel :
-                (item.Tel ? item.Tel : ''))
+          (item.EnkaiSyusaiTel ? item.EnkaiSyusaiTel :
+            (item.Tel ? item.Tel : ''))
         this.inputInfo.CustCompanyName = item.CustCompanyName ? item.CustCompanyName :
-            (item.EnkaiSyusaiName ? item.EnkaiSyusaiName : '')
+          (item.EnkaiSyusaiName ? item.EnkaiSyusaiName : '')
         this.inputInfo.CustName = item.CustName ? item.CustName :
-            (item.Name ? item.Name : '')
+          (item.Name ? item.Name : '')
         this.inputInfo.CustNameKana = item.CustNameKana ? item.CustNameKana :
-            (item.EnkaiSyusaiNameKana ? item.EnkaiSyusaiNameKana :
-                (item.NameKana ? item.NameKana : ''))
+          (item.EnkaiSyusaiNameKana ? item.EnkaiSyusaiNameKana :
+            (item.NameKana ? item.NameKana : ''))
         this.inputInfo.CustBusyoName = item.CustBusyoName
 
         this.inputInfo.EnkaiNum = item.EnkaiNum
         this.inputInfo.JissiDate = item.JissiDate
-        if(item.CustCompanyName || item.EnkaiSyusaiName) {
+        if (item.CustCompanyName || item.EnkaiSyusaiName) {
           this.inputInfo.CompanyReservationNum = item.ReservationNum
-        }else {
+        } else {
           this.inputInfo.ReservationNum = item.ReservationNum
         }
       },
       querySearchTel(queryString, cb) {
-        let arr = this.filterOptionsData
-        let results = arr.filter(this.createFilterTel(queryString))
-        // 调用 callback 返回建议列表的数据
-        cb(results.slice(0, 10))
+//        let arr = this.filterOptionsData
+//        let results = arr.filter(this.createFilterTel(queryString))
+//        // 调用 callback 返回建议列表的数据
+//        cb(results.slice(0, 10))
+        if (queryString != this.oldInfo.CustTel) {
+          this.axios.post('reservation/suggestdata', {
+            CustTel: queryString,
+            CustCompanyName: this.inputInfo.CustCompanyName,
+            CustName: this.inputInfo.CustName,
+            CustNameKana: this.inputInfo.CustNameKana,
+          }).then(res => {
+            if (res.data.Code === "SC-001") {
+              this.suggestArr = res.data.Data
+              this.oldInfo.CustTel = this.inputInfo.CustTel
+              this.oldInfo.CustCompanyName = this.inputInfo.CustCompanyName
+              this.oldInfo.CustName = this.inputInfo.CustName
+              this.oldInfo.CustNameKana = this.inputInfo.CustNameKana
+              cb(res.data.Data)
+            } else {
+              this.$message.error(res.data.Message)
+            }
+          })
+        } else {
+          cb(this.suggestArr)
+        }
+      },
+
+      querySearchCompany(queryString, cb) {
+//        let arr = this.filterOptionsData
+//        let results = arr.filter(this.createFilterCompany(queryString))
+//        // 调用 callback 返回建议列表的数据
+//        cb(results.slice(0, 10))
+        if (queryString != this.oldInfo.CustCompanyName) {
+          this.axios.post('reservation/suggestdata', {
+            CustCompanyName: queryString,
+            CustTel: this.inputInfo.CustTel,
+            CustName: this.inputInfo.CustName,
+            CustNameKana: this.inputInfo.CustNameKana,
+          }).then(res => {
+            if (res.data.Code === "SC-001") {
+              this.suggestArr = res.data.Data
+              this.oldInfo.CustTel = this.inputInfo.CustTel
+              this.oldInfo.CustCompanyName = this.inputInfo.CustCompanyName
+              this.oldInfo.CustName = this.inputInfo.CustName
+              this.oldInfo.CustNameKana = this.inputInfo.CustNameKana
+              cb(res.data.Data)
+            } else {
+              this.$message.error(res.data.Message)
+            }
+          })
+        } else {
+          cb(this.suggestArr)
+        }
+      },
+
+      querySearchName(queryString, cb) {
+//        let arr = this.filterOptionsData
+//        let results = arr.filter(this.createFilterName(queryString))
+//        // 调用 callback 返回建议列表的数据
+//        cb(results.slice(0, 10))
+        if (queryString != this.oldInfo.CustName) {
+          this.axios.post('reservation/suggestdata', {
+            CustName: queryString,
+            CustTel: this.inputInfo.CustTel,
+            CustCompanyName: this.inputInfo.CustCompanyName,
+            CustNameKana: this.inputInfo.CustNameKana,
+          }).then(res => {
+            if (res.data.Code === "SC-001") {
+              this.suggestArr = res.data.Data
+              this.oldInfo.CustTel = this.inputInfo.CustTel
+              this.oldInfo.CustCompanyName = this.inputInfo.CustCompanyName
+              this.oldInfo.CustName = this.inputInfo.CustName
+              this.oldInfo.CustNameKana = this.inputInfo.CustNameKana
+              cb(res.data.Data)
+            } else {
+              this.$message.error(res.data.Message)
+            }
+          })
+        } else {
+          cb(this.suggestArr)
+        }
+      },
+
+      querySearchName2(queryString, cb) {
+//        let arr = this.filterOptionsData
+//        let results = arr.filter(this.createFilterName2(queryString))
+//        // 调用 callback 返回建议列表的数据
+//        cb(results.slice(0, 10))
+        if (queryString != this.oldInfo.CustNameKana) {
+          this.axios.post('reservation/suggestdata', {
+            CustNameKana: queryString,
+            CustTel: this.inputInfo.CustTel,
+            CustName: this.inputInfo.CustName,
+            CustCompanyName: this.inputInfo.CustCompanyName,
+          }).then(res => {
+            if (res.data.Code === "SC-001") {
+              this.suggestArr = res.data.Data
+              this.oldInfo.CustTel = this.inputInfo.CustTel
+              this.oldInfo.CustCompanyName = this.inputInfo.CustCompanyName
+              this.oldInfo.CustName = this.inputInfo.CustName
+              this.oldInfo.CustNameKana = this.inputInfo.CustNameKana
+              cb(res.data.Data)
+            } else {
+              this.$message.error(res.data.Message)
+            }
+          })
+        } else {
+          cb(this.suggestArr)
+        }
       },
       createFilterTel(queryString) {
         return (item) => {
           return (
-                     (String(item.CustTel).indexOf(String(queryString)) > -1)
-                  || (String(item.EnkaiSyusaiTel).indexOf(String(queryString)) > -1)
-                  || (String(item.Tel).indexOf(String(queryString)) > -1)
-              )
-              && (
-                  (String(item.CustCompanyName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
-                  || (String(item.EnkaiSyusaiName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
-              )
-              && (
-                  (String(item.CustName).indexOf(String(this.inputInfo.CustName)) > -1)
-                  || (String(item.Name).indexOf(String(this.inputInfo.CustName)) > -1)
-              )
-              && (
-                  (String(item.CustNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
-                  || (String(item.EnkaiSyusaiNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
-                  || (String(item.NameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
-              )
+              (String(item.CustTel).indexOf(String(queryString)) > -1)
+              || (String(item.EnkaiSyusaiTel).indexOf(String(queryString)) > -1)
+              || (String(item.Tel).indexOf(String(queryString)) > -1)
+            )
+            && (
+              (String(item.CustCompanyName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
+              || (String(item.EnkaiSyusaiName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
+            )
+            && (
+              (String(item.CustName).indexOf(String(this.inputInfo.CustName)) > -1)
+              || (String(item.Name).indexOf(String(this.inputInfo.CustName)) > -1)
+            )
+            && (
+              (String(item.CustNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+              || (String(item.EnkaiSyusaiNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+              || (String(item.NameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+            )
         }
-      },
-      querySearchCompany(queryString, cb) {
-        let arr = this.filterOptionsData
-        let results = arr.filter(this.createFilterCompany(queryString))
-        // 调用 callback 返回建议列表的数据
-        cb(results.slice(0, 10))
       },
       createFilterCompany(queryString) {
         return (item) => {
-          return  (
-                  (String(item.CustCompanyName).indexOf(String(queryString)) > -1)
-                  || (String(item.EnkaiSyusaiName).indexOf(String(queryString)) > -1)
-              )
-              && (
-                  (String(item.CustTel).indexOf(String(this.inputInfo.CustTel)) > -1)
-                  || (String(item.EnkaiSyusaiTel).indexOf(String(this.inputInfo.CustTel)) > -1)
-                  || (String(item.Tel).indexOf(String(this.inputInfo.CustTel)) > -1)
-              )
-              && (
-                  (String(item.CustName).indexOf(String(this.inputInfo.CustName)) > -1)
-                  || (String(item.Name).indexOf(String(this.inputInfo.CustName)) > -1)
-              )
-              && (
-                  (String(item.CustNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
-                  || (String(item.EnkaiSyusaiNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
-                  || (String(item.NameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
-              )
+          return (
+              (String(item.CustCompanyName).indexOf(String(queryString)) > -1)
+              || (String(item.EnkaiSyusaiName).indexOf(String(queryString)) > -1)
+            )
+            && (
+              (String(item.CustTel).indexOf(String(this.inputInfo.CustTel)) > -1)
+              || (String(item.EnkaiSyusaiTel).indexOf(String(this.inputInfo.CustTel)) > -1)
+              || (String(item.Tel).indexOf(String(this.inputInfo.CustTel)) > -1)
+            )
+            && (
+              (String(item.CustName).indexOf(String(this.inputInfo.CustName)) > -1)
+              || (String(item.Name).indexOf(String(this.inputInfo.CustName)) > -1)
+            )
+            && (
+              (String(item.CustNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+              || (String(item.EnkaiSyusaiNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+              || (String(item.NameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+            )
         }
-      },
-      querySearchName(queryString, cb) {
-        let arr = this.filterOptionsData
-        let results = arr.filter(this.createFilterName(queryString))
-        // 调用 callback 返回建议列表的数据
-        cb(results.slice(0, 10))
       },
       createFilterName(queryString) {
         return (item) => {
           return (
-                  (String(item.CustName).indexOf(String(queryString)) > -1)
-                  || (String(item.Name).indexOf(String(queryString)) > -1)
-              )
-              && (
-                  (String(item.CustCompanyName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
-                  || (String(item.EnkaiSyusaiName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
-              )
-              && (
-                  (String(item.CustTel).indexOf(String(this.inputInfo.CustTel)) > -1)
-                  || (String(item.EnkaiSyusaiTel).indexOf(String(this.inputInfo.CustTel)) > -1)
-                  || (String(item.Tel).indexOf(String(this.inputInfo.CustTel)) > -1)
-              )
-              && (
-                  (String(item.CustNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
-                  || (String(item.EnkaiSyusaiNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
-                  || (String(item.NameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
-              )
+              (String(item.CustName).indexOf(String(queryString)) > -1)
+              || (String(item.Name).indexOf(String(queryString)) > -1)
+            )
+            && (
+              (String(item.CustCompanyName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
+              || (String(item.EnkaiSyusaiName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
+            )
+            && (
+              (String(item.CustTel).indexOf(String(this.inputInfo.CustTel)) > -1)
+              || (String(item.EnkaiSyusaiTel).indexOf(String(this.inputInfo.CustTel)) > -1)
+              || (String(item.Tel).indexOf(String(this.inputInfo.CustTel)) > -1)
+            )
+            && (
+              (String(item.CustNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+              || (String(item.EnkaiSyusaiNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+              || (String(item.NameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+            )
         }
-      },
-      querySearchName2(queryString, cb) {
-        let arr = this.filterOptionsData
-        let results = arr.filter(this.createFilterName2(queryString))
-        // 调用 callback 返回建议列表的数据
-        cb(results.slice(0, 10))
       },
       createFilterName2(queryString) {
         return (item) => {
           return (
-                  (String(item.CustNameKana).indexOf(String(queryString)) > -1)
-                  || (String(item.EnkaiSyusaiNameKana).indexOf(String(queryString)) > -1)
-                  || (String(item.NameKana).indexOf(String(queryString)) > -1)
-              )
-              && (
-                  (String(item.CustCompanyName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
-                  || (String(item.EnkaiSyusaiName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
-              )
-              && (
-                  (String(item.CustTel).indexOf(String(this.inputInfo.CustTel)) > -1)
-                  || (String(item.EnkaiSyusaiTel).indexOf(String(this.inputInfo.CustTel)) > -1)
-                  || (String(item.Tel).indexOf(String(this.inputInfo.CustTel)) > -1)
-              )
-              && (
-                  (String(item.CustName).indexOf(String(this.inputInfo.CustName)) > -1)
-                  || (String(item.Name).indexOf(String(this.inputInfo.CustName)) > -1)
-              )
+              (String(item.CustNameKana).indexOf(String(queryString)) > -1)
+              || (String(item.EnkaiSyusaiNameKana).indexOf(String(queryString)) > -1)
+              || (String(item.NameKana).indexOf(String(queryString)) > -1)
+            )
+            && (
+              (String(item.CustCompanyName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
+              || (String(item.EnkaiSyusaiName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
+            )
+            && (
+              (String(item.CustTel).indexOf(String(this.inputInfo.CustTel)) > -1)
+              || (String(item.EnkaiSyusaiTel).indexOf(String(this.inputInfo.CustTel)) > -1)
+              || (String(item.Tel).indexOf(String(this.inputInfo.CustTel)) > -1)
+            )
+            && (
+              (String(item.CustName).indexOf(String(this.inputInfo.CustName)) > -1)
+              || (String(item.Name).indexOf(String(this.inputInfo.CustName)) > -1)
+            )
         }
       },
     },

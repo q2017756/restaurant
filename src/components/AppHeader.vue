@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="header">
-      <h1 class="name">レストラン予約システム</h1>
+      <h1 class="name" @click="toCalendar">レストラン予約システム</h1>
       <img class="back" src="../assets/img/back-black.png" alt="" @click="goBack">
       <div class="right-btns" v-show="btnShow">
         <span class="btn" @click="toBasic">システム管理</span>
@@ -40,12 +40,13 @@
     },
     computed: {},
     methods: {
+      toCalendar() {
+        this.$router.push('calendar');
+      },
       toBasic() {
-        console.log('管理');
         this.$router.push('basicSet');
       },
       toDetail() {
-        console.log('管理');
         this.$router.push('detailSet');
       },
       goBack() {
@@ -65,6 +66,9 @@
     line-height: 50px;
     color: #dbbe77;
     z-index: 999;
+  }
+  .name {
+    cursor: pointer;
   }
   .back {
     display: none;
