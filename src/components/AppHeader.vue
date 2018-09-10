@@ -4,6 +4,7 @@
       <h1 class="name" @click="toCalendar">レストラン予約システム</h1>
       <img class="back" src="../assets/img/back-black.png" alt="" @click="goBack">
       <div class="right-btns" v-show="btnShow">
+        <p class="date" v-if="dateShow">{{date}} - {{type=== '1' ? 'ランチ' : 'ディナー'}}</p>
         <span class="btn" @click="toBasic">システム管理</span>
         <span class="btn" @click="toDetail">詳細設定</span>
       </div>
@@ -18,6 +19,8 @@
   export default {
     data() {
       return {
+        date: localStorage.getItem('clickDate'),
+        type: localStorage.getItem('mealsType'),
         showModal: false,
         modalOptions: {
           show: true,
@@ -30,6 +33,10 @@
       };
     },
     props: {
+      dateShow: {
+        type: Boolean,
+        default: true
+      },
       btnShow: {
         type: Boolean,
         default: true
@@ -66,6 +73,9 @@
     line-height: 50px;
     color: #dbbe77;
     z-index: 999;
+  }
+  .date {
+    color: #000;
   }
   .name {
     cursor: pointer;
@@ -109,6 +119,9 @@
     }
     .right-btns {
       right: 0;
+    }
+    .date, .btn {
+      font-size: 12px !important;
     }
     .fill {
       display: block;

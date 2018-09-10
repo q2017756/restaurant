@@ -27,18 +27,19 @@
                           v-for="item in fieldOptions"
                           :key="item.KaijoId"
                           :label="item.KaijoName"
-                          :value="item.KaijoId">
+                          :value="item.KaijoName">
                   </el-option>
                 </el-select>
                 -
-                <el-select v-model="inputInfo.TableNo" placeholder="">
-                  <el-option
-                          v-for="item in tableOptions"
-                          :key="item.TableId"
-                          :label="item.TableName"
-                          :value="item.TableId">
-                  </el-option>
-                </el-select>
+                <el-autocomplete
+                        v-model="inputInfo.TableNo"
+                        :fetch-suggestions="querySearchTable"
+                        placeholder="内容を入力してください"
+                        @select="handleSelectTable">
+                  <template slot-scope="{ item }">
+                    {{item.TableName}}
+                  </template>
+                </el-autocomplete>
               </div>
               <div class="inner-txt">時間</div>
               <el-time-select class="mb20"
@@ -114,7 +115,7 @@
                         v-for="item in typeOptions"
                         :key="item.KbnId"
                         :label="item.KbnName"
-                        :value="item.KbnId">
+                        :value="item.KbnName">
                 </el-option>
               </el-select>
             </div>
@@ -134,7 +135,7 @@
                       v-for="item in foodOptions"
                       :key="item.MenuId"
                       :label="item.MenuName"
-                      :value="item.MenuId">
+                      :value="item.MenuName">
               </el-option>
             </el-select>
             <div class="inner-txt">受者</div>
@@ -143,7 +144,7 @@
                       v-for="item in ownerOptions"
                       :key="item.OwnerCode"
                       :label="item.OwnerName"
-                      :value="item.OwnerCode">
+                      :value="item.OwnerName">
               </el-option>
             </el-select>
             <div class="inner-txt">受日</div>
@@ -168,11 +169,11 @@
             <div class="info">
               <div class="pull-left">
                 <div class="inner-txt">宴会履歴</div>
-                <el-input v-model="inputInfo.EnkaiNum" class="mr30"/>
+                <el-input v-model="inputInfo.EnkaiNum" class="mr30" :disabled="true"/>
               </div>
               <div class="pull-left">
                 <div class="inner-txt">法人レストラン履</div>
-                <el-input v-model="inputInfo.CompanyReservationNum"/>
+                <el-input v-model="inputInfo.CompanyReservationNum" :disabled="true"/>
               </div>
             </div>
             <div class="info">
@@ -183,12 +184,13 @@
                         type="date"
                         format="yyyy/MM/dd"
                         value-format="yyyy/MM/dd"
+                        :disabled="true"
                         placeholder="日付選択">
                 </el-date-picker>
               </div>
               <div class="pull-left">
                 <div class="inner-txt">個人レストラン履</div>
-                <el-input v-model="inputInfo.ReservationNum"/>
+                <el-input v-model="inputInfo.ReservationNum" :disabled="true"/>
               </div>
             </div>
           </div>
@@ -388,21 +390,21 @@
               this.$message.error(res.data.Message)
             }
           })
-          // 时间
-          this.axios.post('setting/starttime', {
-            DailyDate: localStorage.getItem('clickDate'),
-            TimeKbn: localStorage.getItem('mealsType')
-          }).then(res => {
-            if (res.data.Code === "SC-001") {
-              this.inputInfo.StartTime = res.data.Data[0].SrartTime
-              this.inputInfo.EndTime = res.data.Data[0].EndTime
-            } else {
-              this.$message.error(res.data.Message)
-            }
-          })
         }
       },
       getSelectInfo() {
+        // 时间
+        this.axios.post('setting/starttime', {
+          DailyDate: localStorage.getItem('clickDate'),
+          TimeKbn: localStorage.getItem('mealsType')
+        }).then(res => {
+          if (res.data.Code === "SC-001") {
+            this.inputInfo.StartTime = res.data.Data[0].SrartTime
+            this.inputInfo.EndTime = res.data.Data[0].EndTime
+          } else {
+            this.$message.error(res.data.Message)
+          }
+        })
         // 会场
         this.axios.post('master/getkaijo').then(res => {
           if (res.data.Code === "SC-001") {
@@ -444,15 +446,6 @@
             this.$message.error(res.data.Message)
           }
         })
-        // 获取推荐信息
-//        this.axios.post('reservation/suggestdata').then(res => {
-//          if (res.data.Code === "SC-001") {
-//            this.loading2 = false
-//            this.filterOptionsData = res.data.Data
-//          } else {
-//            this.$message.error(res.data.Message)
-//          }
-//        })
       },
       setInfo() {
         this.modalOptions.show = true
@@ -559,6 +552,20 @@
         } else {
           this.inputInfo.ReservationNum = item.ReservationNum
         }
+      },
+      handleSelectTable (item) {
+        this.inputInfo.TableNo = item.TableName
+      },
+      querySearchTable(queryString, cb) {
+        var tables = this.tableOptions;
+        var results = queryString ? tables.filter(this.createFilter(queryString)) : tables;
+        // 调用 callback 返回建议列表的数据
+        cb(results);
+      },
+      createFilter(queryString) {
+        return (restaurant) => {
+          return (restaurant.TableName.toLowerCase().indexOf(String(queryString).toLowerCase()) > -1);
+        };
       },
       querySearchTel(queryString, cb) {
 //        let arr = this.filterOptionsData

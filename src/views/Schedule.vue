@@ -54,7 +54,7 @@
             <td>{{ item.RyouriRemark }}</td>
             <td>{{ item.SituationRemark }}</td>
             <td>{{ item.UketukeDate }}</td>
-            <td><span class="color-btn blue">宴</span></td>
+            <td><span class="color-btn" :class="(item.EnkaiNum)? 'blue' : 'gray'">宴</span></td>
             <td class="long-td">{{ item.EnkaiNum }}</td>
             <td>
               <el-button size="mini" plain @click="toEdit(item)">修正</el-button>
@@ -67,7 +67,7 @@
             <td>{{ item.CustTel }}</td>
             <td colspan="2">{{ item.OthersRemark }}</td>
             <td>{{ item.OwnerName }}</td>
-            <td><span class="color-btn">婚</span></td>
+            <td><span class="color-btn" :class="item.KonreiNum ? '' : 'gray'">婚</span></td>
             <td class="long-td">{{ item.KonReiNum }}</td>
             <td></td>
           </tr>
@@ -178,11 +178,9 @@
         }
       },
       toAdd() {
-        if (this.modalStatus === "0" || this.modalStatus === "1") {
-          localStorage.setItem('scheduleInfo','')
-          localStorage.setItem('setInfoType', '1')
-          this.$router.push('reserveInfo')
-        }
+        localStorage.setItem('setInfoType', '1')
+        localStorage.setItem('scheduleInfo','')
+        this.$router.push('reserveInfo')
       },
       toEdit(item) {
         localStorage.setItem('setInfoType', '2')

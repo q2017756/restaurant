@@ -86,7 +86,7 @@
           </div>
           <div class="group-input group1">
             <div>
-              <el-input v-model="inputValue.group1" placeholder="内容を入力してください"/>
+              <el-input v-model="inputValue.group1" maxlength="4" minlength="1" placeholder="内容を入力してください"/>
               <span class="ml12 mr24">組以上</span>
             </div>
             <div>
@@ -117,12 +117,13 @@
         <div class="tab-inner">
           <div class="inner-txt">メールアドレス</div>
           <el-select class="email-input"
-                  v-model="email"
-                  multiple
-                  filterable
-                  allow-create
-                  default-first-option
-                  placeholder="内容を入力してください">
+                     popper-class="disn"
+                     v-model="email"
+                     multiple
+                     filterable
+                     allow-create
+                     default-first-option
+                     placeholder="内容を入力してください">
           </el-select>
         </div>
       </div>
@@ -199,10 +200,10 @@
     computed: {},
     methods: {
       getData() {
-        this.axios.post('setting/getbasesetting').then(res=>{
+        this.axios.post('setting/getbasesetting').then(res => {
 
-          if(res.data.Code === "SC-001") {
-            if(res.data.Data[0]) {
+          if (res.data.Code === "SC-001") {
+            if (res.data.Data[0]) {
               this.loading = false
               const info = res.data.Data[0]
               this.checkList = info.WeeklyWorkdayId.split(',')
@@ -218,13 +219,13 @@
                 group2: info.YoyakuUnavalibleNum,
                 people2: info.YoyakusyaUnavalibleNum,
               }
-              this.email = info.TantoMail.split()
+              this.email = info.TantoMail.split(',')
             }
-          }else {
+          } else {
             this.$message.error(res.data.Message)
           }
         })
-        
+
         this.options = getTimeList()
       },
       toDetail() {
@@ -243,7 +244,7 @@
       doConfirm() {
         if (this.modalStatus === 1) {
           this.loading = true
-          this.axios.post('setting/updatebasesetting',{
+          this.axios.post('setting/updatebasesetting', {
             WeeklyWorkdayId: this.checkList.join(','),
             LunchStartTime: this.timeValue.lunchStart,
             LunchEndTime: this.timeValue.lunchEnd,
@@ -256,14 +257,14 @@
             TantoMail: this.email.join(','),
             RegDate: localStorage.getItem('clickDate'),
             RegUserId: JSON.parse(localStorage.getItem('userInfo')).UserName,
-          }).then(res=>{
+          }).then(res => {
 
-            if(res.data.Code === "SC-001") {
+            if (res.data.Code === "SC-001") {
               this.loading = false
               this.modalOptions.show = false
               this.modalOptions2.show = true
               this.modalMsg2 = '登録は成功しました'
-            }else {
+            } else {
               this.$message.error(res.data.Message)
             }
           })
@@ -282,6 +283,11 @@
 </script>
 
 <style scoped lang="scss">
+  .disn {
+    display: none !important;
+    opacity: 0;
+  }
+
   .pull-left {
     float: left;
   }
@@ -388,6 +394,7 @@
       }
     }
   }
+
   @media screen and(max-width: 750px) {
     .container {
       transform: scale(1) !important;

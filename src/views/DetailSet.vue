@@ -123,17 +123,15 @@
           <span class="title-txt">予约可否</span>
         </div>
         <div class="tab-inner small">
-          <el-checkbox-group v-model="checkList">
-            <el-checkbox label="0">
+            <el-radio v-model="checkList" label="0">
               <img class="middle-img" src="../assets/img/calendar-circle.png" alt="">
-            </el-checkbox>
-            <el-checkbox label="1">
+            </el-radio>
+            <el-radio v-model="checkList" label="1">
               <img class="middle-img" src="../assets/img/calendar-triangle.png" alt="">
-            </el-checkbox>
-            <el-checkbox label="2">
+            </el-radio>
+            <el-radio v-model="checkList" label="2">
               <img class="middle-img" src="../assets/img/calendar-x.png" alt="">
-            </el-checkbox>
-          </el-checkbox-group>
+            </el-radio>
         </div>
       </div>
       <div class="opr-btns">
@@ -164,7 +162,7 @@
         loading: localStorage.getItem('clickDate') ? true : false,
         dayValue: '',
         DayOffKbn: '',
-        checkList: [],
+        checkList: '',
         timeValue: {
           lunchStart: '',
           lunchEnd: '',
@@ -236,7 +234,7 @@
               group2: info.YoyakuUnavalibleNum,
               people2: info.YoyakusyaUnavalibleNum,
             }
-            this.checkList = info.YoyakuLevel.split(',')
+            this.checkList = info.YoyakuLevel
           }else if(res.data.Code === "EC-001") {
             this.loading = false
           } else{
@@ -270,7 +268,7 @@
             YoyakusyaAvalibleNum: this.inputValue.people1,
             YoyakuUnavalibleNum: this.inputValue.group2,
             YoyakusyaUnavalibleNum: this.inputValue.people2,
-            YoyakuLevel: this.checkList.join(','),
+            YoyakuLevel: this.checkList,
             DayOffKbn: this.DayOffKbn,
             RegDate: localStorage.getItem('clickDate'),
             RegUserId: JSON.parse(localStorage.getItem('userInfo')).UserName,
