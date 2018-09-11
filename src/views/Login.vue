@@ -6,7 +6,7 @@
         <p class="sub-title">システム</p>
         <input class="username" type="text" v-model="username">
         <input class="pwd" type="password" v-model="password">
-        <div class="login-btn" @click="login">登録</div>
+        <div class="login-btn" @click="login">ログイン</div>
       </div>
     </div>
     <app-modal :options="modalOptions" v-show="modalOptions.show">

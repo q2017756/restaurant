@@ -1,233 +1,268 @@
 <template>
   <div class="unified-bg" v-loading="loading || loading2">
     <app-header/>
-    <div class="container">
-      <div class="inner-left">
-        <div v-if="setInfoType === '1' ? false : true" class="tab sel-date">
-          <div class="tab-title pull-left mr30">
-            <span class="title-line"></span>
-            <span class="title-txt">予約日</span>
+    <el-form :model="inputInfo" :rules="rules" ref="ruleForm">
+      <div class="container">
+        <div class="inner-left">
+          <div v-if="setInfoType === '1' ? false : true" class="tab sel-date">
+            <div class="tab-title pull-left mr30">
+              <span class="title-line"></span>
+              <span class="title-txt">予約日</span>
+            </div>
+            <div class="pull-left">
+              <el-form-item prop="ReservationDate">
+              <el-input v-model="inputInfo.ReservationDate" class="mr30"/>
+              </el-form-item>
+              <el-button class="mt20 remarks-btn" type="primary" @click="calendarShow = true">予約日変更</el-button>
+            </div>
           </div>
-          <div class="pull-left">
-            <el-input v-model="inputInfo.ReservationDate" class="mr30"/>
-            <el-button class="remarks-btn" type="primary" @click="calendarShow = true">予約日変更</el-button>
-          </div>
-        </div>
-        <div class="tab">
-          <div class="tab-title">
-            <span class="title-line"></span>
-            <span class="title-txt">基本信息</span>
-          </div>
-          <div class="tab-inner">
-            <div class="time-wrap">
-              <div class="mb20">
-                <div class="inner-txt">テーブル</div>
-                <el-select v-model="inputInfo.KaijoName" placeholder="">
-                  <el-option
-                          v-for="item in fieldOptions"
-                          :key="item.KaijoId"
-                          :label="item.KaijoName"
-                          :value="item.KaijoName">
-                  </el-option>
-                </el-select>
-                -
-                <el-autocomplete
-                        v-model="inputInfo.TableNo"
-                        :fetch-suggestions="querySearchTable"
-                        placeholder="内容を入力してください"
-                        @select="handleSelectTable">
-                  <template slot-scope="{ item }">
-                    {{item.TableName}}
-                  </template>
-                </el-autocomplete>
-              </div>
-              <div class="inner-txt">時間</div>
-              <el-time-select class="mb20"
-                              v-model="inputInfo.StartTime"
-                              :picker-options="{
+          <div class="tab">
+            <div class="tab-title">
+              <span class="title-line"></span>
+              <span class="title-txt">基本信息</span>
+            </div>
+            <div class="tab-inner">
+              <div class="time-wrap">
+                <div class="mb20">
+                  <div class="inner-txt">テーブル</div>
+                  <el-select v-model="inputInfo.KaijoName" placeholder="">
+                    <el-option
+                            v-for="item in fieldOptions"
+                            :key="item.KaijoId"
+                            :label="item.KaijoName"
+                            :value="item.KaijoName">
+                    </el-option>
+                  </el-select>
+                  -
+                  <el-form-item prop="TableNo">
+                    <el-autocomplete
+                            v-model="inputInfo.TableNo"
+                            :fetch-suggestions="querySearchTable"
+                            placeholder="内容を入力してください"
+                            @select="handleSelectTable">
+                      <template slot-scope="{ item }">
+                        {{item.TableName}}
+                      </template>
+                    </el-autocomplete>
+                  </el-form-item>
+                </div>
+                <div class="inner-txt">時間</div>
+                <el-form-item prop="StartTime">
+                  <el-time-select
+                          v-model="inputInfo.StartTime"
+                          :picker-options="{
                         start: inputInfo.StartTime ? inputInfo.StartTime : '00:00',
                         step: '00:30',
                         end: inputInfo.EndTime ? inputInfo.EndTime : '24:00'
                       }"
-                              placeholder="">
-              </el-time-select>
-              <div class="inner-txt">TEL</div>
-              <el-autocomplete
-                      popper-class="my-autocomplete"
-                      v-model="inputInfo.CustTel"
-                      :fetch-suggestions="querySearchTel"
-                      placeholder="内容を入力してください"
-                      @select="handleSelect">
-                <template slot-scope="{ item }">
-                  <app-info :item="item"/>
-                </template>
-              </el-autocomplete>
-              <div class="info" style="margin-top: 20px">
-                <div class="">
-                  <div class="inner-txt">法人・団体名</div>
+                          placeholder="">
+                  </el-time-select>
+                </el-form-item>
+                <div class="inner-txt mt20">TEL</div>
+                <el-form-item prop="CustTel">
                   <el-autocomplete
+                          type="number"
                           popper-class="my-autocomplete"
-                          v-model="inputInfo.CustCompanyName"
-                          :fetch-suggestions="querySearchCompany"
+                          v-model="inputInfo.CustTel"
+                          :fetch-suggestions="querySearchTel"
                           placeholder="内容を入力してください"
                           @select="handleSelect">
                     <template slot-scope="{ item }">
                       <app-info :item="item"/>
                     </template>
                   </el-autocomplete>
+                </el-form-item>
+                <div class="info" style="margin-top: 20px">
+                  <div class="">
+                    <div class="inner-txt">法人・団体名</div>
+                    <el-form-item prop="CustCompanyName">
+                      <el-autocomplete
+                              popper-class="my-autocomplete"
+                              v-model="inputInfo.CustCompanyName"
+                              :fetch-suggestions="querySearchCompany"
+                              placeholder="内容を入力してください"
+                              @select="handleSelect">
+                        <template slot-scope="{ item }">
+                          <app-info :item="item"/>
+                        </template>
+                      </el-autocomplete>
+                    </el-form-item>
+                  </div>
+                  <div class="name-wrap">
+                    <div class="inner-txt">部署名</div>
+                    <el-form-item prop="CustBusyoName">
+                      <el-input v-model="inputInfo.CustBusyoName"/>
+                    </el-form-item>
+                  </div>
                 </div>
-                <div class="name-wrap">
-                  <div class="inner-txt">部署名</div>
-                  <el-input v-model="inputInfo.CustBusyoName"/>
+                <div class="info">
+                  <div class="">
+                    <div class="inner-txt">予約者</div>
+                    <el-form-item prop="CustName">
+                      <el-autocomplete
+                              popper-class="my-autocomplete"
+                              v-model="inputInfo.CustName"
+                              :fetch-suggestions="querySearchName"
+                              placeholder="内容を入力してください"
+                              @select="handleSelect">
+                        <template slot-scope="{ item }">
+                          <app-info :item="item"/>
+                        </template>
+                      </el-autocomplete>
+                    </el-form-item>
+                  </div>
+                  <div class="name-wrap">
+                    <div class="inner-txt">ふりがな</div>
+                    <el-form-item prop="CustNameKana">
+                      <el-autocomplete
+                              popper-class="my-autocomplete"
+                              v-model="inputInfo.CustNameKana"
+                              :fetch-suggestions="querySearchName2"
+                              placeholder="内容を入力してください"
+                              @select="handleSelect">
+                        <template slot-scope="{ item }">
+                          <app-info :item="item"/>
+                        </template>
+                      </el-autocomplete>
+                    </el-form-item>
+                  </div>
                 </div>
+                <div class="inner-txt">区分</div>
+                <el-form-item prop="KbnName">
+                  <el-select v-model="inputInfo.KbnName" placeholder="">
+                    <el-option
+                            v-for="item in typeOptions"
+                            :key="item.KbnId"
+                            :label="item.KbnName"
+                            :value="item.KbnName">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
               </div>
               <div class="info">
                 <div class="">
-                  <div class="inner-txt">予約者</div>
-                  <el-autocomplete
-                          popper-class="my-autocomplete"
-                          v-model="inputInfo.CustName"
-                          :fetch-suggestions="querySearchName"
-                          placeholder="内容を入力してください"
-                          @select="handleSelect">
-                    <template slot-scope="{ item }">
-                      <app-info :item="item"/>
-                    </template>
-                  </el-autocomplete>
+                  <div class="inner-txt mt20">大人人数</div>
+                  <el-form-item prop="AdultNum">
+                    <el-input type="number" v-model="inputInfo.AdultNum" class="mr30"/>
+                  </el-form-item>
                 </div>
                 <div class="name-wrap">
-                  <div class="inner-txt">ふりがな</div>
-                  <el-autocomplete
-                          popper-class="my-autocomplete"
-                          v-model="inputInfo.CustNameKana"
-                          :fetch-suggestions="querySearchName2"
-                          placeholder="内容を入力してください"
-                          @select="handleSelect">
-                    <template slot-scope="{ item }">
-                      <app-info :item="item"/>
-                    </template>
-                  </el-autocomplete>
+                  <div class="inner-txt">子供人数</div>
+                  <el-form-item prop="ChildNum">
+                    <el-input type="number" v-model="inputInfo.ChildNum"/>
+                  </el-form-item>
                 </div>
               </div>
-              <div class="inner-txt">区分</div>
-              <el-select class="mb20" v-model="inputInfo.KbnName" placeholder="">
+              <div class="inner-txt">料理</div>
+              <el-select class="mb20" v-model="inputInfo.MenuName" placeholder="">
                 <el-option
-                        v-for="item in typeOptions"
-                        :key="item.KbnId"
-                        :label="item.KbnName"
-                        :value="item.KbnName">
+                        v-for="item in foodOptions"
+                        :key="item.MenuId"
+                        :label="item.MenuName"
+                        :value="item.MenuName">
                 </el-option>
               </el-select>
-            </div>
-            <div class="info">
-              <div class="">
-                <div class="inner-txt">大人人数</div>
-                <el-input v-model="inputInfo.AdultNum" class="mr30"/>
-              </div>
-              <div class="name-wrap">
-                <div class="inner-txt">子供人数</div>
-                <el-input v-model="inputInfo.ChildNum"/>
-              </div>
-            </div>
-            <div class="inner-txt">料理</div>
-            <el-select class="mb20" v-model="inputInfo.MenuName" placeholder="">
-              <el-option
-                      v-for="item in foodOptions"
-                      :key="item.MenuId"
-                      :label="item.MenuName"
-                      :value="item.MenuName">
-              </el-option>
-            </el-select>
-            <div class="inner-txt">受者</div>
-            <el-select class="mb20" v-model="inputInfo.OwnerName" placeholder="">
-              <el-option
-                      v-for="item in ownerOptions"
-                      :key="item.OwnerCode"
-                      :label="item.OwnerName"
-                      :value="item.OwnerName">
-              </el-option>
-            </el-select>
-            <div class="inner-txt">受日</div>
-            <el-date-picker
-                    v-model="inputInfo.UketukeDate"
-                    type="date"
-                    format="yyyy/MM/dd"
-                    value-format="yyyy/MM/dd"
-                    placeholder="日付選択">
-            </el-date-picker>
-          </div>
-        </div>
-      </div>
-      <div class="inner-right">
-        <div></div>
-        <div class="tab">
-          <div class="tab-title">
-            <span class="title-line"></span>
-            <span class="title-txt">履歴</span>
-          </div>
-          <div class="tab-inner">
-            <div class="info">
-              <div class="pull-left">
-                <div class="inner-txt">宴会履歴</div>
-                <el-input v-model="inputInfo.EnkaiNum" class="mr30" :disabled="true"/>
-              </div>
-              <div class="pull-left">
-                <div class="inner-txt">法人レストラン履</div>
-                <el-input v-model="inputInfo.CompanyReservationNum" :disabled="true"/>
-              </div>
-            </div>
-            <div class="info">
-              <div class="pull-left">
-                <div class="inner-txt">結婚式</div>
+              <div class="inner-txt">受者</div>
+              <el-select class="mb20" v-model="inputInfo.OwnerName" placeholder="">
+                <el-option
+                        v-for="item in ownerOptions"
+                        :key="item.OwnerCode"
+                        :label="item.OwnerName"
+                        :value="item.OwnerName">
+                </el-option>
+              </el-select>
+              <div class="inner-txt">受日</div>
+              <el-form-item prop="UketukeDate">
                 <el-date-picker
-                        v-model="inputInfo.KonreiJissidate"
+                        v-model="inputInfo.UketukeDate"
                         type="date"
                         format="yyyy/MM/dd"
                         value-format="yyyy/MM/dd"
-                        :disabled="true"
                         placeholder="日付選択">
                 </el-date-picker>
-              </div>
-              <div class="pull-left">
-                <div class="inner-txt">個人レストラン履</div>
-                <el-input v-model="inputInfo.ReservationNum" :disabled="true"/>
-              </div>
+              </el-form-item>
             </div>
           </div>
         </div>
-        <div class="tab">
-          <div class="tab-title">
-            <span class="title-line"></span>
-            <span class="title-txt">備考</span>
+        <div class="inner-right">
+          <div></div>
+          <div class="tab">
+            <div class="tab-title">
+              <span class="title-line"></span>
+              <span class="title-txt">履歴</span>
+            </div>
+            <div class="tab-inner">
+              <div class="info">
+                <div class="pull-left">
+                  <div class="inner-txt">宴会履歴</div>
+                  <el-input v-model="inputInfo.EnkaiNum" class="mr30" :disabled="true"/>
+                </div>
+                <div class="pull-left">
+                  <div class="inner-txt">法人レストラン履</div>
+                  <el-input v-model="inputInfo.CompanyReservationNum" :disabled="true"/>
+                </div>
+              </div>
+              <div class="info">
+                <div class="pull-left">
+                  <div class="inner-txt">結婚式</div>
+                  <el-date-picker
+                          v-model="inputInfo.KonreiJissidate"
+                          type="date"
+                          format="yyyy/MM/dd"
+                          value-format="yyyy/MM/dd"
+                          :disabled="true"
+                          placeholder="日付選択">
+                  </el-date-picker>
+                </div>
+                <div class="pull-left">
+                  <div class="inner-txt">個人レストラン履</div>
+                  <el-input v-model="inputInfo.ReservationNum" :disabled="true"/>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="tab-inner remark">
-            <div class="inner-txt mb20 flex-center">料理詳細
-              <el-checkbox class="font-small" label="強調" name="type" v-model="inputInfo.RyouriRemarke" true-label="1"
-                           false-label="0"/>
+          <div class="tab">
+            <div class="tab-title">
+              <span class="title-line"></span>
+              <span class="title-txt">備考</span>
             </div>
-            <el-input class="mb30" type="textarea" v-model="inputInfo.RyouriRemark"/>
-            <div class="inner-txt mb20 flex-center">シチュエーション
-              <el-checkbox class="font-small" label="強調" name="type" v-model="inputInfo.SituationRemarke" true-label="1"
-                           false-label="0"/>
+            <div class="tab-inner remark">
+              <div class="inner-txt mb20 flex-center">料理詳細
+                <el-checkbox class="font-small" label="強調" name="type" v-model="inputInfo.RyouriRemarke" true-label="1"
+                             false-label="0"/>
+              </div>
+              <el-form-item prop="RyouriRemark">
+                <el-input type="textarea" v-model="inputInfo.RyouriRemark"/>
+              </el-form-item>
+              <div class="inner-txt mt30 mb20 flex-center">シチュエーション
+                <el-checkbox class="font-small" label="強調" name="type" v-model="inputInfo.SituationRemarke"
+                             true-label="1"
+                             false-label="0"/>
+              </div>
+              <el-form-item prop="SituationRemark">
+                <el-input type="textarea" v-model="inputInfo.SituationRemark"/>
+              </el-form-item>
+              <div class="inner-txt mt30 mb20 flex-center">その他備考
+                <el-checkbox class="font-small" label="強調" name="type" v-model="inputInfo.OthersRemarke" true-label="1"
+                             false-label="0"/>
+              </div>
+              <el-form-item prop="OthersRemark">
+                <el-input type="textarea" v-model="inputInfo.OthersRemark"/>
+              </el-form-item>
             </div>
-            <el-input type="textarea" class="mb30" v-model="inputInfo.SituationRemark"/>
-            <div class="inner-txt mb20 flex-center">その他備考
-              <el-checkbox class="font-small" label="強調" name="type" v-model="inputInfo.OthersRemarke" true-label="1"
-                           false-label="0"/>
-            </div>
-            <el-input type="textarea" class="mb30" v-model="inputInfo.OthersRemark"/>
           </div>
         </div>
+        <div class="opr-btns">
+          <el-button class="remarks-btn" type="primary" @click="setInfo">登録</el-button>
+          <el-button class="remarks-btn" plain @click="toPre">戻る</el-button>
+          <el-button v-if="setInfoType === '1' ? false : true" class="remarks-btn" plain @click="cancelSet">予約ＣＸＬ
+          </el-button>
+          <el-button v-if="setInfoType === '1' ? false : true" class="remarks-btn" plain @click="deleteSet">データ削除
+          </el-button>
+        </div>
       </div>
-      <div class="opr-btns">
-        <el-button class="remarks-btn" type="primary" @click="setInfo">登録</el-button>
-        <el-button class="remarks-btn" plain @click="toPre">戻る</el-button>
-        <el-button v-if="setInfoType === '1' ? false : true" class="remarks-btn" plain @click="cancelSet">予約ＣＸＬ
-        </el-button>
-        <el-button v-if="setInfoType === '1' ? false : true" class="remarks-btn" plain @click="deleteSet">データ削除
-        </el-button>
-      </div>
-    </div>
+    </el-form>
+
     <div v-if="calendarShow" class="calendar-container">
       <a @click="calendarShow = false" class="xd xd-close">close</a>
       <app-calendar :events="eventsData"
@@ -278,6 +313,7 @@
         },
         suggestArr: [],
         inputInfo: {
+          name: '',
           ReservationCode: '', // 日期编码
           ReservationDate: localStorage.getItem('clickDate'), // 日期
           TimeKbn: localStorage.getItem('mealsType'), // 预定时间段
@@ -309,6 +345,63 @@
           CompanyReservationNum: '', // 法人餐厅预约次数
           ActiveFlg: "", // 状态 0 取消或删除 “1”=取消 “2”=删除
         },
+        rules: {
+          group1: [
+            {required: true, message: '選択してください', trigger: 'blur'},
+            {min: 1, max: 4, message: '半角数字4桁以内で入力してください', trigger: 'blur'}
+          ],
+          ReservationDate: [
+            {required: true, message: '選択してください', trigger: 'change'},
+          ],
+          CustTel: [
+            {required: true, message: '選択してください', trigger: 'blur'},
+            {max: 20, message: '入力してください', trigger: 'blur'}
+          ],
+
+          CustName: [
+            {max: 8, message: '8文字以内で入力してください', trigger: 'blur'}
+          ],
+          CustNameKana: [
+            {max: 50, message: '50文字以内で入力してください', trigger: 'blur'}
+          ],
+          CustCompanyName: [
+            {max: 50, message: '50文字以内で入力してください', trigger: 'blur'}
+          ],
+          CustBusyoName: [
+            {max: 50, message: '50文字以内で入力してください', trigger: 'blur'}
+          ],
+
+
+          AdultNum: [
+            {required: true, message: '選択してください', trigger: 'blur'},
+            {max: 3, message: '半角数字3桁以内で入力してください', trigger: 'blur'}
+          ],
+          ChildNum: [
+            {max: 3, message: '半角数字3桁以内で入力してください', trigger: 'blur'}
+          ],
+
+          UketukeDate: [
+            {required: true, message: '選択してください', trigger: 'change'},
+          ],
+          KbnName: [
+            {required: true, message: '選択してください', trigger: 'change'},
+          ],
+          StartTime: [
+            {required: true, message: '選択してください', trigger: 'change'},
+          ],
+          TableNo: [
+            {max: 10, message: '10文字以内で入力してください', trigger: 'blur'}
+          ],
+          RyouriRemark: [
+            {max: 500, message: '500文字以内で入力してください', trigger: 'blur'}
+          ],
+          SituationRemark: [
+            {max: 500, message: '500文字以内で入力してください', trigger: 'blur'}
+          ],
+          OthersRemark: [
+            {max: 500, message: '500文字以内で入力してください', trigger: 'blur'}
+          ],
+        },
         // 模态框
         modalMsg: '',
         modalStatus: 1,
@@ -334,17 +427,17 @@
         itemRender(item) {
           const h = this.$createElement
           return h('div', {
-              class: 'calendar-text-container'
-            },
-            [
-              h('span', {
-                  class: 'calendar-text'
-                }, item.TimeKbn === "1" ? 'ランチ' : 'ディナー'
-              ),
-              h('span', {
-                class: item.YoyakuLevel === '0' ? 'calendar-icon-circle' : (item.YoyakuLevel === '1' ? 'calendar-icon-triangle' : 'calendar-icon-x')
-              })
-            ]
+                class: 'calendar-text-container'
+              },
+              [
+                h('span', {
+                      class: 'calendar-text'
+                    }, item.TimeKbn === "1" ? 'ランチ' : 'ディナー'
+                ),
+                h('span', {
+                  class: item.YoyakuLevel === '0' ? 'calendar-icon-circle' : (item.YoyakuLevel === '1' ? 'calendar-icon-triangle' : 'calendar-icon-x')
+                })
+              ]
           )
         },
       }
@@ -382,7 +475,7 @@
               const data = res.data.Data.filter((item) => {
                 const date = new Date()
                 const year = date.getFullYear()
-                const month = (date.getMonth() + 1) < 10 ? ('0' + (date.getMonth() + 1)) : (date.getMonth() + 1);
+                const month = (date.getMonth() + 1) < 10 ? ('0' + (date.getMonth() + 1)) : (date.getMonth() + 1)
                 return item.DailyDate.indexOf(year + '/' + month) > -1
               })
               this.$store.dispatch('setCalendarDataOne', data)
@@ -448,9 +541,17 @@
         })
       },
       setInfo() {
-        this.modalOptions.show = true
-        this.modalMsg = '登録してよろしいでしょうか？'
-        this.modalStatus = 1
+        this.$refs['ruleForm'].validate((valid) => {
+          if (valid) {
+            this.modalOptions.show = true
+            this.modalMsg = '登録してよろしいでしょうか？'
+            this.modalStatus = 1
+          } else {
+            this.$message.error('選択してください')
+            console.log('error submit!!')
+            return false
+          }
+        })
       },
       toPre() {
         this.modalOptions.show = true
@@ -458,14 +559,31 @@
         this.modalStatus = 2
       },
       cancelSet() {
-        this.modalOptions.show = true
-        this.modalMsg = '予約をキャンセルしてよろしいでしょうか？'
-        this.modalStatus = 3
+        this.$refs['ruleForm'].validate((valid) => {
+          if (valid) {
+            this.modalOptions.show = true
+            this.modalMsg = '予約をキャンセルしてよろしいでしょうか？'
+            this.modalStatus = 3
+          } else {
+            this.$message.error('選択してください')
+            console.log('error submit!!')
+            return false
+          }
+        })
       },
       deleteSet() {
-        this.modalOptions.show = true
-        this.modalMsg = '予約データを削除してよろしいでしょうか？'
-        this.modalStatus = 4
+        this.$refs['ruleForm'].validate((valid) => {
+          if (valid) {
+            this.modalOptions.show = true
+            this.modalMsg = '予約データを削除してよろしいでしょうか？'
+            this.modalStatus = 4
+          } else {
+            this.$message.error('選択してください')
+            console.log('error submit!!')
+            return false
+          }
+        })
+
       },
       doConfirm() {
         if (this.modalStatus === 1) {
@@ -479,6 +597,8 @@
               this.modalOptions2.show = true
               this.modalMsg2 = '登録は成功しました'
             } else {
+              this.modalOptions.show = false
+              this.modalOptions2.show = false
               this.$message.error(res.data.Message)
             }
           })
@@ -495,8 +615,8 @@
               this.modalOptions2.show = true
               this.modalMsg2 = '予約をキャンセルしました'
             } else {
-              // this.modalOptions.show = false
-              // this.modalOptions2.show = true
+              this.modalOptions.show = false
+              this.modalOptions2.show = false
               // this.modalMsg2 = '問題が発生しました。システム管理者へ連絡してください'
               this.$message.error(res.data.Message)
             }
@@ -512,8 +632,8 @@
               this.modalOptions2.show = true
               this.modalMsg2 = '予約データを削除しました'
             } else {
-              // this.modalOptions.show = false
-              // this.modalOptions2.show = true
+              this.modalOptions.show = false
+              this.modalOptions2.show = false
               // this.modalMsg2 = '問題が発生しました。システム管理者へ連絡してください'
               this.$message.error(res.data.Message)
             }
@@ -534,15 +654,15 @@
       handleSelect(item) {
         console.log(item)
         this.inputInfo.CustTel = item.CustTel ? item.CustTel :
-          (item.EnkaiSyusaiTel ? item.EnkaiSyusaiTel :
-            (item.Tel ? item.Tel : ''))
+            (item.EnkaiSyusaiTel ? item.EnkaiSyusaiTel :
+                (item.Tel ? item.Tel : ''))
         this.inputInfo.CustCompanyName = item.CustCompanyName ? item.CustCompanyName :
-          (item.EnkaiSyusaiName ? item.EnkaiSyusaiName : '')
+            (item.EnkaiSyusaiName ? item.EnkaiSyusaiName : '')
         this.inputInfo.CustName = item.CustName ? item.CustName :
-          (item.Name ? item.Name : '')
+            (item.Name ? item.Name : '')
         this.inputInfo.CustNameKana = item.CustNameKana ? item.CustNameKana :
-          (item.EnkaiSyusaiNameKana ? item.EnkaiSyusaiNameKana :
-            (item.NameKana ? item.NameKana : ''))
+            (item.EnkaiSyusaiNameKana ? item.EnkaiSyusaiNameKana :
+                (item.NameKana ? item.NameKana : ''))
         this.inputInfo.CustBusyoName = item.CustBusyoName
 
         this.inputInfo.EnkaiNum = item.EnkaiNum
@@ -553,19 +673,19 @@
           this.inputInfo.ReservationNum = item.ReservationNum
         }
       },
-      handleSelectTable (item) {
+      handleSelectTable(item) {
         this.inputInfo.TableNo = item.TableName
       },
       querySearchTable(queryString, cb) {
-        var tables = this.tableOptions;
-        var results = queryString ? tables.filter(this.createFilter(queryString)) : tables;
+        var tables = this.tableOptions
+        var results = queryString ? tables.filter(this.createFilter(queryString)) : tables
         // 调用 callback 返回建议列表的数据
-        cb(results);
+        cb(results)
       },
       createFilter(queryString) {
         return (restaurant) => {
-          return (restaurant.TableName.toLowerCase().indexOf(String(queryString).toLowerCase()) > -1);
-        };
+          return (restaurant.TableName.toLowerCase().indexOf(String(queryString).toLowerCase()) > -1)
+        }
       },
       querySearchTel(queryString, cb) {
 //        let arr = this.filterOptionsData
@@ -681,89 +801,89 @@
       createFilterTel(queryString) {
         return (item) => {
           return (
-              (String(item.CustTel).indexOf(String(queryString)) > -1)
-              || (String(item.EnkaiSyusaiTel).indexOf(String(queryString)) > -1)
-              || (String(item.Tel).indexOf(String(queryString)) > -1)
-            )
-            && (
-              (String(item.CustCompanyName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
-              || (String(item.EnkaiSyusaiName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
-            )
-            && (
-              (String(item.CustName).indexOf(String(this.inputInfo.CustName)) > -1)
-              || (String(item.Name).indexOf(String(this.inputInfo.CustName)) > -1)
-            )
-            && (
-              (String(item.CustNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
-              || (String(item.EnkaiSyusaiNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
-              || (String(item.NameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
-            )
+                  (String(item.CustTel).indexOf(String(queryString)) > -1)
+                  || (String(item.EnkaiSyusaiTel).indexOf(String(queryString)) > -1)
+                  || (String(item.Tel).indexOf(String(queryString)) > -1)
+              )
+              && (
+                  (String(item.CustCompanyName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
+                  || (String(item.EnkaiSyusaiName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
+              )
+              && (
+                  (String(item.CustName).indexOf(String(this.inputInfo.CustName)) > -1)
+                  || (String(item.Name).indexOf(String(this.inputInfo.CustName)) > -1)
+              )
+              && (
+                  (String(item.CustNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+                  || (String(item.EnkaiSyusaiNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+                  || (String(item.NameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+              )
         }
       },
       createFilterCompany(queryString) {
         return (item) => {
           return (
-              (String(item.CustCompanyName).indexOf(String(queryString)) > -1)
-              || (String(item.EnkaiSyusaiName).indexOf(String(queryString)) > -1)
-            )
-            && (
-              (String(item.CustTel).indexOf(String(this.inputInfo.CustTel)) > -1)
-              || (String(item.EnkaiSyusaiTel).indexOf(String(this.inputInfo.CustTel)) > -1)
-              || (String(item.Tel).indexOf(String(this.inputInfo.CustTel)) > -1)
-            )
-            && (
-              (String(item.CustName).indexOf(String(this.inputInfo.CustName)) > -1)
-              || (String(item.Name).indexOf(String(this.inputInfo.CustName)) > -1)
-            )
-            && (
-              (String(item.CustNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
-              || (String(item.EnkaiSyusaiNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
-              || (String(item.NameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
-            )
+                  (String(item.CustCompanyName).indexOf(String(queryString)) > -1)
+                  || (String(item.EnkaiSyusaiName).indexOf(String(queryString)) > -1)
+              )
+              && (
+                  (String(item.CustTel).indexOf(String(this.inputInfo.CustTel)) > -1)
+                  || (String(item.EnkaiSyusaiTel).indexOf(String(this.inputInfo.CustTel)) > -1)
+                  || (String(item.Tel).indexOf(String(this.inputInfo.CustTel)) > -1)
+              )
+              && (
+                  (String(item.CustName).indexOf(String(this.inputInfo.CustName)) > -1)
+                  || (String(item.Name).indexOf(String(this.inputInfo.CustName)) > -1)
+              )
+              && (
+                  (String(item.CustNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+                  || (String(item.EnkaiSyusaiNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+                  || (String(item.NameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+              )
         }
       },
       createFilterName(queryString) {
         return (item) => {
           return (
-              (String(item.CustName).indexOf(String(queryString)) > -1)
-              || (String(item.Name).indexOf(String(queryString)) > -1)
-            )
-            && (
-              (String(item.CustCompanyName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
-              || (String(item.EnkaiSyusaiName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
-            )
-            && (
-              (String(item.CustTel).indexOf(String(this.inputInfo.CustTel)) > -1)
-              || (String(item.EnkaiSyusaiTel).indexOf(String(this.inputInfo.CustTel)) > -1)
-              || (String(item.Tel).indexOf(String(this.inputInfo.CustTel)) > -1)
-            )
-            && (
-              (String(item.CustNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
-              || (String(item.EnkaiSyusaiNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
-              || (String(item.NameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
-            )
+                  (String(item.CustName).indexOf(String(queryString)) > -1)
+                  || (String(item.Name).indexOf(String(queryString)) > -1)
+              )
+              && (
+                  (String(item.CustCompanyName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
+                  || (String(item.EnkaiSyusaiName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
+              )
+              && (
+                  (String(item.CustTel).indexOf(String(this.inputInfo.CustTel)) > -1)
+                  || (String(item.EnkaiSyusaiTel).indexOf(String(this.inputInfo.CustTel)) > -1)
+                  || (String(item.Tel).indexOf(String(this.inputInfo.CustTel)) > -1)
+              )
+              && (
+                  (String(item.CustNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+                  || (String(item.EnkaiSyusaiNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+                  || (String(item.NameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
+              )
         }
       },
       createFilterName2(queryString) {
         return (item) => {
           return (
-              (String(item.CustNameKana).indexOf(String(queryString)) > -1)
-              || (String(item.EnkaiSyusaiNameKana).indexOf(String(queryString)) > -1)
-              || (String(item.NameKana).indexOf(String(queryString)) > -1)
-            )
-            && (
-              (String(item.CustCompanyName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
-              || (String(item.EnkaiSyusaiName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
-            )
-            && (
-              (String(item.CustTel).indexOf(String(this.inputInfo.CustTel)) > -1)
-              || (String(item.EnkaiSyusaiTel).indexOf(String(this.inputInfo.CustTel)) > -1)
-              || (String(item.Tel).indexOf(String(this.inputInfo.CustTel)) > -1)
-            )
-            && (
-              (String(item.CustName).indexOf(String(this.inputInfo.CustName)) > -1)
-              || (String(item.Name).indexOf(String(this.inputInfo.CustName)) > -1)
-            )
+                  (String(item.CustNameKana).indexOf(String(queryString)) > -1)
+                  || (String(item.EnkaiSyusaiNameKana).indexOf(String(queryString)) > -1)
+                  || (String(item.NameKana).indexOf(String(queryString)) > -1)
+              )
+              && (
+                  (String(item.CustCompanyName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
+                  || (String(item.EnkaiSyusaiName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
+              )
+              && (
+                  (String(item.CustTel).indexOf(String(this.inputInfo.CustTel)) > -1)
+                  || (String(item.EnkaiSyusaiTel).indexOf(String(this.inputInfo.CustTel)) > -1)
+                  || (String(item.Tel).indexOf(String(this.inputInfo.CustTel)) > -1)
+              )
+              && (
+                  (String(item.CustName).indexOf(String(this.inputInfo.CustName)) > -1)
+                  || (String(item.Name).indexOf(String(this.inputInfo.CustName)) > -1)
+              )
         }
       },
     },
@@ -798,8 +918,16 @@
     margin-bottom: 20px;
   }
 
+  .mt20 {
+    margin-top: 20px;
+  }
+
   .mb30 {
     margin-bottom: 30px;
+  }
+
+  .mt30 {
+    margin-top: 30px;
   }
 
   .container {

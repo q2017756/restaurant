@@ -189,6 +189,11 @@ html, body {
     }
   }
 }
+.el-form-item {
+  display: inline-block !important;
+  margin-bottom: 0 !important;
+  width: 100% !important;
+}
 .el-loading-mask {
   position: fixed !important;
 }

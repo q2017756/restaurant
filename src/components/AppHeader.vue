@@ -3,10 +3,10 @@
     <div class="header">
       <h1 class="name" @click="toCalendar">レストラン予約システム</h1>
       <img class="back" src="../assets/img/back-black.png" alt="" @click="goBack">
-      <div class="right-btns" v-show="btnShow">
+      <div class="right-btns" v-if='btnShow'>
         <p class="date" v-if="dateShow">{{date}} - {{type=== '1' ? 'ランチ' : 'ディナー'}}</p>
-        <span class="btn" @click="toBasic">システム管理</span>
-        <span class="btn" @click="toDetail">詳細設定</span>
+        <span class="btn"  v-if="auth !== '1'" @click="toBasic">システム管理</span>
+        <span class="btn"  v-if="auth !== '1'" @click="toDetail">詳細設定</span>
       </div>
     </div>
     <div class="fill"></div>
@@ -21,15 +21,8 @@
       return {
         date: localStorage.getItem('clickDate'),
         type: localStorage.getItem('mealsType'),
-        showModal: false,
-        modalOptions: {
-          show: true,
-          title: ' ',
-          showCancelButton: true,
-          cancelButtonText: 'ok',
-          showConfirmButton: true,
-          confirmButtonText: ' '
-        }
+        // auth: JSON.parse(localStorage.getItem('userInfo')).GroupId,
+        auth: '2',
       };
     },
     props: {

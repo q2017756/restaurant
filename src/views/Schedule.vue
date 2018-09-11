@@ -1,6 +1,6 @@
 <template>
   <div class="unified-bg">
-    <app-header :btnShow="$store.isRoot"></app-header>
+    <app-header></app-header>
     <div class="container-b">
       <div class="remarks">
         <div class="add-btn" @click="showModal">
@@ -189,18 +189,22 @@
       },
       saveAndLeave() {
         console.log('保存备注')
-        this.axios.post('setting/updatedailymessage',{
-          DailyDate: localStorage.getItem('clickDate'),
-          DailyMessage: this.remarks
-        }).then(res=>{
-          if(res.data.Code === "SC-001") {
-            this.canILeave = true
-            this.$router.push(this.toName)
-          }else {
-            this.$message.error(res.data.Message)
-          }
-        })
-
+        if(this.remarks.length > 500) {
+          this.$message.error('500文字以内で入力してください')
+          this.leaveModalOptions.show = false
+        }else {
+          this.axios.post('setting/updatedailymessage',{
+            DailyDate: localStorage.getItem('clickDate'),
+            DailyMessage: this.remarks
+          }).then(res=>{
+            if(res.data.Code === "SC-001") {
+              this.canILeave = true
+              this.$router.push(this.toName)
+            }else {
+              this.$message.error(res.data.Message)
+            }
+          })
+        }
       },
       forceLeave() {
         console.log('不保存备注，强制离开')

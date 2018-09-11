@@ -1,6 +1,6 @@
 <template>
   <div class="unified-bg">
-    <app-header :dateShow="false" :btnShow="$store.state.isRoot"></app-header>
+    <app-header :dateShow="false"></app-header>
     <div class="contianer" v-loading="loading">
       <app-calendar :events="$store.state.calendarDataOne"
                     :dateItemRender="itemRender"
