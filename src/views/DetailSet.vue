@@ -171,12 +171,23 @@
 
   export default {
     data() {
-      var checkDay = (rule, value, callback) => {
+      const checkDay = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('選択してください'));
         }
         callback();
       };
+      const checkNum = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('選択してください'))
+        } else if (Number(value)<0 || value.length > 4 ) {
+          callback(new Error('半角数字4桁以内で入力してください'))
+        } else if(!(/(^[1-9]\d*$)/.test(value))) {
+          callback(new Error('半角数字4桁以内で入力してください'))
+        } else {
+          callback()
+        }
+      }
       return {
         loading: localStorage.getItem('clickDate') ? true : false,
         DayOffKbn: '',
@@ -218,20 +229,16 @@
             {validator: checkDay, trigger: 'change' }
           ],
           group1: [
-            {required: true, message: '選択してください', trigger: 'blur'},
-            {min: 1, max: 4, message: '半角数字4桁以内で入力してください', trigger: 'blur'}
+            {validator: checkNum, trigger: 'blur'}
           ],
           people1: [
-            {required: true, message: '選択してください', trigger: 'blur'},
-            {min: 1, max: 4, message: '半角数字4桁以内で入力してください', trigger: 'blur'}
+            {validator: checkNum, trigger: 'blur'}
           ],
           group2: [
-            {required: true, message: '選択してください', trigger: 'blur'},
-            {min: 1, max: 4, message: '半角数字4桁以内で入力してください', trigger: 'blur'}
+            {validator: checkNum, trigger: 'blur'}
           ],
           people2: [
-            {required: true, message: '選択してください', trigger: 'blur'},
-            {min: 1, max: 4, message: '半角数字4桁以内で入力してください', trigger: 'blur'}
+            {validator: checkNum, trigger: 'blur'}
           ]
         }
       }

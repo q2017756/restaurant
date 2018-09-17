@@ -25,26 +25,28 @@
               <div class="time-wrap">
                 <div class="mb20">
                   <div class="inner-txt">テーブル</div>
-                  <el-select v-model="inputInfo.KaijoName" placeholder="">
-                    <el-option
-                            v-for="item in fieldOptions"
-                            :key="item.KaijoId"
-                            :label="item.KaijoName"
-                            :value="item.KaijoName">
-                    </el-option>
-                  </el-select>
-                  -
-                  <el-form-item prop="TableNo">
-                    <el-autocomplete
-                            v-model="inputInfo.TableNo"
-                            :fetch-suggestions="querySearchTable"
-                            placeholder="内容を入力してください"
-                            @select="handleSelectTable">
-                      <template slot-scope="{ item }">
-                        {{item.TableName}}
-                      </template>
-                    </el-autocomplete>
-                  </el-form-item>
+                  <div class="disf">
+                    <el-select v-model="inputInfo.KaijoName" placeholder="">
+                      <el-option
+                              v-for="item in fieldOptions"
+                              :key="item.KaijoId"
+                              :label="item.KaijoName"
+                              :value="item.KaijoName">
+                      </el-option>
+                    </el-select>
+                    <span class="line"> - </span>
+                    <el-form-item class="" prop="TableNo">
+                      <el-autocomplete
+                              v-model="inputInfo.TableNo"
+                              :fetch-suggestions="querySearchTable"
+                              placeholder="内容を入力してください"
+                              @select="handleSelectTable">
+                        <template slot-scope="{ item }">
+                          {{item.TableName}}
+                        </template>
+                      </el-autocomplete>
+                    </el-form-item>
+                  </div>
                 </div>
                 <div class="inner-txt">時間</div>
                 <el-form-item prop="StartTime">
@@ -61,7 +63,7 @@
                 <div class="inner-txt mt20">TEL</div>
                 <el-form-item prop="CustTel">
                   <el-autocomplete
-                          type="number"
+                          type="tel"
                           popper-class="my-autocomplete"
                           v-model="inputInfo.CustTel"
                           :fetch-suggestions="querySearchTel"
@@ -143,13 +145,13 @@
                 <div class="">
                   <div class="inner-txt mt20">大人人数</div>
                   <el-form-item prop="AdultNum">
-                    <el-input type="number" v-model="inputInfo.AdultNum" class="mr30"/>
+                    <el-input type="tel" v-model="inputInfo.AdultNum" class="mr30"/>
                   </el-form-item>
                 </div>
                 <div class="name-wrap">
-                  <div class="inner-txt">子供人数</div>
+                  <div class="inner-txt mt20">子供人数</div>
                   <el-form-item prop="ChildNum">
-                    <el-input type="number" v-model="inputInfo.ChildNum"/>
+                    <el-input type="tel" v-model="inputInfo.ChildNum"/>
                   </el-form-item>
                 </div>
               </div>
@@ -178,6 +180,7 @@
                         type="date"
                         format="yyyy/MM/dd"
                         value-format="yyyy/MM/dd"
+                        :picker-options="pickerOptions1"
                         placeholder="日付選択">
                 </el-date-picker>
               </el-form-item>
@@ -253,7 +256,9 @@
           </div>
         </div>
         <div class="opr-btns">
-          <el-button class="remarks-btn" type="primary" @click="setInfo">登録</el-button>
+          <el-button class="remarks-btn" type="primary"
+                     v-if="Date.parse(new Date(new Date().setHours(0,0,0,0))) <= Date.parse(new Date(clickDate))"
+                     @click="setInfo">登録</el-button>
           <el-button class="remarks-btn" plain @click="toPre">戻る</el-button>
           <el-button v-if="setInfoType === '1' ? false : true" class="remarks-btn" plain @click="cancelSet">予約ＣＸＬ
           </el-button>
@@ -289,11 +294,43 @@
   import AppHeader from "../components/AppHeader.vue"
   import AppCalendar from '../components/AppCalendar'
   import AppInfo from '../components/AppInfo'
-  import {getTimeList} from '../utils/func'
 
   export default {
     data() {
+      const checkTel = (rule, value, callback) => {
+        var pattern=/(^\s*\+?\s*(\(\s*\d+\s*\)|\d+)(\s*-?\s*(\(\s*\d+\s*\)|\s*\d+\s*))*\s*$)/;
+        if (!value) {
+          return callback(new Error('選択してください'))
+        } else if (value.length > 20 || !pattern.test(value)) {
+          callback(new Error('入力してください'))
+        } else {
+          callback()
+        }
+      }
+      const checkNum = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('選択してください'))
+        } else if (Number(value)<0 || value.length > 3 ) {
+          callback(new Error('半角数字3桁以内で入力してください'))
+        } else if(!(/(^[1-9]\d*$)/.test(value))) {
+          callback(new Error('半角数字3桁以内で入力してください'))
+        } else {
+          callback()
+        }
+      }
+      const checkNum2 = (rule, value, callback) => {
+        if (!value) {
+          callback()
+        }else if (Number(value)<0 || value.length > 3 ) {
+          callback(new Error('半角数字3桁以内で入力してください'))
+        } else if(!(/(^[1-9]\d*$)/.test(value))) {
+          callback(new Error('半角数字3桁以内で入力してください'))
+        } else {
+          callback()
+        }
+      }
       return {
+        clickDate: localStorage.getItem('clickDate'),
         loading: true,
         loading2: false,
         setInfoType: localStorage.setInfoType, // 提交状态 1新增 2修改
@@ -346,16 +383,11 @@
           ActiveFlg: "", // 状态 0 取消或删除 “1”=取消 “2”=删除
         },
         rules: {
-          group1: [
-            {required: true, message: '選択してください', trigger: 'blur'},
-            {min: 1, max: 4, message: '半角数字4桁以内で入力してください', trigger: 'blur'}
-          ],
           ReservationDate: [
             {required: true, message: '選択してください', trigger: 'change'},
           ],
           CustTel: [
-            {required: true, message: '選択してください', trigger: 'blur'},
-            {max: 20, message: '入力してください', trigger: 'blur'}
+            {validator: checkTel, trigger: 'blur'}
           ],
 
           CustName: [
@@ -373,11 +405,10 @@
 
 
           AdultNum: [
-            {required: true, message: '選択してください', trigger: 'blur'},
-            {max: 3, message: '半角数字3桁以内で入力してください', trigger: 'blur'}
+            {validator: checkNum, trigger: 'blur'}
           ],
           ChildNum: [
-            {max: 3, message: '半角数字3桁以内で入力してください', trigger: 'blur'}
+            {validator: checkNum2, trigger: 'blur'}
           ],
 
           UketukeDate: [
@@ -401,6 +432,11 @@
           OthersRemark: [
             {max: 500, message: '500文字以内で入力してください', trigger: 'blur'}
           ],
+        },
+        pickerOptions1: {
+          disabledDate(time) {
+            return (time.getTime() <= (Date.now()-86400000) || time.getTime() >= Date.parse(new Date(localStorage.getItem('clickDate')))+86400000)
+          },
         },
         // 模态框
         modalMsg: '',
@@ -897,7 +933,6 @@
   .pull-left {
     float: left;
   }
-
   .pull-right {
     float: right;
   }
@@ -929,7 +964,15 @@
   .mt30 {
     margin-top: 30px;
   }
-
+  .disf {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .line {
+    display: inline-block;
+    margin: 0 20px;
+  }
   .container {
     margin: 20px auto;
     display: flex;

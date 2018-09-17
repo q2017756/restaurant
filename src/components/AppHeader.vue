@@ -21,8 +21,8 @@
       return {
         date: localStorage.getItem('clickDate'),
         type: localStorage.getItem('mealsType'),
-        // auth: JSON.parse(localStorage.getItem('userInfo')).GroupId,
-        auth: '2',
+        auth: JSON.parse(localStorage.getItem('userInfo')).GroupId,
+        // auth: '2',
       };
     },
     props: {
@@ -69,6 +69,7 @@
   }
   .date {
     color: #000;
+    padding: 10px 15px;
   }
   .name {
     cursor: pointer;

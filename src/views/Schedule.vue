@@ -3,8 +3,7 @@
     <app-header></app-header>
     <div class="container-b">
       <div class="remarks">
-        <div class="add-btn" @click="showModal">
-          <!--<img src="../assets/img/add.png" alt="">-->
+        <div class="add-btn" v-if="Date.parse(new Date(new Date().setHours(0,0,0,0))) <= Date.parse(new Date(clickDate))" @click="showModal">
           新規登録
         </div>
         <el-input  v-loading="loading"
@@ -51,8 +50,8 @@
             <td>{{ item.CustCompanyName }}</td>
             <td>{{ item.KbnName }}</td>
             <td>{{ item.MenuName }}</td>
-            <td>{{ item.RyouriRemark }}</td>
-            <td>{{ item.SituationRemark }}</td>
+            <td class="longer-td">{{ item.RyouriRemark }}</td>
+            <td class="longer-td">{{ item.SituationRemark }}</td>
             <td>{{ item.UketukeDate }}</td>
             <td><span class="color-btn" :class="(item.EnkaiNum)? 'blue' : 'gray'">宴</span></td>
             <td class="long-td">{{ item.EnkaiNum }}</td>
@@ -63,9 +62,9 @@
           <tr :class="item.ActiveFlg === '1' ? 'tr-disabled': (item.ActiveFlg === '2' ? 'tr-hidden': '')">
             <td>{{ item.StartTime }}</td>
             <td>{{ item.CustName }}({{ item.CustNameKana}})</td>
-            <td>{{ item.AdultNum }}({{ item.ChildNum }})</td>
+            <td>{{ item.AdultNum }}<span v-if="item.ChildNum && item.ChildNum !== '0'">({{ item.ChildNum }})</span></td>
             <td>{{ item.CustTel }}</td>
-            <td colspan="2">{{ item.OthersRemark }}</td>
+            <td colspan="2" class="longer-td">{{ item.OthersRemark }}</td>
             <td>{{ item.OwnerName }}</td>
             <td><span class="color-btn" :class="item.KonreiNum ? '' : 'gray'">婚</span></td>
             <td class="long-td">{{ item.KonReiNum }}</td>
@@ -106,7 +105,7 @@
         tableInfo: [],
         canILeave: false, // 能否进行路有跳转
         toName: '', // 路由将要跳转的地址
-
+        clickDate: localStorage.getItem('clickDate'),
         // modal相关
         modalStatus: localStorage.getItem('mealsStatus'),
         modalMsg: '',
@@ -311,6 +310,11 @@
         }
         .long-td {
           width: 100px;
+        }
+        .longer-td {
+          word-break:break-all;
+          width: 15%;
+          max-width: 500px;
         }
       }
     }

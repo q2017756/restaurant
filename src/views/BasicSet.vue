@@ -97,13 +97,13 @@
             <div class="group-input group1">
               <div>
                 <el-form-item prop="group1">
-                  <el-input v-model="ruleForm.group1" type="number" placeholder="内容を入力してください"/>
+                  <el-input v-model="ruleForm.group1" type="tel" placeholder="内容を入力してください"/>
                 </el-form-item>
                 <span class="ml12 mr24">組以上</span>
               </div>
               <div>
                 <el-form-item prop="people1">
-                  <el-input v-model="ruleForm.people1" type="number" placeholder="内容を入力してください"/>
+                  <el-input v-model="ruleForm.people1" type="tel" placeholder="内容を入力してください"/>
                 </el-form-item>
                 <span class="ml12">人以上</span>
               </div>
@@ -114,13 +114,13 @@
             <div class="group-input">
               <div>
                 <el-form-item prop="group2">
-                  <el-input v-model="ruleForm.group2" type="number" placeholder="内容を入力してください"/>
+                  <el-input v-model="ruleForm.group2" type="tel" placeholder="内容を入力してください"/>
                 </el-form-item>
                 <span class="ml12 mr24">組以上</span>
               </div>
               <div>
                 <el-form-item prop="people2">
-                  <el-input v-model="ruleForm.people2" type="number" placeholder="内容を入力してください"/>
+                  <el-input v-model="ruleForm.people2" type="tel" placeholder="内容を入力してください"/>
                 </el-form-item>
                 <span class="ml12">人以上</span>
               </div>
@@ -135,7 +135,7 @@
           <div class="tab-inner">
             <div class="inner-txt">メールアドレス</div>
             <el-input class="input-add" v-model="emailText" clearable></el-input>
-            <img class="image-add" src="../assets/img/add2.png"  @click="addEmail" alt="">
+            <img class="image-add" src="../assets/img/add2.png" @click="addEmail" alt="">
             <div>
               <div class="email-item" v-for="item,index in email">
                 <span class="email-content">{{item}}</span>
@@ -171,6 +171,17 @@
 
   export default {
     data() {
+      const checkNum = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('選択してください'))
+        } else if (Number(value)<0 || value.length > 4 ) {
+          callback(new Error('半角数字4桁以内で入力してください'))
+        } else if(!(/(^[1-9]\d*$)/.test(value))) {
+          callback(new Error('半角数字4桁以内で入力してください'))
+        } else {
+          callback()
+        }
+      }
       return {
         loading: true,
         checkList: [],
@@ -212,20 +223,16 @@
 
         rules: {
           group1: [
-            {required: true, message: '選択してください', trigger: 'blur'},
-            {min: 1, max: 4, message: '半角数字4桁以内で入力してください', trigger: 'blur'}
+            {validator: checkNum, trigger: 'blur'}
           ],
           people1: [
-            {required: true, message: '選択してください', trigger: 'blur'},
-            {min: 1, max: 4, message: '半角数字4桁以内で入力してください', trigger: 'blur'}
+            {validator: checkNum, trigger: 'blur'}
           ],
           group2: [
-            {required: true, message: '選択してください', trigger: 'blur'},
-            {min: 1, max: 4, message: '半角数字4桁以内で入力してください', trigger: 'blur'}
+            {validator: checkNum, trigger: 'blur'}
           ],
           people2: [
-            {required: true, message: '選択してください', trigger: 'blur'},
-            {min: 1, max: 4, message: '半角数字4桁以内で入力してください', trigger: 'blur'}
+            {validator: checkNum, trigger: 'blur'}
           ],
           lunchStart: [
             {required: true, message: '選択してください', trigger: 'change'}
@@ -298,16 +305,16 @@
         this.modalStatus = 2
       },
       addEmail() {
-        var myreg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
-        if(this.emailText && myreg.test(this.emailText)){
+        var myreg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/
+        if (this.emailText && myreg.test(this.emailText)) {
           this.email.push(this.emailText)
-        }else {
+        } else {
           this.$message.error('正しいメールを入力してください')
         }
       },
       delEmail(i) {
         console.log(i)
-        this.email.splice(i,1)
+        this.email.splice(i, 1)
       },
       doConfirm() {
         if (this.modalStatus === 1) {
@@ -463,14 +470,17 @@
       }
     }
   }
+
   .input-add {
     width: 300px;
     margin-right: 20px;
   }
+
   .image-add {
     width: 30px;
     vertical-align: middle;
   }
+
   .email-item {
     display: inline-block;
     padding: 5px 10px;
@@ -478,10 +488,12 @@
     background: #eee;
     margin: 10px 10px 10px 0;
   }
+
   .email-content {
     color: #000;
     margin-right: 10px;
   }
+
   .image-x {
     vertical-align: middle;
   }
