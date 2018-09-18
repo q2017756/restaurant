@@ -11,7 +11,7 @@
             </div>
             <div class="pull-left">
               <el-form-item prop="ReservationDate">
-              <el-input v-model="inputInfo.ReservationDate" class="mr30"/>
+                <el-input v-model="inputInfo.ReservationDate" class="mr30"/>
               </el-form-item>
               <el-button class="mt20 remarks-btn" type="primary" @click="calendarShow = true">予約日変更</el-button>
             </div>
@@ -68,6 +68,7 @@
                           v-model="inputInfo.CustTel"
                           :fetch-suggestions="querySearchTel"
                           placeholder="内容を入力してください"
+                          @blur="getHistoryInfo"
                           @select="handleSelect">
                     <template slot-scope="{ item }">
                       <app-info :item="item"/>
@@ -83,6 +84,7 @@
                               v-model="inputInfo.CustCompanyName"
                               :fetch-suggestions="querySearchCompany"
                               placeholder="内容を入力してください"
+                              @blur="getHistoryInfo"
                               @select="handleSelect">
                         <template slot-scope="{ item }">
                           <app-info :item="item"/>
@@ -106,6 +108,7 @@
                               v-model="inputInfo.CustName"
                               :fetch-suggestions="querySearchName"
                               placeholder="内容を入力してください"
+                              @blur="getHistoryInfo"
                               @select="handleSelect">
                         <template slot-scope="{ item }">
                           <app-info :item="item"/>
@@ -121,6 +124,7 @@
                               v-model="inputInfo.CustNameKana"
                               :fetch-suggestions="querySearchName2"
                               placeholder="内容を入力してください"
+                              @blur="getHistoryInfo"
                               @select="handleSelect">
                         <template slot-scope="{ item }">
                           <app-info :item="item"/>
@@ -258,7 +262,8 @@
         <div class="opr-btns">
           <el-button class="remarks-btn" type="primary"
                      v-if="Date.parse(new Date(new Date().setHours(0,0,0,0))) <= Date.parse(new Date(clickDate))"
-                     @click="setInfo">登録</el-button>
+                     @click="setInfo">登録
+          </el-button>
           <el-button class="remarks-btn" plain @click="toPre">戻る</el-button>
           <el-button v-if="setInfoType === '1' ? false : true" class="remarks-btn" plain @click="cancelSet">予約ＣＸＬ
           </el-button>
@@ -290,6 +295,8 @@
 </template>
 
 <script>
+  import _ from 'lodash'
+
   import AppModal from "../components/AppModal.vue"
   import AppHeader from "../components/AppHeader.vue"
   import AppCalendar from '../components/AppCalendar'
@@ -298,7 +305,7 @@
   export default {
     data() {
       const checkTel = (rule, value, callback) => {
-        var pattern=/(^\s*\+?\s*(\(\s*\d+\s*\)|\d+)(\s*-?\s*(\(\s*\d+\s*\)|\s*\d+\s*))*\s*$)/;
+        var pattern = /(^\s*\+?\s*(\(\s*\d+\s*\)|\d+)(\s*-?\s*(\(\s*\d+\s*\)|\s*\d+\s*))*\s*$)/
         if (!value) {
           return callback(new Error('選択してください'))
         } else if (value.length > 20 || !pattern.test(value)) {
@@ -310,9 +317,9 @@
       const checkNum = (rule, value, callback) => {
         if (!value) {
           return callback(new Error('選択してください'))
-        } else if (Number(value)<0 || value.length > 3 ) {
+        } else if (Number(value) < 0 || value.length > 3) {
           callback(new Error('半角数字3桁以内で入力してください'))
-        } else if(!(/(^[1-9]\d*$)/.test(value))) {
+        } else if (!(/(^[1-9]\d*$)/.test(value))) {
           callback(new Error('半角数字3桁以内で入力してください'))
         } else {
           callback()
@@ -321,9 +328,9 @@
       const checkNum2 = (rule, value, callback) => {
         if (!value) {
           callback()
-        }else if (Number(value)<0 || value.length > 3 ) {
+        } else if (Number(value) < 0 || value.length > 3) {
           callback(new Error('半角数字3桁以内で入力してください'))
-        } else if(!(/(^[1-9]\d*$)/.test(value))) {
+        } else if (!(/(^[1-9]\d*$)/.test(value))) {
           callback(new Error('半角数字3桁以内で入力してください'))
         } else {
           callback()
@@ -435,7 +442,7 @@
         },
         pickerOptions1: {
           disabledDate(time) {
-            return (time.getTime() <= (Date.now()-86400000) || time.getTime() >= Date.parse(new Date(localStorage.getItem('clickDate')))+86400000)
+            return (time.getTime() <= (Date.now() - 86400000) || time.getTime() >= Date.parse(new Date(localStorage.getItem('clickDate'))) + 86400000)
           },
         },
         // 模态框
@@ -723,205 +730,135 @@
           return (restaurant.TableName.toLowerCase().indexOf(String(queryString).toLowerCase()) > -1)
         }
       },
-      querySearchTel(queryString, cb) {
-//        let arr = this.filterOptionsData
-//        let results = arr.filter(this.createFilterTel(queryString))
-//        // 调用 callback 返回建议列表的数据
-//        cb(results.slice(0, 10))
-        if (queryString != this.oldInfo.CustTel) {
-          this.axios.post('reservation/suggestdata', {
-            CustTel: queryString,
-            CustCompanyName: this.inputInfo.CustCompanyName,
-            CustName: this.inputInfo.CustName,
-            CustNameKana: this.inputInfo.CustNameKana,
-          }).then(res => {
-            if (res.data.Code === "SC-001") {
-              this.suggestArr = res.data.Data
-              this.oldInfo.CustTel = this.inputInfo.CustTel
-              this.oldInfo.CustCompanyName = this.inputInfo.CustCompanyName
-              this.oldInfo.CustName = this.inputInfo.CustName
-              this.oldInfo.CustNameKana = this.inputInfo.CustNameKana
-              cb(res.data.Data)
-            } else {
-              this.$message.error(res.data.Message)
-            }
-          })
-        } else {
-          cb(this.suggestArr)
-        }
-      },
+      querySearchTel: _.debounce(function (queryString, cb) {
+        setTimeout(function () {
+          if (queryString !== this.oldInfo.CustTel) {
+            this.axios.post('reservation/suggestdata', {
+              CustTel: queryString,
+              CustCompanyName: this.inputInfo.CustCompanyName,
+              CustName: this.inputInfo.CustName,
+              CustNameKana: this.inputInfo.CustNameKana,
+            }).then(res => {
+              if (res.data.Code === "SC-001") {
+                this.suggestArr = res.data.Data
+                this.oldInfo.CustTel = this.inputInfo.CustTel
+                this.oldInfo.CustCompanyName = this.inputInfo.CustCompanyName
+                this.oldInfo.CustName = this.inputInfo.CustName
+                this.oldInfo.CustNameKana = this.inputInfo.CustNameKana
+                cb(res.data.Data)
+              } else {
+                this.$message.error(res.data.Message)
+              }
+            })
+          } else {
+            cb(this.suggestArr)
+          }
+        }.bind(this), 1000)
+      }, 1000),
+      querySearchCompany: _.debounce(function (queryString, cb) {
+        setTimeout(function () {
+          if (queryString !== this.oldInfo.CustCompanyName) {
+            this.axios.post('reservation/suggestdata', {
+              CustCompanyName: queryString,
+              CustTel: this.inputInfo.CustTel,
+              CustName: this.inputInfo.CustName,
+              CustNameKana: this.inputInfo.CustNameKana,
+            }).then(res => {
+              if (res.data.Code === "SC-001") {
+                this.suggestArr = res.data.Data
+                this.oldInfo.CustTel = this.inputInfo.CustTel
+                this.oldInfo.CustCompanyName = this.inputInfo.CustCompanyName
+                this.oldInfo.CustName = this.inputInfo.CustName
+                this.oldInfo.CustNameKana = this.inputInfo.CustNameKana
+                cb(res.data.Data)
+              } else {
+                this.$message.error(res.data.Message)
+              }
+            })
+          } else {
+            cb(this.suggestArr)
+          }
+        }.bind(this), 1000)
+      }, 1000),
 
-      querySearchCompany(queryString, cb) {
-//        let arr = this.filterOptionsData
-//        let results = arr.filter(this.createFilterCompany(queryString))
-//        // 调用 callback 返回建议列表的数据
-//        cb(results.slice(0, 10))
-        if (queryString != this.oldInfo.CustCompanyName) {
-          this.axios.post('reservation/suggestdata', {
-            CustCompanyName: queryString,
-            CustTel: this.inputInfo.CustTel,
-            CustName: this.inputInfo.CustName,
-            CustNameKana: this.inputInfo.CustNameKana,
-          }).then(res => {
-            if (res.data.Code === "SC-001") {
-              this.suggestArr = res.data.Data
-              this.oldInfo.CustTel = this.inputInfo.CustTel
-              this.oldInfo.CustCompanyName = this.inputInfo.CustCompanyName
-              this.oldInfo.CustName = this.inputInfo.CustName
-              this.oldInfo.CustNameKana = this.inputInfo.CustNameKana
-              cb(res.data.Data)
+      querySearchName: _.debounce(function (queryString, cb) {
+        setTimeout(function () {
+          if (queryString !== this.oldInfo.CustName) {
+            this.axios.post('reservation/suggestdata', {
+              CustName: queryString,
+              CustTel: this.inputInfo.CustTel,
+              CustCompanyName: this.inputInfo.CustCompanyName,
+              CustNameKana: this.inputInfo.CustNameKana,
+            }).then(res => {
+              if (res.data.Code === "SC-001") {
+                this.suggestArr = res.data.Data
+                this.oldInfo.CustTel = this.inputInfo.CustTel
+                this.oldInfo.CustCompanyName = this.inputInfo.CustCompanyName
+                this.oldInfo.CustName = this.inputInfo.CustName
+                this.oldInfo.CustNameKana = this.inputInfo.CustNameKana
+                cb(res.data.Data)
+              } else {
+                this.$message.error(res.data.Message)
+              }
+            })
+          } else {
+            cb(this.suggestArr)
+          }
+        }.bind(this), 1000)
+      }, 1000),
+      querySearchName2: _.debounce(function (queryString, cb) {
+        setTimeout(function () {
+          if (queryString !== this.oldInfo.CustNameKana) {
+            this.axios.post('reservation/suggestdata', {
+              CustNameKana: queryString,
+              CustTel: this.inputInfo.CustTel,
+              CustName: this.inputInfo.CustName,
+              CustCompanyName: this.inputInfo.CustCompanyName,
+            }).then(res => {
+              if (res.data.Code === "SC-001") {
+                this.suggestArr = res.data.Data
+                this.oldInfo.CustTel = this.inputInfo.CustTel
+                this.oldInfo.CustCompanyName = this.inputInfo.CustCompanyName
+                this.oldInfo.CustName = this.inputInfo.CustName
+                this.oldInfo.CustNameKana = this.inputInfo.CustNameKana
+                cb(res.data.Data)
+              } else {
+                this.$message.error(res.data.Message)
+              }
+            })
+          } else {
+            cb(this.suggestArr)
+          }
+        }.bind(this), 1000)
+      }, 1000),
+      getHistoryInfo() {
+        this.axios.post('reservation/suggestdata', {
+          CustNameKana: this.inputInfo.CustNameKana,
+          CustTel: this.inputInfo.CustTel,
+          CustName: this.inputInfo.CustName,
+          CustCompanyName: this.inputInfo.CustCompanyName,
+        }).then(res => {
+          if (res.data.Code === "SC-001") {
+            if (res.data.Data.length === 1) {
+              const item = res.data.Data[0]
+              this.inputInfo.EnkaiNum = item.EnkaiNum
+              this.inputInfo.JissiDate = item.JissiDate
+              if (item.CustCompanyName || item.EnkaiSyusaiName) {
+                this.inputInfo.CompanyReservationNum = item.ReservationNum
+              } else {
+                this.inputInfo.ReservationNum = item.ReservationNum
+              }
             } else {
-              this.$message.error(res.data.Message)
+              this.inputInfo.EnkaiNum = ''
+              this.inputInfo.JissiDate = ''
+              this.inputInfo.CompanyReservationNum = ''
+              this.inputInfo.ReservationNum = ''
             }
-          })
-        } else {
-          cb(this.suggestArr)
-        }
-      },
-
-      querySearchName(queryString, cb) {
-//        let arr = this.filterOptionsData
-//        let results = arr.filter(this.createFilterName(queryString))
-//        // 调用 callback 返回建议列表的数据
-//        cb(results.slice(0, 10))
-        if (queryString != this.oldInfo.CustName) {
-          this.axios.post('reservation/suggestdata', {
-            CustName: queryString,
-            CustTel: this.inputInfo.CustTel,
-            CustCompanyName: this.inputInfo.CustCompanyName,
-            CustNameKana: this.inputInfo.CustNameKana,
-          }).then(res => {
-            if (res.data.Code === "SC-001") {
-              this.suggestArr = res.data.Data
-              this.oldInfo.CustTel = this.inputInfo.CustTel
-              this.oldInfo.CustCompanyName = this.inputInfo.CustCompanyName
-              this.oldInfo.CustName = this.inputInfo.CustName
-              this.oldInfo.CustNameKana = this.inputInfo.CustNameKana
-              cb(res.data.Data)
-            } else {
-              this.$message.error(res.data.Message)
-            }
-          })
-        } else {
-          cb(this.suggestArr)
-        }
-      },
-
-      querySearchName2(queryString, cb) {
-//        let arr = this.filterOptionsData
-//        let results = arr.filter(this.createFilterName2(queryString))
-//        // 调用 callback 返回建议列表的数据
-//        cb(results.slice(0, 10))
-        if (queryString != this.oldInfo.CustNameKana) {
-          this.axios.post('reservation/suggestdata', {
-            CustNameKana: queryString,
-            CustTel: this.inputInfo.CustTel,
-            CustName: this.inputInfo.CustName,
-            CustCompanyName: this.inputInfo.CustCompanyName,
-          }).then(res => {
-            if (res.data.Code === "SC-001") {
-              this.suggestArr = res.data.Data
-              this.oldInfo.CustTel = this.inputInfo.CustTel
-              this.oldInfo.CustCompanyName = this.inputInfo.CustCompanyName
-              this.oldInfo.CustName = this.inputInfo.CustName
-              this.oldInfo.CustNameKana = this.inputInfo.CustNameKana
-              cb(res.data.Data)
-            } else {
-              this.$message.error(res.data.Message)
-            }
-          })
-        } else {
-          cb(this.suggestArr)
-        }
-      },
-      createFilterTel(queryString) {
-        return (item) => {
-          return (
-                  (String(item.CustTel).indexOf(String(queryString)) > -1)
-                  || (String(item.EnkaiSyusaiTel).indexOf(String(queryString)) > -1)
-                  || (String(item.Tel).indexOf(String(queryString)) > -1)
-              )
-              && (
-                  (String(item.CustCompanyName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
-                  || (String(item.EnkaiSyusaiName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
-              )
-              && (
-                  (String(item.CustName).indexOf(String(this.inputInfo.CustName)) > -1)
-                  || (String(item.Name).indexOf(String(this.inputInfo.CustName)) > -1)
-              )
-              && (
-                  (String(item.CustNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
-                  || (String(item.EnkaiSyusaiNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
-                  || (String(item.NameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
-              )
-        }
-      },
-      createFilterCompany(queryString) {
-        return (item) => {
-          return (
-                  (String(item.CustCompanyName).indexOf(String(queryString)) > -1)
-                  || (String(item.EnkaiSyusaiName).indexOf(String(queryString)) > -1)
-              )
-              && (
-                  (String(item.CustTel).indexOf(String(this.inputInfo.CustTel)) > -1)
-                  || (String(item.EnkaiSyusaiTel).indexOf(String(this.inputInfo.CustTel)) > -1)
-                  || (String(item.Tel).indexOf(String(this.inputInfo.CustTel)) > -1)
-              )
-              && (
-                  (String(item.CustName).indexOf(String(this.inputInfo.CustName)) > -1)
-                  || (String(item.Name).indexOf(String(this.inputInfo.CustName)) > -1)
-              )
-              && (
-                  (String(item.CustNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
-                  || (String(item.EnkaiSyusaiNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
-                  || (String(item.NameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
-              )
-        }
-      },
-      createFilterName(queryString) {
-        return (item) => {
-          return (
-                  (String(item.CustName).indexOf(String(queryString)) > -1)
-                  || (String(item.Name).indexOf(String(queryString)) > -1)
-              )
-              && (
-                  (String(item.CustCompanyName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
-                  || (String(item.EnkaiSyusaiName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
-              )
-              && (
-                  (String(item.CustTel).indexOf(String(this.inputInfo.CustTel)) > -1)
-                  || (String(item.EnkaiSyusaiTel).indexOf(String(this.inputInfo.CustTel)) > -1)
-                  || (String(item.Tel).indexOf(String(this.inputInfo.CustTel)) > -1)
-              )
-              && (
-                  (String(item.CustNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
-                  || (String(item.EnkaiSyusaiNameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
-                  || (String(item.NameKana).indexOf(String(this.inputInfo.CustNameKana)) > -1)
-              )
-        }
-      },
-      createFilterName2(queryString) {
-        return (item) => {
-          return (
-                  (String(item.CustNameKana).indexOf(String(queryString)) > -1)
-                  || (String(item.EnkaiSyusaiNameKana).indexOf(String(queryString)) > -1)
-                  || (String(item.NameKana).indexOf(String(queryString)) > -1)
-              )
-              && (
-                  (String(item.CustCompanyName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
-                  || (String(item.EnkaiSyusaiName).indexOf(String(this.inputInfo.CustCompanyName)) > -1)
-              )
-              && (
-                  (String(item.CustTel).indexOf(String(this.inputInfo.CustTel)) > -1)
-                  || (String(item.EnkaiSyusaiTel).indexOf(String(this.inputInfo.CustTel)) > -1)
-                  || (String(item.Tel).indexOf(String(this.inputInfo.CustTel)) > -1)
-              )
-              && (
-                  (String(item.CustName).indexOf(String(this.inputInfo.CustName)) > -1)
-                  || (String(item.Name).indexOf(String(this.inputInfo.CustName)) > -1)
-              )
-        }
-      },
+          } else {
+            this.$message.error(res.data.Message)
+          }
+        })
+      }
     },
     mounted() {
       this.getData()
@@ -933,6 +870,7 @@
   .pull-left {
     float: left;
   }
+
   .pull-right {
     float: right;
   }
@@ -964,15 +902,18 @@
   .mt30 {
     margin-top: 30px;
   }
+
   .disf {
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
+
   .line {
     display: inline-block;
     margin: 0 20px;
   }
+
   .container {
     margin: 20px auto;
     display: flex;
